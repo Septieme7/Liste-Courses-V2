@@ -2,7 +2,7 @@
 
 > Gérez vos listes de courses, suivez votre budget et organisez vos achats — simplement, depuis n'importe quel appareil.
 
-🔗 **Application en ligne** : [liste-courses7.netlify.app](https://liste-courses7.netlify.app/)
+🔗 **Application en ligne** : [liste-coursesv2.netlify.app](https://liste-coursesv2.netlify.app/)
 
 ---
 
