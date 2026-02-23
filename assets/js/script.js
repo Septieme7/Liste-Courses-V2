@@ -1,32 +1,11 @@
 /* =============================================================
    COURSES MALIN · script.js
-   Structure :
-     1.  Configuration & constantes
-     2.  État global
-     3.  Initialisation
-     4.  Persistance (localStorage)
-     5.  Thème & couleurs
-     6.  Navigation (avec gestion du bouton retour)
-     7.  Rendu – Vue Accueil
-     8.  Rendu – Grille de listes (avec bouton caméra)
-     9.  Gestion du budget
-    10.  CRUD Articles
-    11.  Bottom sheet : Ajouter / Modifier article (multi-ajout)
-    12.  Bottom sheet : Créer une liste
-    13.  Gestion des listes (CRUD) + carte magasin
-    14.  Partage / Export .txt
-    15.  Son & alerte budget
-    16.  Overlay & sheets
-    17.  Modal Logo
-    18.  Snackbar
-    19.  Utilitaires
-    20.  Attachement des écouteurs d'événements
+   (Version avec scan de code-barres, logo cliquable, bouton retour, carte magasin)
 ============================================================= */
 
-// * =============================================================
-//    1. CONFIGURATION & CONSTANTES
-// ============================================================= */
-
+/* =============================================================
+   1. CONFIGURATION & CONSTANTES
+============================================================= */
 const COLORS = [
   { n: 'blue',   h: '#3B82F6' },
   { n: 'green',  h: '#10B981' },
@@ -78,8 +57,7 @@ let snkCallback  = null;
 let audioInstance= null;
 
 // Pour le scan de code-barres
-let scanner = null;
-let isScanning = false;
+let html5QrCode = null;
 
 /* =============================================================
    3. INITIALISATION
@@ -892,42 +870,46 @@ function closeSheet() {
 }
 
 /* =============================================================
-   17. SCAN DE CODE-BARRES (avec Instascan + Open Food Facts)
+   17. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
+
 function startBarcodeScan() {
-  if (isScanning) return;
+  if (html5QrCode) return; // déjà en cours
+
   const container = document.getElementById('scannerContainer');
-  const video = document.getElementById('scannerVideo');
   container.style.display = 'block';
 
-  Instascan.Camera.getCameras().then(cameras => {
-    if (cameras.length > 0) {
-      scanner = new Instascan.Scanner({ video: video, mirror: false });
-      scanner.addListener('scan', function (content) {
-        stopBarcodeScan();
-        fetchProductFromBarcode(content);
-      });
-      const backCamera = cameras.find(cam => cam.name.toLowerCase().includes('back')) || cameras[0];
-      scanner.start(backCamera);
-      isScanning = true;
-    } else {
-      showSnack('Aucune caméra trouvée');
-      container.style.display = 'none';
+  html5QrCode = new Html5Qrcode("qr-reader");
+  const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+    // Arrêter le scan dès qu'un code est trouvé
+    stopBarcodeScan();
+    fetchProductFromBarcode(decodedText);
+  };
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+  html5QrCode.start(
+    { facingMode: "environment" }, // caméra arrière
+    config,
+    qrCodeSuccessCallback,
+    (errorMessage) => {
+      // erreur de scan (ignorée, on continue)
     }
-  }).catch(err => {
-    console.error(err);
+  ).catch(err => {
     showSnack('Erreur accès caméra');
+    console.error(err);
     container.style.display = 'none';
+    html5QrCode = null;
   });
 }
 
 function stopBarcodeScan() {
-  if (scanner) {
-    scanner.stop();
-    scanner = null;
+  if (html5QrCode) {
+    html5QrCode.stop().then(() => {
+      html5QrCode.clear();
+      html5QrCode = null;
+    }).catch(err => console.warn(err));
   }
   document.getElementById('scannerContainer').style.display = 'none';
-  isScanning = false;
 }
 
 function fetchProductFromBarcode(barcode) {

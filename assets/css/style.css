@@ -10,7 +10,7 @@
      6.  Vues (home / lists / settings)
      7.  Bloc Budget
      8.  Indicateur liste active
-     9.  Carte du magasin (nouveau)
+     9.  Carte du magasin
     10.  Barre de recherche
     11.  En-têtes de catégories
     12.  Lignes d'articles
@@ -29,50 +29,48 @@
 
 /* =============================================================
    1. VARIABLES CSS
-   IMPORTANT : --p (couleur primaire) est la couleur du thème.
-   Tous les éléments d'interaction (checkbox, barre budget,
-   toggles, progress…) utilisent --p pour suivre le thème choisi.
-   --ok reste réservé aux textes de statut positif (restant > 0).
-   --err et --warn restent sémantiques (danger, avertissement).
+   Définition des couleurs, ombres, rayons, hauteurs et transitions.
+   La variable --p est la couleur primaire qui change selon le thème.
+   Les autres variables sont fixes.
 ============================================================= */
 :root {
   /* --- Couleur primaire (thème "blue" par défaut) --- */
-  --p:   #3B82F6;
-  --pd:  #2563EB;
+  --p:   #3B82F6;   /* Couleur principale (bleu par défaut) */
+  --pd:  #2563EB;   /* Version plus foncée pour les interactions */
 
   /* --- Couleurs sémantiques --- */
-  --ok:  #10B981;   /* Texte "Restant positif" uniquement */
-  --err: #EF4444;   /* Danger / dépassement budget */
-  --warn:#F59E0B;   /* Barre budget ≥ 80% */
+  --ok:  #10B981;   /* Vert pour les soldes positifs (restant) */
+  --err: #EF4444;   /* Rouge pour les erreurs/dépassements */
+  --warn:#F59E0B;   /* Orange pour l'avertissement (barre ≥ 80%) */
 
   /* --- Surfaces & fonds (mode clair) --- */
-  --bg:  #F8FAFC;
-  --sur: #FFFFFF;
-  --sur2:#F1F5F9;
+  --bg:  #F8FAFC;   /* Fond général */
+  --sur: #FFFFFF;   /* Surface (cartes, header, etc.) */
+  --sur2:#F1F5F9;   /* Surface secondaire (légèrement grisée) */
 
   /* --- Texte (mode clair) --- */
-  --tx:  #1E293B;
-  --tx2: #64748B;
-  --tx3: #94A3B8;
+  --tx:  #1E293B;   /* Texte principal */
+  --tx2: #64748B;   /* Texte secondaire (moins important) */
+  --tx3: #94A3B8;   /* Texte tertiaire (placeholders, icônes) */
 
   /* --- Bordures --- */
-  --bd:  #E2E8F0;
+  --bd:  #E2E8F0;   /* Couleur des bordures */
 
   /* --- Effets --- */
-  --sh:    0 2px 10px rgba(0, 0, 0, 0.07);
-  --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --sh:    0 2px 10px rgba(0, 0, 0, 0.07);   /* Ombre légère */
+  --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.10);   /* Ombre plus prononcée */
 
   /* --- Rayon --- */
-  --r:    16px;
-  --r-sm: 10px;
-  --r-xs:  8px;
+  --r:    16px;     /* Rayon de base (grand) */
+  --r-sm: 10px;     /* Rayon moyen */
+  --r-xs:  8px;     /* Petit rayon */
 
   /* --- Hauteurs fixes --- */
-  --hh: 56px;
-  --th: 60px;
+  --hh: 56px;       /* Hauteur du header */
+  --th: 60px;       /* Hauteur de la barre de navigation */
 
   /* --- Transition globale --- */
-  --tr: 0.2s ease;
+  --tr: 0.2s ease;  /* Transition rapide pour les changements d'état */
 }
 
 /* --- Thèmes de couleur (data-color sur <html>) --- */
@@ -86,45 +84,47 @@
 
 /* --- Mode sombre (data-theme="dark" sur <html>) --- */
 [data-theme="dark"] {
-  --bg:  #0F172A;
-  --sur: #1E293B;
-  --sur2:#334155;
-  --tx:  #F1F5F9;
-  --tx2: #94A3B8;
-  --tx3: #475569;
-  --bd:  #334155;
-  --sh:    0 2px 10px rgba(0, 0, 0, 0.35);
+  --bg:  #0F172A;   /* Fond plus foncé */
+  --sur: #1E293B;   /* Surfaces plus sombres */
+  --sur2:#334155;   /* Surface secondaire */
+  --tx:  #F1F5F9;   /* Texte clair */
+  --tx2: #94A3B8;   /* Texte secondaire clair */
+  --tx3: #475569;   /* Texte tertiaire */
+  --bd:  #334155;   /* Bordures plus foncées */
+  --sh:    0 2px 10px rgba(0, 0, 0, 0.35);   /* Ombre plus marquée */
   --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.50);
 }
 
 
 /* =============================================================
    2. RESET & BASE
+   Réinitialisation des marges et paddings, box-sizing général,
+   et styles de base pour le body.
 ============================================================= */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: border-box;   /* Inclut les bordures et paddings dans les dimensions */
   margin: 0;
   padding: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; /* Supprime le flash sur mobile */
 }
 
 html {
-  background-color: var(--bg);
-  -webkit-text-size-adjust: 100%;
+  background-color: var(--bg);   /* Fond global */
+  -webkit-text-size-adjust: 100%; /* Empêche le redimensionnement du texte sur mobile */
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
-               'Segoe UI', system-ui, sans-serif;
+               'Segoe UI', system-ui, sans-serif; /* Police système pour un rendu natif */
   font-size: 16px;
   line-height: 1.4;
   background: var(--bg);
   color: var(--tx);
-  height: 100dvh;
-  overflow: hidden;
-  transition: background var(--tr), color var(--tr);
+  height: 100dvh;                /* Hauteur totale de la fenêtre */
+  overflow: hidden;              /* Empêche le scroll sur le body (le contenu scroll interne) */
+  transition: background var(--tr), color var(--tr); /* Transition douce entre thèmes */
 }
 
 a   { color: var(--p); text-decoration: none; }
@@ -135,6 +135,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    3. LAYOUT PRINCIPAL
+   Header fixe, contenu scrollable, navigation fixe en bas.
 ============================================================= */
 #hdr {
   position: fixed;
@@ -159,7 +160,7 @@ input, select, textarea { font-family: inherit; }
   justify-content: center;
   gap: 7px;
   min-width: 0;
-  cursor: pointer; /* Indique que le logo est cliquable */
+  cursor: pointer;  /* Indique que le logo est cliquable */
 }
 
 /* Logo dans le header */
@@ -171,7 +172,7 @@ input, select, textarea { font-family: inherit; }
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
   transition: transform 0.1s;
 }
-.hlogo:active { transform: scale(0.9); }
+.hlogo:active { transform: scale(0.9); } /* Effet de clic */
 
 #hdr h1 {
   font-size: 17px;
@@ -212,14 +213,15 @@ input, select, textarea { font-family: inherit; }
   top: var(--hh);
   bottom: var(--th);
   left: 0; right: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overflow-y: auto;               /* Permet le défilement vertical */
+  -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+  overscroll-behavior: contain;   /* Empêche le rebond du scroll au-delà */
 }
 
 
 /* =============================================================
    4. NAVIGATION BOTTOM TAB BAR
+   Barre de navigation en bas, avec trois onglets.
 ============================================================= */
 #nav {
   position: fixed;
@@ -230,7 +232,7 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   z-index: 100;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom); /* Gestion des encoches */
   transition: background var(--tr), border-color var(--tr);
 }
 
@@ -249,12 +251,13 @@ input, select, textarea { font-family: inherit; }
   transition: color var(--tr);
 }
 .tab svg { width: 22px; height: 22px; stroke-width: 1.75; }
-.tab.on  { color: var(--p); }            /* ← suit le thème */
-.tab:active { transform: scale(0.9); }
+.tab.on  { color: var(--p); }            /* Onglet actif avec la couleur primaire */
+.tab:active { transform: scale(0.9); }   /* Effet de clic */
 
 
 /* =============================================================
    5. BOUTON FLOTTANT (FAB)
+   Bouton d'ajout rapide en bas à droite.
 ============================================================= */
 #fab {
   position: fixed;
@@ -263,7 +266,7 @@ input, select, textarea { font-family: inherit; }
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: var(--p);               /* ← suit le thème */
+  background: var(--p);               /* Couleur primaire */
   color: #fff;
   border: none;
   display: flex;
@@ -275,11 +278,13 @@ input, select, textarea { font-family: inherit; }
 }
 #fab:hover   { background: var(--pd); }
 #fab:active  { transform: scale(0.92); }
-#fab.pulse   { animation: pulse 2s infinite; }
+#fab.pulse   { animation: pulse 2s infinite; } /* Animation d'impulsion */
 
 
 /* =============================================================
    6. VUES
+   Chaque vue (accueil, listes, réglages) est cachée par défaut,
+   seule celle avec la classe .on est affichée.
 ============================================================= */
 .view { display: none; padding: 12px 16px 16px; }
 .view.on { display: block; }
@@ -304,7 +309,7 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   gap: 5px;
   padding: 8px 14px;
-  background: var(--p);               /* ← suit le thème */
+  background: var(--p);
   color: #fff;
   border-radius: 20px;
   border: none;
@@ -317,6 +322,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    7. BLOC BUDGET
+   Affichage du budget total, dépensé, restant et barre de progression.
 ============================================================= */
 .card {
   background: var(--sur);
@@ -347,7 +353,7 @@ input, select, textarea { font-family: inherit; }
   width: 76px;
   font-size: 20px;
   font-weight: 700;
-  color: var(--p);                    /* ← suit le thème */
+  color: var(--p);                    /* Couleur primaire */
   border: none;
   background: transparent;
   text-align: right;
@@ -374,11 +380,9 @@ input, select, textarea { font-family: inherit; }
 }
 .bst-val { font-size: 16px; font-weight: 700; transition: color var(--tr); }
 
-/*
- * .bst-val.ok = "Restant" quand budget positif
- * Utilise --p (couleur du thème) pour cohérence visuelle
- */
-.bst-val.ok  { color: var(--p); }      /* ← CORRIGÉ : suit le thème */
+/* Texte "Restant" quand positif : couleur primaire */
+.bst-val.ok  { color: var(--p); }
+/* Texte "Restant" négatif : rouge */
 .bst-val.err { color: var(--err); }
 
 /* Barre de progression */
@@ -390,14 +394,14 @@ input, select, textarea { font-family: inherit; }
 }
 .pfill {
   height: 100%;
-  background: var(--p);               /* ← CORRIGÉ : suit le thème */
+  background: var(--p);               /* Couleur primaire */
   border-radius: 3px;
   transition: width 0.4s ease, background 0.3s;
 }
 .pfill.w { background: var(--warn); } /* ≥ 80% → orange */
 .pfill.e { background: var(--err);  } /* 100% → rouge */
 
-/* Alerte dépassement */
+/* Alerte dépassement (cachée par défaut) */
 .balert {
   display: none;
   align-items: center;
@@ -411,11 +415,12 @@ input, select, textarea { font-family: inherit; }
   font-weight: 600;
 }
 .balert.on { display: flex; }
-[data-theme="dark"] .balert { background: #450a0a; }
+[data-theme="dark"] .balert { background: #450a0a; } /* Fond plus foncé en mode sombre */
 
 
 /* =============================================================
    8. INDICATEUR LISTE ACTIVE
+   Affiche la liste courante avec son emoji, son nom, et les boutons partager/changer.
 ============================================================= */
 .alist {
   display: flex;
@@ -453,7 +458,7 @@ input, select, textarea { font-family: inherit; }
   border-radius: 50%;
   border: 1.5px solid var(--bd);
   background: transparent;
-  color: var(--p);                    /* ← suit le thème */
+  color: var(--p);                    /* Couleur primaire */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -481,7 +486,8 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   9. CARTE DU MAGASIN (NOUVEAU)
+   9. CARTE DU MAGASIN
+   Affichage de la photo du plan du magasin associée à la liste active.
 ============================================================= */
 #listMapContainer .card {
   padding: 12px;
@@ -495,18 +501,13 @@ input, select, textarea { font-family: inherit; }
   border-radius: var(--r-xs);
   object-fit: contain;
   background: var(--sur2);
-  cursor: pointer;
-}
-
-/* ajout de la vidéo du scanner dans la carte du magasin */
-#scannerContainer video {
-  max-height: 300px;
-  object-fit: cover;
+  cursor: pointer; /* Indique que la miniature est cliquable */
 }
 
 
 /* =============================================================
    10. BARRE DE RECHERCHE
+   Champ de recherche avec une loupe en icône.
 ============================================================= */
 .sbar { position: relative; margin-bottom: 12px; }
 .sbar svg {
@@ -515,7 +516,7 @@ input, select, textarea { font-family: inherit; }
   top: 50%;
   transform: translateY(-50%);
   color: var(--tx3);
-  pointer-events: none;
+  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
 }
 .sbar input {
   width: 100%;
@@ -534,6 +535,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    11. EN-TÊTES DE CATÉGORIES
+   Titres de catégorie avec fond coloré et nombre d'articles.
 ============================================================= */
 .chdr {
   display: flex;
@@ -551,6 +553,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    12. LIGNES D'ARTICLES
+   Chaque ligne représente un article avec checkbox, nom, quantité, prix, suppression.
 ============================================================= */
 .irow {
   display: flex;
@@ -561,15 +564,12 @@ input, select, textarea { font-family: inherit; }
   min-height: 54px;
   background: var(--sur);
   transition: background var(--tr);
-  animation: slideIn 0.15s ease-out;
+  animation: slideIn 0.15s ease-out; /* Animation d'apparition */
 }
 .irow:last-child { border-bottom: none; }
-.irow.ckd .itxt { text-decoration: line-through; color: var(--tx3); }
+.irow.ckd .itxt { text-decoration: line-through; color: var(--tx3); } /* Article coché */
 
-/*
- * Checkbox circulaire
- * CORRIGÉ : utilise --p pour suivre le thème choisi
- */
+/* Checkbox circulaire */
 .icheck {
   width: 24px;
   height: 24px;
@@ -584,13 +584,13 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr), border-color var(--tr);
 }
 .icheck.on {
-  background: var(--p);              /* ← CORRIGÉ : suit le thème */
-  border-color: var(--p);            /* ← CORRIGÉ : suit le thème */
+  background: var(--p);              /* Couleur primaire quand coché */
+  border-color: var(--p);
 }
 .icheck svg { display: none; }
-.icheck.on svg { display: block; }
+.icheck.on svg { display: block; }   /* Affiche la coche quand coché */
 
-.ibody { flex: 1; min-width: 0; cursor: pointer; }
+.ibody { flex: 1; min-width: 0; cursor: pointer; } /* Zone cliquable pour modifier */
 .itxt  { font-size: 15px; font-weight: 400; color: var(--tx); transition: color var(--tr); }
 .imeta {
   font-size: 12px;
@@ -602,9 +602,10 @@ input, select, textarea { font-family: inherit; }
   text-overflow: ellipsis;
 }
 
-/* Actions droite */
+/* Actions droite (quantité, prix, suppression) */
 .iact { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 
+/* Boutons + et - pour la quantité */
 .qbtn {
   width: 26px;
   height: 26px;
@@ -628,10 +629,10 @@ input, select, textarea { font-family: inherit; }
   font-weight: 700;
   min-width: 18px;
   text-align: center;
-  color: var(--p);                   /* ← suit le thème */
+  color: var(--p);                   /* Couleur primaire */
 }
 
-/* Prix inline */
+/* Prix unitaire (cliquable pour édition inline) */
 .iprice {
   font-size: 13px;
   font-weight: 500;
@@ -654,6 +655,7 @@ input, select, textarea { font-family: inherit; }
 .iprice input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .iprice input:focus { outline: none; }
 
+/* Bouton de suppression */
 .idel {
   width: 28px;
   height: 28px;
@@ -667,11 +669,12 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr), color var(--tr);
 }
 .idel:hover,
-.idel:active { background: #FEE2E2; color: var(--err); }
+.idel:active { background: #FEE2E2; color: var(--err); } /* Rouge au survol */
 
 
 /* =============================================================
    13. ÉTAT VIDE
+   Affiché quand la liste est vide ou qu'aucune liste n'existe.
 ============================================================= */
 .empty { text-align: center; padding: 48px 24px; color: var(--tx3); }
 .empty svg { width: 68px; height: 68px; margin-bottom: 14px; opacity: 0.3; }
@@ -681,6 +684,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    14. BARRE DE TOTAL
+   Affiche le nombre total d'articles dans la liste.
 ============================================================= */
 .tbar {
   display: flex;
@@ -693,15 +697,16 @@ input, select, textarea { font-family: inherit; }
   margin-bottom: 12px;
 }
 .tbar-lbl { font-size: 13px; color: var(--tx2); }
-.tbar-val { font-size: 15px; font-weight: 700; color: var(--p); } /* ← suit le thème */
+.tbar-val { font-size: 15px; font-weight: 700; color: var(--p); } /* Couleur primaire */
 
 
 /* =============================================================
-   15. GRILLE DE LISTES (Cards) avec bouton caméra
+   15. GRILLE DE LISTES (Cards)
+   Affichage des listes sous forme de cartes avec progression.
 ============================================================= */
 .lgrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur mobile */
   gap: 12px;
 }
 .lcard {
@@ -715,22 +720,24 @@ input, select, textarea { font-family: inherit; }
 }
 .lcard:hover   { box-shadow: var(--sh-lg); }
 .lcard:active  { transform: scale(0.97); }
-.lcard.sel     { outline: 2.5px solid var(--p); }  /* ← suit le thème */
+.lcard.sel     { outline: 2.5px solid var(--p); } /* Liste active */
 
 .lbanner {
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 28px; /* Taille de l'emoji */
 }
 .linfo    { padding: 10px 12px 4px; }
 .lname    { font-size: 14px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); }
 .lstats   { font-size: 11px; color: var(--tx2); }
 
+/* Barre de progression de la liste (articles cochés) */
 .lprog  { height: 3px; background: var(--sur2); margin: 7px 0 6px; border-radius: 2px; overflow: hidden; }
 .lprogf { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 
+/* Boutons d'action sur la carte (caméra, renommer, supprimer) */
 .lbtns { display: flex; gap: 5px; padding: 0 10px 10px; justify-content: flex-end; }
 .lbtn  {
   padding: 4px 9px;
@@ -742,13 +749,14 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr);
 }
 .lbtn:hover { background: var(--bd); }
-.lbtn.danger { background: #FEE2E2; color: var(--err); }
-.lbtn.map { background: var(--sur2); font-size: 14px; } /* bouton caméra */
+.lbtn.danger { background: #FEE2E2; color: var(--err); } /* Bouton suppression */
+.lbtn.map { background: var(--sur2); font-size: 14px; } /* Bouton caméra */
 [data-theme="dark"] .lbtn.danger { background: #450a0a; }
 
 
 /* =============================================================
    16. PAGE RÉGLAGES
+   Organisation des réglages en sections avec groupes.
 ============================================================= */
 .ssec { margin-bottom: 20px; }
 .stitle {
@@ -781,7 +789,7 @@ input, select, textarea { font-family: inherit; }
 
 .sact-btn {
   padding: 7px 14px;
-  background: var(--p);              /* ← suit le thème */
+  background: var(--p);
   color: #fff;
   border: none;
   border-radius: 20px;
@@ -815,6 +823,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    17. OVERLAY & BOTTOM SHEETS
+   Overlay semi-transparent et panneaux coulissants depuis le bas.
 ============================================================= */
 #ovl {
   position: fixed;
@@ -825,7 +834,7 @@ input, select, textarea { font-family: inherit; }
   pointer-events: none;
   transition: opacity 0.25s;
 }
-#ovl.on { opacity: 1; pointer-events: all; }
+#ovl.on { opacity: 1; pointer-events: all; } /* Affiché quand un sheet est ouvert */
 
 .sheet {
   position: fixed;
@@ -833,15 +842,16 @@ input, select, textarea { font-family: inherit; }
   background: var(--sur);
   border-radius: 20px 20px 0 0;
   z-index: 210;
-  transform: translateY(100%);
+  transform: translateY(100%); /* Caché en bas */
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   max-height: 90dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--sh-lg);
 }
-.sheet.on { transform: translateY(0); }
+.sheet.on { transform: translateY(0); } /* Visible */
 
+/* Poignée de tirage */
 .shandle {
   width: 38px;
   height: 4px;
@@ -881,7 +891,7 @@ input, select, textarea { font-family: inherit; }
 /* Indice multi-ajout sous le champ nom */
 .multi-hint {
   font-size: 12px;
-  color: var(--p);                   /* ← suit le thème */
+  color: var(--p);
   margin-top: 5px;
   font-weight: 500;
   min-height: 16px;
@@ -938,9 +948,10 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    18. COMPOSANTS PARTAGÉS
+   Stepper, chips, toggle, grille de couleurs.
 ============================================================= */
 
-/* --- Stepper --- */
+/* --- Stepper (quantité) --- */
 .stepper { display: flex; align-items: center; gap: 20px; justify-content: center; padding: 4px 0; }
 .stbtn {
   width: 44px;
@@ -950,7 +961,7 @@ input, select, textarea { font-family: inherit; }
   background: transparent;
   font-size: 22px;
   font-weight: 700;
-  color: var(--p);                   /* ← suit le thème */
+  color: var(--p);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -960,17 +971,17 @@ input, select, textarea { font-family: inherit; }
 .stbtn:active { transform: scale(0.92); }
 .stval { font-size: 24px; font-weight: 700; min-width: 40px; text-align: center; color: var(--tx); }
 
-/* --- Chips --- */
+/* --- Chips (suggestions, emojis) --- */
 .chips {
   display: flex;
   gap: 8px;
-  overflow-x: auto;
+  overflow-x: auto;           /* Défilement horizontal */
   padding: 4px 0 8px;
   margin-bottom: 4px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none;      /* Cache la barre de défilement (Firefox) */
+  -ms-overflow-style: none;   /* (Internet Explorer) */
 }
-.chips::-webkit-scrollbar { display: none; }
+.chips::-webkit-scrollbar { display: none; } /* Cache la barre (WebKit) */
 .chip {
   padding: 7px 14px;
   background: var(--sur2);
@@ -983,11 +994,10 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr), color var(--tr);
 }
 .chip:hover  { background: var(--bd); }
-.chip:active { background: var(--p); color: #fff; } /* ← suit le thème */
+.chip:active { background: var(--p); color: #fff; } /* Appui rapide */
 
 /*
- * Toggle switch
- * CORRIGÉ : .tog.on utilise --p (couleur du thème)
+ * Toggle switch (mode sombre, alerte sonore)
  */
 .tog {
   width: 48px;
@@ -1000,7 +1010,7 @@ input, select, textarea { font-family: inherit; }
   flex-shrink: 0;
   transition: background 0.2s;
 }
-.tog.on { background: var(--p); }    /* ← CORRIGÉ : suit le thème */
+.tog.on { background: var(--p); }    /* État activé */
 .tog::after {
   content: '';
   position: absolute;
@@ -1011,7 +1021,7 @@ input, select, textarea { font-family: inherit; }
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s;
 }
-.tog.on::after { transform: translateX(20px); }
+.tog.on::after { transform: translateX(20px); } /* Curseur à droite */
 
 /* --- Pastilles couleur --- */
 .cgrid { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1024,11 +1034,12 @@ input, select, textarea { font-family: inherit; }
   transition: transform var(--tr), border-color var(--tr);
 }
 .csw:hover { transform: scale(1.15); }
-.csw.on    { border-color: var(--tx); transform: scale(1.1); }
+.csw.on    { border-color: var(--tx); transform: scale(1.1); } /* Sélectionnée */
 
 
 /* =============================================================
    19. MODAL LOGO
+   Fenêtre modale pour afficher le logo en grand.
 ============================================================= */
 .modal {
   position: fixed;
@@ -1045,7 +1056,7 @@ input, select, textarea { font-family: inherit; }
   max-height: 80%;
   border-radius: var(--r);
   box-shadow: var(--sh-lg);
-  animation: fadeIn 0.2s;
+  animation: fadeIn 0.2s; /* Apparition en fondu */
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
@@ -1055,6 +1066,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    20. SNACKBAR
+   Notification temporaire en bas de l'écran.
 ============================================================= */
 #snk {
   position: fixed;
@@ -1078,6 +1090,7 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    21. ANIMATIONS
+   Animations diverses (apparition, pulsation, check bounce).
 ============================================================= */
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(6px); }
@@ -1090,6 +1103,7 @@ input, select, textarea { font-family: inherit; }
   50%     { box-shadow: 0 4px 28px color-mix(in srgb, var(--p) 80%, transparent); }
 }
 
+/* Effet de rebond quand on coche un article */
 @keyframes checkBounce {
   0%   { transform: scale(1); }
   40%  { transform: scale(1.18); }
@@ -1101,16 +1115,17 @@ input, select, textarea { font-family: inherit; }
 
 /* =============================================================
    22. RESPONSIVE (≥ 640px)
+   Ajustements pour les écrans plus larges (tablettes).
 ============================================================= */
 @media (min-width: 640px) {
-  .lgrid { grid-template-columns: repeat(3, 1fr); }
+  .lgrid { grid-template-columns: repeat(3, 1fr); } /* 3 colonnes pour les listes */
 
   #fab { right: 24px; bottom: calc(var(--th) + 20px); }
 
   .sheet {
     max-width: 480px;
     left: 50%;
-    transform: translateX(-50%) translateY(100%);
+    transform: translateX(-50%) translateY(100%); /* Centré horizontalement */
   }
   .sheet.on { transform: translateX(-50%) translateY(0); }
 

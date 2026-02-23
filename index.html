@@ -89,7 +89,7 @@
             <button class="sact-btn sact-muted" id="changeMapBtn" style="padding: 5px 12px;">Changer</button>
             <button class="sact-btn sact-danger" id="deleteMapBtn" style="padding: 5px 12px;">Supprimer</button>
           </div>
-          <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none;">
+          <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
       </div>
 
@@ -266,9 +266,9 @@
         <p class="multi-hint" id="iNameHint"></p>
       </div>
 
-      <!-- Conteneur vidéo pour le scan (caché par défaut) -->
-      <div id="scannerContainer" style="display: none; margin-top: 10px; border-radius: var(--r-sm); overflow: hidden; background: #000;">
-        <video id="scannerVideo" style="width: 100%; height: auto;"></video>
+      <!-- Conteneur pour la caméra (caché par défaut) -->
+      <div id="scannerContainer" style="display: none; margin-top: 10px; border-radius: var(--r-sm); overflow: hidden; background: #000; min-height: 250px;">
+        <div id="qr-reader" style="width: 100%;"></div>
         <div style="display: flex; gap: 8px; padding: 8px; justify-content: center;">
           <button class="sact-btn sact-muted" id="btnStopScan">Arrêter</button>
         </div>
@@ -339,8 +339,8 @@
 
   <div id="snk" role="status" aria-live="polite"></div>
 
-  <!-- Instascan pour le scan de code-barres -->
-  <script src="https://cdn.jsdelivr.net/npm/instascan@1.0.0-beta.3/instascan.min.js"></script>
+  <!-- Bibliothèque html5-qrcode pour le scan de code-barres -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 </html>
