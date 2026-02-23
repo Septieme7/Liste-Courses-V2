@@ -10,18 +10,20 @@
      6.  Vues (home / lists / settings)
      7.  Bloc Budget
      8.  Indicateur liste active
-     9.  Barre de recherche
-    10.  En-têtes de catégories
-    11.  Lignes d'articles
-    12.  État vide (empty state)
-    13.  Barre de total
-    14.  Grille de listes (cards)
-    15.  Page Réglages
-    16.  Overlay & Bottom Sheets
-    17.  Composants partagés (stepper, chips, toggle, couleurs)
-    18.  Snackbar
-    19.  Animations & Transitions
-    20.  Responsive (≥ 640px)
+     9.  Carte du magasin (nouveau)
+    10.  Barre de recherche
+    11.  En-têtes de catégories
+    12.  Lignes d'articles
+    13.  État vide (empty state)
+    14.  Barre de total
+    15.  Grille de listes (cards) avec bouton caméra
+    16.  Page Réglages
+    17.  Overlay & Bottom Sheets
+    18.  Composants partagés (stepper, chips, toggle, couleurs)
+    19.  Modal Logo
+    20.  Snackbar
+    21.  Animations & Transitions
+    22.  Responsive (≥ 640px)
 ============================================================= */
 
 
@@ -127,7 +129,7 @@ body {
 
 a   { color: var(--p); text-decoration: none; }
 ul  { list-style: none; }
-button { font-family: inherit; cursor: pointer; }
+button { font-family: inherit; cursor: pointer; background: none; border: none; }
 input, select, textarea { font-family: inherit; }
 
 
@@ -157,6 +159,7 @@ input, select, textarea { font-family: inherit; }
   justify-content: center;
   gap: 7px;
   min-width: 0;
+  cursor: pointer; /* Indique que le logo est cliquable */
 }
 
 /* Logo dans le header */
@@ -165,9 +168,10 @@ input, select, textarea { font-family: inherit; }
   height: 26px;
   object-fit: contain;
   flex-shrink: 0;
-  /* Légère ombre pour lisibilité sur fond clair/sombre */
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  transition: transform 0.1s;
 }
+.hlogo:active { transform: scale(0.9); }
 
 #hdr h1 {
   font-size: 17px;
@@ -183,7 +187,6 @@ input, select, textarea { font-family: inherit; }
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: none;
   background: transparent;
   color: var(--tx2);
   display: flex;
@@ -478,7 +481,25 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   9. BARRE DE RECHERCHE
+   9. CARTE DU MAGASIN (NOUVEAU)
+============================================================= */
+#listMapContainer .card {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#mapThumb {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: var(--r-xs);
+  object-fit: contain;
+  background: var(--sur2);
+}
+
+
+/* =============================================================
+   10. BARRE DE RECHERCHE
 ============================================================= */
 .sbar { position: relative; margin-bottom: 12px; }
 .sbar svg {
@@ -505,7 +526,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   10. EN-TÊTES DE CATÉGORIES
+   11. EN-TÊTES DE CATÉGORIES
 ============================================================= */
 .chdr {
   display: flex;
@@ -522,7 +543,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   11. LIGNES D'ARTICLES
+   12. LIGNES D'ARTICLES
 ============================================================= */
 .irow {
   display: flex;
@@ -643,7 +664,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   12. ÉTAT VIDE
+   13. ÉTAT VIDE
 ============================================================= */
 .empty { text-align: center; padding: 48px 24px; color: var(--tx3); }
 .empty svg { width: 68px; height: 68px; margin-bottom: 14px; opacity: 0.3; }
@@ -652,7 +673,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   13. BARRE DE TOTAL
+   14. BARRE DE TOTAL
 ============================================================= */
 .tbar {
   display: flex;
@@ -669,7 +690,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   14. GRILLE DE LISTES (Cards)
+   15. GRILLE DE LISTES (Cards) avec bouton caméra
 ============================================================= */
 .lgrid {
   display: grid;
@@ -683,6 +704,7 @@ input, select, textarea { font-family: inherit; }
   box-shadow: var(--sh);
   cursor: pointer;
   transition: transform var(--tr), box-shadow var(--tr), background var(--tr);
+  position: relative;
 }
 .lcard:hover   { box-shadow: var(--sh-lg); }
 .lcard:active  { transform: scale(0.97); }
@@ -714,11 +736,12 @@ input, select, textarea { font-family: inherit; }
 }
 .lbtn:hover { background: var(--bd); }
 .lbtn.danger { background: #FEE2E2; color: var(--err); }
+.lbtn.map { background: var(--sur2); font-size: 14px; } /* bouton caméra */
 [data-theme="dark"] .lbtn.danger { background: #450a0a; }
 
 
 /* =============================================================
-   15. PAGE RÉGLAGES
+   16. PAGE RÉGLAGES
 ============================================================= */
 .ssec { margin-bottom: 20px; }
 .stitle {
@@ -784,7 +807,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   16. OVERLAY & BOTTOM SHEETS
+   17. OVERLAY & BOTTOM SHEETS
 ============================================================= */
 #ovl {
   position: fixed;
@@ -907,7 +930,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   17. COMPOSANTS PARTAGÉS
+   18. COMPOSANTS PARTAGÉS
 ============================================================= */
 
 /* --- Stepper --- */
@@ -998,7 +1021,33 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   18. SNACKBAR
+   19. MODAL LOGO
+============================================================= */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.modal img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: var(--r);
+  box-shadow: var(--sh-lg);
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* =============================================================
+   20. SNACKBAR
 ============================================================= */
 #snk {
   position: fixed;
@@ -1021,7 +1070,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   19. ANIMATIONS
+   21. ANIMATIONS
 ============================================================= */
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(6px); }
@@ -1044,7 +1093,7 @@ input, select, textarea { font-family: inherit; }
 
 
 /* =============================================================
-   20. RESPONSIVE (≥ 640px)
+   22. RESPONSIVE (≥ 640px)
 ============================================================= */
 @media (min-width: 640px) {
   .lgrid { grid-template-columns: repeat(3, 1fr); }

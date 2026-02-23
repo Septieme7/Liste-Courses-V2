@@ -6,20 +6,21 @@
      3.  Initialisation
      4.  Persistance (localStorage)
      5.  Thème & couleurs
-     6.  Navigation
+     6.  Navigation (avec gestion du bouton retour)
      7.  Rendu – Vue Accueil
-     8.  Rendu – Grille de listes
+     8.  Rendu – Grille de listes (avec bouton caméra)
      9.  Gestion du budget
     10.  CRUD Articles
     11.  Bottom sheet : Ajouter / Modifier article (multi-ajout)
     12.  Bottom sheet : Créer une liste
-    13.  Gestion des listes (CRUD)
+    13.  Gestion des listes (CRUD) + carte magasin
     14.  Partage / Export .txt
     15.  Son & alerte budget
     16.  Overlay & sheets
-    17.  Snackbar
-    18.  Utilitaires
-    19.  Attachement des écouteurs d'événements
+    17.  Modal Logo
+    18.  Snackbar
+    19.  Utilitaires
+    20.  Attachement des écouteurs d'événements
 ============================================================= */
 
 
@@ -230,7 +231,7 @@ function syncSettingsUI() {
 
 
 /* =============================================================
-   6. NAVIGATION
+   6. NAVIGATION (avec gestion du bouton retour)
 ============================================================= */
 
 let currentTab = 'home';
@@ -253,6 +254,15 @@ function goTo(tab) {
   activeTab.classList.add('on');
   activeTab.setAttribute('aria-current', 'page');
 
+  // Gestion du bouton retour
+  const btnBack = document.getElementById('btnBack');
+  if (tab === 'home') {
+    btnBack.style.display = 'none';
+  } else {
+    btnBack.style.display = 'flex';
+  }
+
+  // Titre du header et visibilité du bouton Ajouter
   const titles = { home: getActiveName(), lists: 'Mes Listes', settings: 'Réglages' };
   document.getElementById('htitle').textContent = titles[tab];
 
@@ -293,6 +303,17 @@ function renderHome() {
   document.getElementById('htitle').textContent    = list?.name || 'Mes Courses';
   document.getElementById('aListName').textContent = list?.name || 'Aucune liste';
   document.getElementById('aListIco').textContent  = list?.emoji || '🛒';
+
+  /* Affichage de la carte du magasin (si existante) */
+  const mapContainer = document.getElementById('listMapContainer');
+  const mapThumb = document.getElementById('mapThumb');
+  if (list && list.mapImage) {
+    mapContainer.style.display = 'block';
+    mapThumb.src = list.mapImage;
+    mapThumb.style.display = 'inline';
+  } else {
+    mapContainer.style.display = 'none';
+  }
 
   /* Filtrage par recherche */
   const query    = document.getElementById('searchIn').value.toLowerCase().trim();
@@ -408,7 +429,7 @@ function renderHome() {
 
 
 /* =============================================================
-   8. RENDU – GRILLE DE LISTES
+   8. RENDU – GRILLE DE LISTES (avec bouton caméra)
 ============================================================= */
 
 /** Construit les cartes de listes */
@@ -446,6 +467,8 @@ function renderLists() {
           </div>
         </div>
         <div class="lbtns">
+          <!-- Bouton caméra pour ajouter/voir la carte du magasin -->
+          <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="Ajouter une photo du magasin">📷</button>
           <button class="lbtn"
                   onclick="event.stopPropagation(); renameList('${list.id}')"
                   aria-label="Renommer ${esc(list.name)}">✏️</button>
@@ -831,7 +854,7 @@ function confirmList() {
   const color = document.getElementById('lColor').value || '#3B82F6';
   const id    = Date.now().toString();
 
-  lists.push({ id, name, emoji, color, items: [] });
+  lists.push({ id, name, emoji, color, items: [], mapImage: null });
 
   if (!activeId) activeId = id;
 
@@ -857,7 +880,7 @@ function buildEmojiChips() {
 
 
 /* =============================================================
-   13. GESTION DES LISTES (CRUD)
+   13. GESTION DES LISTES (CRUD) + CARTE MAGASIN
 ============================================================= */
 
 /** Sélectionne une liste et redirige vers l'accueil */
@@ -898,6 +921,60 @@ function removeList(listId) {
   renderLists();
   renderHome();
   showSnack('Liste supprimée');
+}
+
+/**
+ * Capture une image (carte du magasin) pour une liste.
+ * Utilise l'API input file pour accéder à l'appareil photo ou à la galerie.
+ */
+function captureMap(listId) {
+  const list = lists.find(l => l.id === listId);
+  if (!list) return;
+
+  // Créer un input file dynamique
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment'; // suggère l'appareil photo arrière
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      list.mapImage = readerEvent.target.result; // base64
+      saveData();
+      // Si on est dans la liste active, mettre à jour l'affichage
+      if (listId === activeId) renderHome();
+      // Mettre à jour la grille (pour la pastille caméra, on ne change pas l'affichage, mais on pourrait ajouter un indicateur)
+      renderLists();
+      showSnack('Carte du magasin enregistrée');
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+/** Visualise la carte du magasin dans une modal simple */
+function viewMap() {
+  const list = lists.find(l => l.id === activeId);
+  if (!list || !list.mapImage) return;
+  // On utilise la même modal que le logo ? On peut en créer une dédiée ou réutiliser.
+  const modal = document.getElementById('logoModal');
+  const img = modal.querySelector('img');
+  img.src = list.mapImage;
+  modal.style.display = 'flex';
+}
+
+/** Supprime la carte du magasin de la liste active */
+function deleteMap() {
+  const list = lists.find(l => l.id === activeId);
+  if (!list || !list.mapImage) return;
+  if (!confirm('Supprimer la carte du magasin ?')) return;
+  list.mapImage = null;
+  saveData();
+  renderHome();
+  showSnack('Carte supprimée');
 }
 
 
@@ -1082,7 +1159,20 @@ function closeSheet() {
 
 
 /* =============================================================
-   17. SNACKBAR
+   17. MODAL LOGO
+============================================================= */
+
+function showLogoModal() {
+  document.getElementById('logoModal').style.display = 'flex';
+}
+
+function closeLogoModal() {
+  document.getElementById('logoModal').style.display = 'none';
+}
+
+
+/* =============================================================
+   18. SNACKBAR
 ============================================================= */
 
 /**
@@ -1112,7 +1202,7 @@ function triggerSnackAction() {
 
 
 /* =============================================================
-   18. UTILITAIRES
+   19. UTILITAIRES
 ============================================================= */
 
 /**
@@ -1131,14 +1221,15 @@ function esc(str) {
 
 
 /* =============================================================
-   19. ATTACHEMENT DES ÉCOUTEURS D'ÉVÉNEMENTS
+   20. ATTACHEMENT DES ÉCOUTEURS D'ÉVÉNEMENTS
    Centralisés ici → le HTML reste purement déclaratif.
 ============================================================= */
 
 function attachListeners() {
 
   /* ---- Header ---- */
-  document.getElementById('btnSettings').addEventListener('click', () => goTo('settings'));
+  document.getElementById('btnBack').addEventListener('click', () => goTo('home'));
+  document.getElementById('headerLogo').addEventListener('click', showLogoModal);
   document.getElementById('btnAdd').addEventListener('click', openAddItem);
 
   /* ---- Navigation ---- */
@@ -1157,6 +1248,22 @@ function attachListeners() {
   document.getElementById('searchIn').addEventListener('input',  renderHome);
   document.getElementById('btnChangeList').addEventListener('click', () => goTo('lists'));
   document.getElementById('btnShare').addEventListener('click', shareList);
+  document.getElementById('viewMapBtn').addEventListener('click', viewMap);
+  document.getElementById('changeMapBtn').addEventListener('click', () => {
+    if (activeId) captureMap(activeId);
+  });
+  document.getElementById('deleteMapBtn').addEventListener('click', deleteMap);
+
+  /* ---- État vide (emptyState) : comportement conditionnel ---- */
+  document.getElementById('emptyState').addEventListener('click', () => {
+    if (lists.length === 0) {
+      // Aucune liste n'existe → aller vers la création de liste
+      goTo('lists');
+    } else {
+      // Une liste existe (même si elle est vide) → ouvrir l'ajout d'article
+      openAddItem();
+    }
+  });
 
   /* ---- Sheet Article ---- */
   document.getElementById('iName').addEventListener('input', validateItemForm);
@@ -1194,6 +1301,9 @@ function attachListeners() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && openSheetId) closeSheet();
   });
+
+  /* ---- Modal logo : clic sur l'overlay ferme ---- */
+  document.getElementById('logoModal').addEventListener('click', closeLogoModal);
 }
 
 
