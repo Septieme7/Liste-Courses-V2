@@ -1,3 +1,4 @@
+
 # 🛒 Courses Malin
 
 > Gérez vos listes de courses, suivez votre budget et organisez vos achats — simplement, depuis n'importe quel appareil.
@@ -44,6 +45,11 @@
 - Renommer ou supprimer une liste en un tap
 - Navigation rapide entre les listes
 
+### 🗺️ Carte du magasin
+- Associez une **photo de la carte du magasin** à chaque liste (prise via l’appareil photo ou depuis la galerie)
+- Visualisez la carte directement dans l’accueil, avec options pour voir, changer ou supprimer l’image
+- Idéal pour ne pas oublier le plan du magasin lors de vos courses
+
 ### 🎨 Personnalisation
 - **7 thèmes de couleurs** : Bleu, Vert, Rouge, Violet, Orange, Rose, Or
 - **Mode sombre / clair** avec détection automatique possible
@@ -54,11 +60,14 @@
 - Aucune perte après rechargement ou fermeture de l'onglet
 - Aucun compte, aucun serveur, aucune connexion requise
 
-### 📱 Design mobile-first
+### 📱 Design mobile-first & confort d’utilisation
 - Interface optimisée pour smartphones et tablettes
 - Navigation par **barre d'onglets** fixe en bas d'écran
 - Formulaires en **bottom sheet** (glissement vers le haut)
 - Fermeture des panneaux par swipe bas ou touche Échap
+- **Logo cliquable** : affiche le logo en plein écran d’un simple tap
+- **Bouton retour** dans les vues secondaires pour revenir à l’accueil
+- **État vide intelligent** : cliquer sur l’écran “liste vide” redirige vers la création de liste si aucune n’existe, ou ouvre l’ajout d’article si une liste est déjà présente
 - Compatible PWA (installable sur l'écran d'accueil)
 
 ---
@@ -148,6 +157,11 @@ Aucun — l'application fonctionne entièrement côté client, sans serveur ni d
 2. Renseignez les prix de vos articles
 3. La barre de progression et les montants se mettent à jour automatiquement
 
+### Ajouter une carte de magasin à une liste
+1. Dans **Mes Listes**, cliquez sur l’icône 📷 de la liste souhaitée
+2. Prenez une photo ou sélectionnez une image depuis votre galerie
+3. La carte apparaîtra dans l’accueil de cette liste
+
 ### Cocher un article
 - Appuyez sur le **cercle** à gauche de l'article pour le marquer comme acheté
 
@@ -177,3 +191,4 @@ Ce projet est libre d'utilisation.
 **Seven7** — Projet personnel.
 
 > 💬 *Des suggestions ? Ouvrez une [issue](https://github.com/Septieme7/Liste-Courses-V2/issues) ou proposez une Pull Request !*
+```
