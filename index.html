@@ -13,6 +13,8 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
   <link rel="manifest" href="assets/manifest/site.webmanifest">
   <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Cropper.js pour l'édition d'image -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 </head>
 <body>
 
@@ -131,6 +133,10 @@
           Nouvelle
         </button>
       </div>
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <button class="sact-btn" id="btnExportLists">📤 Exporter les listes</button>
+        <button class="sact-btn" id="btnImportLists">📥 Importer un fichier</button>
+      </div>
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -201,7 +207,7 @@
           </div>
         </div>
       </div>
-      <p class="app-version">Courses Malin · v2.1</p>
+      <p class="app-version">Courses Malin · v2.3</p>
     </section>
   </main>
 
@@ -252,7 +258,6 @@
         <div class="chips" id="qChips" role="group" aria-label="Suggestions rapides"></div>
       </div>
 
-      <!-- Champ Nom avec bouton Scanner -->
       <div class="fld">
         <label for="iName">
           Nom
@@ -266,11 +271,26 @@
         <p class="multi-hint" id="iNameHint"></p>
       </div>
 
-      <!-- Conteneur pour la caméra (caché par défaut) -->
+      <!-- Mode scan multiple -->
+      <div class="fld" style="display: flex; align-items: center; justify-content: space-between;">
+        <label for="multiScanToggle">Mode scan multiple</label>
+        <button class="tog" id="multiScanToggle" role="switch" aria-checked="false"></button>
+      </div>
+
+      <!-- Conteneur pour la caméra -->
       <div id="scannerContainer" style="display: none; margin-top: 10px; border-radius: var(--r-sm); overflow: hidden; background: #000; min-height: 250px;">
         <div id="qr-reader" style="width: 100%;"></div>
         <div style="display: flex; gap: 8px; padding: 8px; justify-content: center;">
           <button class="sact-btn sact-muted" id="btnStopScan">Arrêter</button>
+        </div>
+        <!-- Panneau de résultat pour le scan multiple -->
+        <div id="scanResultPanel" style="display: none; background: var(--sur); padding: 10px; border-radius: 8px; margin-top: 8px;">
+          <div id="scanProductName" style="font-weight: 600; margin-bottom: 5px;"></div>
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+            <button class="sact-btn sact-muted" id="scanIgnoreBtn">Ignorer</button>
+            <button class="sact-btn" id="scanAddBtn">Ajouter</button>
+            <button class="sact-btn sact-danger" id="scanStopBtn">Arrêter</button>
+          </div>
         </div>
       </div>
 
@@ -299,6 +319,10 @@
           <option value="🧹 Entretien">🧹 Entretien</option>
           <option value="🧃 Boissons">🧃 Boissons</option>
           <option value="🍦 Surgelés">🍦 Surgelés</option>
+          <option value="💕 Love">💕 Love</option>
+          <option value="🤬 SaMéreList">🤬 SaMéreList</option>
+          <option value="🖕 Sheet List">🖕 Sheet List</option>
+          <option value="🧙‍♂️ Magic List">🧙‍♂️ Magic List</option>
         </select>
       </div>
       <div class="fld" id="fldNote">
@@ -332,6 +356,43 @@
     </div>
   </div>
 
+  <!-- Bottom Sheet : Éditeur d'image (recadrage, rotation) -->
+  <div class="sheet" id="shImageEditor" role="dialog" aria-modal="true" aria-labelledby="shImageTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shImageTitle">Éditer l'image</h2>
+    <div class="sbody">
+      <div style="max-height: 50vh; overflow: hidden; margin-bottom: 16px;">
+        <img id="imageToEdit" src="" style="max-width: 100%; display: block;">
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
+        <button class="sact-btn sact-muted" id="btnRotateLeft" aria-label="Tourner à gauche">↺ 90°</button>
+        <button class="sact-btn sact-muted" id="btnRotateRight" aria-label="Tourner à droite">↻ 90°</button>
+        <button class="sact-btn sact-muted" id="btnFlipHorizontal" aria-label="Retourner horizontalement">↔</button>
+        <button class="sact-btn sact-muted" id="btnFlipVertical" aria-label="Retourner verticalement">↕</button>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="sbtn sact-muted" id="btnCancelImageEdit" style="flex:1;">Annuler</button>
+        <button class="sbtn pri" id="btnSaveImageEdit" style="flex:1;">Valider</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet : Export de listes -->
+  <div class="sheet" id="shExport" role="dialog" aria-modal="true" aria-labelledby="shExportTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shExportTitle">Exporter des listes</h2>
+    <div class="sbody">
+      <p>Sélectionnez les listes à exporter :</p>
+      <div id="exportListCheckboxes" style="margin: 16px 0;">
+        <!-- Les checkboxes seront générées dynamiquement -->
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="sbtn sact-muted" id="btnCancelExport" style="flex:1;">Annuler</button>
+        <button class="sbtn pri" id="btnConfirmExport" style="flex:1;">Exporter</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal pour afficher le logo ou la carte en grand -->
   <div id="logoModal" class="modal" onclick="closeLogoModal()" role="dialog" aria-modal="true" aria-label="Logo agrandi" style="display: none;">
     <img src="assets/images/LogoCourses.png" alt="Logo Courses Malin">
@@ -339,8 +400,9 @@
 
   <div id="snk" role="status" aria-live="polite"></div>
 
-  <!-- Bibliothèque html5-qrcode pour le scan de code-barres -->
+  <!-- Bibliothèques externes -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 </html>

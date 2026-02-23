@@ -1,6 +1,6 @@
 /* =============================================================
    COURSES MALIN · script.js
-   (Version avec scan de code-barres, logo cliquable, bouton retour, carte magasin)
+   Version finale avec édition d'image, scan multiple, export/import CSV
 ============================================================= */
 
 /* =============================================================
@@ -16,12 +16,12 @@ const COLORS = [
   { n: 'gold',   h: '#D97706' },
 ];
 
-const EMOJIS = ['🛒', '🏪', '🍎', '🥗', '🏠', '🎉', '💊', '🐾', '🌿', '🍕', '🛍️', '📦'];
+const EMOJIS = ['🛒', '🏪', '🍎', '🥗', '🏠', '🎉', '💊', '🐾', '🌿', '🍕', '🧙‍♂️', '🖕', '🤬', '💕', '🛍️', '📦'];
 
 const QUICK_ITEMS = [
   'Pain', 'Lait', 'Œufs', 'Beurre', 'Fromage', 'Yaourt',
   'Eau', 'Pommes', 'Bananes', 'Poulet', 'Pâtes', 'Riz',
-  'Café', 'Jus', 'Farine', 'Sucre', 'Sel', 'Huile',
+  'Café', 'Jus', 'Farine', 'Sucre', 'Sel', 'Huile', 'Dinosaure', 'Licorne', 'Chocolat', 'Glaces', 'Saucisses', 'Poisson', 'Carottes', 'Tomates',
 ];
 
 const CAT_COLORS = {
@@ -34,6 +34,10 @@ const CAT_COLORS = {
   '🧹 Entretien':          '#64748B',
   '🧃 Boissons':           '#06B6D4',
   '🍦 Surgelés':           '#60A5FA',
+  '🖕 Sheet List':         '#d4ea46',
+  '🧙‍♂️ Magic List':          '#a855f7',
+  '🤬 SaMére List':          '#ef4444',
+  '💕 Love 💕':        '#ec4899',
 };
 
 const LS_LISTS  = 'cm_lists';
@@ -56,8 +60,15 @@ let snkTimer     = null;
 let snkCallback  = null;
 let audioInstance= null;
 
-// Pour le scan de code-barres
+// Scan
 let html5QrCode = null;
+let multiScanMode = false;
+let lastScannedBarcode = null;
+let lastScannedProductData = null;
+
+// Éditeur d'image
+let cropper = null;
+let currentListIdForImage = null;
 
 /* =============================================================
    3. INITIALISATION
@@ -569,6 +580,21 @@ function confirmItem() {
     const price = parseFloat(document.getElementById('iPrice').value) || 0;
     const note  = document.getElementById('iNote').value.trim();
 
+    // Détection des doublons en mode simple
+    if (!editItemId && !isMulti) {
+      const existing = list.items.find(i => i.text.toLowerCase() === names[0].toLowerCase());
+      if (existing) {
+        if (confirm(`"${names[0]}" est déjà dans la liste. Voulez-vous augmenter la quantité ?`)) {
+          existing.qty = (existing.qty || 1) + currentQty;
+          saveData();
+          closeSheet();
+          renderHome();
+          showSnack('Quantité augmentée');
+          return;
+        }
+      }
+    }
+
     if (editItemId) {
       const item = list.items.find(i => i.id === editItemId);
       if (item) {
@@ -716,11 +742,8 @@ function captureMap(listId) {
 
     const reader = new FileReader();
     reader.onload = (readerEvent) => {
-      list.mapImage = readerEvent.target.result;
-      saveData();
-      if (listId === activeId) renderHome();
-      renderLists();
-      showSnack('Carte du magasin enregistrée');
+      // Ouvrir l'éditeur avec l'image chargée
+      openImageEditor(readerEvent.target.result, listId);
     };
     reader.readAsDataURL(file);
   };
@@ -881,9 +904,13 @@ function startBarcodeScan() {
 
   html5QrCode = new Html5Qrcode("qr-reader");
   const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-    // Arrêter le scan dès qu'un code est trouvé
-    stopBarcodeScan();
-    fetchProductFromBarcode(decodedText);
+    if (multiScanMode) {
+      fetchProductFromBarcodeMultiple(decodedText);
+    } else {
+      // Mode simple : on arrête et on remplit le formulaire
+      stopBarcodeScan();
+      fetchProductFromBarcode(decodedText);
+    }
   };
   const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
@@ -910,6 +937,7 @@ function stopBarcodeScan() {
     }).catch(err => console.warn(err));
   }
   document.getElementById('scannerContainer').style.display = 'none';
+  document.getElementById('scanResultPanel').style.display = 'none';
 }
 
 function fetchProductFromBarcode(barcode) {
@@ -932,6 +960,10 @@ function fetchProductFromBarcode(barcode) {
           else if (catLower.includes('bread') || catLower.includes('bakery')) matchedCat = '🥖 Boulangerie';
           else if (catLower.includes('drink') || catLower.includes('beverage')) matchedCat = '🧃 Boissons';
           else if (catLower.includes('frozen')) matchedCat = '🍦 Surgelés';
+          else if (catLower.includes('heart')) matchedCat = '💕 Love';
+          else if (catLower.includes('baby')) matchedCat = '🤬 SaMéreList';
+          else if (catLower.includes('sheet')) matchedCat = '🖕 Sheet List';
+          else if (catLower.includes('magic')) matchedCat = '🧙‍♂️ Magic List';
           if (matchedCat) break;
         }
         if (matchedCat) document.getElementById('iCat').value = matchedCat;
@@ -953,8 +985,108 @@ function fetchProductFromBarcode(barcode) {
     });
 }
 
+function fetchProductFromBarcodeMultiple(barcode) {
+  showSnack(`Recherche...`, null, null, true);
+  fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 1) {
+        lastScannedBarcode = barcode;
+        lastScannedProductData = data.product;
+        showScanResult(data.product);
+      } else {
+        lastScannedBarcode = barcode;
+        lastScannedProductData = { product_name: `Code: ${barcode}`, brands: '' };
+        showScanResult({ product_name: `Code: ${barcode}`, brands: '' });
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      showSnack('Erreur API');
+    });
+}
+
+function showScanResult(product) {
+  const panel = document.getElementById('scanResultPanel');
+  document.getElementById('scanProductName').textContent = product.product_name || 'Produit inconnu';
+  panel.style.display = 'block';
+}
+
+function addProductFromScan(product) {
+  const list = lists.find(l => l.id === activeId);
+  if (!list) return;
+
+  // Vérifier les doublons (par code-barres ou par nom)
+  const existing = list.items.find(item => 
+    item.barcode === lastScannedBarcode || 
+    (product.product_name && item.text.toLowerCase() === product.product_name.toLowerCase())
+  );
+  if (existing) {
+    if (confirm(`"${existing.text}" est déjà dans la liste. Voulez-vous augmenter la quantité ?`)) {
+      existing.qty = (existing.qty || 1) + 1;
+      saveData();
+      renderHome();
+      showSnack('Quantité augmentée');
+    }
+    return;
+  }
+
+  // Déterminer la catégorie
+  let cat = '';
+  const categories = product.categories_tags || [];
+  for (let c of categories) {
+    const cl = c.toLowerCase();
+    if (cl.includes('fruit') || cl.includes('vegetable')) cat = '🥦 Fruits & Légumes';
+    else if (cl.includes('meat') || cl.includes('fish')) cat = '🥩 Viandes & Poissons';
+    else if (cl.includes('dairy') || cl.includes('milk')) cat = '🥛 Produits Laitiers';
+    else if (cl.includes('bread') || cl.includes('bakery')) cat = '🥖 Boulangerie';
+    else if (cl.includes('drink') || cl.includes('beverage')) cat = '🧃 Boissons';
+    else if (cl.includes('frozen')) cat = '🍦 Surgelés';
+    else if (cl.includes('heart')) cat = '💕 Love';
+    else if (cl.includes('baby')) cat = '🤬 SaMéreList';
+    else if (cl.includes('sheet')) cat = '🖕 Sheet List';
+    else if (cl.includes('magic')) cat = '🧙‍♂️ Magic List';
+    if (cat) break;
+  }
+
+  // Ajouter l'article
+  list.items.push({
+    id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 5),
+    text: product.product_name || 'Produit',
+    qty: 1,
+    price: 0,
+    note: product.brands || '',
+    cat: cat,
+    ck: false,
+    barcode: lastScannedBarcode
+  });
+  saveData();
+  renderHome();
+  showSnack('Article ajouté');
+}
+
 /* =============================================================
-   18. MODAL LOGO
+   18. ÉDITEUR D'IMAGE (recadrage, rotation)
+============================================================= */
+function openImageEditor(imageDataUrl, listId) {
+  currentListIdForImage = listId;
+  const img = document.getElementById('imageToEdit');
+  img.src = imageDataUrl;
+  
+  if (cropper) cropper.destroy();
+  cropper = new Cropper(img, {
+    aspectRatio: NaN,
+    viewMode: 1,
+    autoCropArea: 1,
+    responsive: true,
+    background: false,
+  });
+
+  openSheet('shImageEditor');
+}
+
+/* =============================================================
+   19. MODAL LOGO
 ============================================================= */
 function showLogoModal() {
   document.getElementById('logoModal').style.display = 'flex';
@@ -965,7 +1097,7 @@ function closeLogoModal() {
 }
 
 /* =============================================================
-   19. SNACKBAR
+   20. SNACKBAR
 ============================================================= */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
@@ -984,7 +1116,7 @@ function triggerSnackAction() {
 }
 
 /* =============================================================
-   20. UTILITAIRES
+   21. UTILITAIRES
 ============================================================= */
 function esc(str) {
   return String(str)
@@ -996,7 +1128,164 @@ function esc(str) {
 }
 
 /* =============================================================
-   21. ATTACHEMENT DES ÉCOUTEURS
+   22. EXPORT / IMPORT CSV (avec sélection)
+============================================================= */
+
+function showExportSelector() {
+  const container = document.getElementById('exportListCheckboxes');
+  if (lists.length === 0) {
+    showSnack('Aucune liste à exporter');
+    return;
+  }
+
+  let html = '';
+  lists.forEach(list => {
+    html += `
+      <div style="margin-bottom: 10px;">
+        <label style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" class="export-checkbox" data-list-id="${list.id}" checked>
+          <span>${list.emoji} ${esc(list.name)} (${list.items.length} article${list.items.length !== 1 ? 's' : ''})</span>
+        </label>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+
+  openSheet('shExport');
+}
+
+function confirmExport() {
+  const checkboxes = document.querySelectorAll('.export-checkbox');
+  const selectedIds = [];
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      selectedIds.push(cb.dataset.listId);
+    }
+  });
+
+  if (selectedIds.length === 0) {
+    showSnack('Aucune liste sélectionnée');
+    return;
+  }
+
+  const selectedLists = lists.filter(list => selectedIds.includes(list.id));
+
+  // Générer le CSV pour les listes sélectionnées
+  let csvContent = "liste;article;quantite;prix;categorie;note;coché\n";
+  selectedLists.forEach(list => {
+    list.items.forEach(item => {
+      const ligne = [
+        `"${list.name}"`,
+        `"${item.text}"`,
+        item.qty || 1,
+        item.price || 0,
+        `"${item.cat || ''}"`,
+        `"${item.note || ''}"`,
+        item.ck ? 1 : 0
+      ].join(';');
+      csvContent += ligne + '\n';
+    });
+  });
+
+  // Nom de fichier
+  let baseName = 'mes_listes';
+  if (selectedLists.length === 1) {
+    baseName = selectedLists[0].name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  }
+  const date = new Date().toISOString().slice(0,10);
+  const filename = `${baseName}_${date}.csv`;
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  closeSheet();
+}
+
+function importListsFromCSV() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.csv';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const csv = readerEvent.target.result;
+      const lines = csv.split('\n').filter(line => line.trim() !== '');
+      if (lines.length < 2) {
+        showSnack('Fichier CSV vide');
+        return;
+      }
+
+      // Vérification de l'en-tête (première ligne)
+      const header = lines[0].split(';').map(s => s.replace(/^"|"$/g, '').trim());
+      if (header.length < 7) {
+        showSnack('Format CSV invalide (en-tête incorrect)');
+        return;
+      }
+
+      const newLists = [];
+      const listMap = {};
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(';').map(s => s.replace(/^"|"$/g, '').trim());
+        if (cols.length < 7) continue; // ligne mal formée
+
+        const listName = cols[0];
+        if (!listName) continue;
+
+        if (!listMap[listName]) {
+          const newList = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+            name: listName,
+            emoji: '🛒',
+            color: '#3B82F6',
+            items: [],
+            mapImage: null
+          };
+          listMap[listName] = newList;
+          newLists.push(newList);
+        }
+
+        const item = {
+          id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+          text: cols[1],
+          qty: parseInt(cols[2]) || 1,
+          price: parseFloat(cols[3]) || 0,
+          cat: cols[4] || '',
+          note: cols[5] || '',
+          ck: cols[6] === '1' ? true : false
+        };
+        listMap[listName].items.push(item);
+      }
+
+      if (newLists.length === 0) {
+        showSnack('Aucune liste trouvée dans le fichier');
+        return;
+      }
+
+      if (confirm(`Remplacer les ${lists.length} liste(s) existante(s) par ${newLists.length} nouvelle(s) liste(s) ?`)) {
+        lists = newLists;
+        activeId = lists[0]?.id || null;
+        saveData();
+        renderAll();
+        goTo('home');
+        showSnack('Import terminé');
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  };
+  input.click();
+}
+
+/* =============================================================
+   23. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
   // Header
@@ -1042,9 +1331,32 @@ function attachListeners() {
   document.getElementById('qtyPlus').addEventListener('click',  () => adjustSheetQty(+1));
   document.getElementById('iSubmit').addEventListener('click', confirmItem);
 
+  // Toggle scan multiple
+  document.getElementById('multiScanToggle').addEventListener('click', () => {
+    multiScanMode = !multiScanMode;
+    const tog = document.getElementById('multiScanToggle');
+    tog.classList.toggle('on', multiScanMode);
+    tog.setAttribute('aria-checked', multiScanMode);
+  });
+
   // Scan
   document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScan);
   document.getElementById('btnStopScan').addEventListener('click', stopBarcodeScan);
+
+  // Boutons du panneau de résultat de scan
+  document.getElementById('scanAddBtn').addEventListener('click', () => {
+    if (lastScannedProductData) {
+      addProductFromScan(lastScannedProductData);
+    }
+    document.getElementById('scanResultPanel').style.display = 'none';
+  });
+  document.getElementById('scanIgnoreBtn').addEventListener('click', () => {
+    document.getElementById('scanResultPanel').style.display = 'none';
+  });
+  document.getElementById('scanStopBtn').addEventListener('click', () => {
+    stopBarcodeScan();
+    document.getElementById('scanResultPanel').style.display = 'none';
+  });
 
   // Sheet Liste
   document.getElementById('lName').addEventListener('input', validateListForm);
@@ -1053,6 +1365,14 @@ function attachListeners() {
   // Mes Listes
   document.getElementById('btnNewList').addEventListener('click', openAddList);
 
+  // Export/Import (avec sélection)
+  document.getElementById('btnExportLists').addEventListener('click', showExportSelector);
+  document.getElementById('btnImportLists').addEventListener('click', importListsFromCSV);
+
+  // Boutons du sheet d'export
+  document.getElementById('btnCancelExport').addEventListener('click', closeSheet);
+  document.getElementById('btnConfirmExport').addEventListener('click', confirmExport);
+
   // Réglages
   document.getElementById('darkTog').addEventListener('click',    toggleDark);
   document.getElementById('soundTog').addEventListener('click',   toggleSound);
@@ -1060,6 +1380,47 @@ function attachListeners() {
   document.getElementById('btnPlaySound').addEventListener('click', playSound);
   document.getElementById('btnStopSound').addEventListener('click', stopSound);
   document.getElementById('btnReset').addEventListener('click',   resetAll);
+
+  // Éditeur d'image
+  document.getElementById('btnRotateLeft').addEventListener('click', () => {
+    if (cropper) cropper.rotate(-90);
+  });
+  document.getElementById('btnRotateRight').addEventListener('click', () => {
+    if (cropper) cropper.rotate(90);
+  });
+  document.getElementById('btnFlipHorizontal').addEventListener('click', () => {
+    if (cropper) {
+      const scaleX = cropper.getData().scaleX || 1;
+      cropper.scaleX(-scaleX);
+    }
+  });
+  document.getElementById('btnFlipVertical').addEventListener('click', () => {
+    if (cropper) {
+      const scaleY = cropper.getData().scaleY || 1;
+      cropper.scaleY(-scaleY);
+    }
+  });
+  document.getElementById('btnCancelImageEdit').addEventListener('click', () => {
+    closeSheet();
+    if (cropper) cropper.destroy();
+    cropper = null;
+  });
+  document.getElementById('btnSaveImageEdit').addEventListener('click', () => {
+    if (!cropper) return;
+    const canvas = cropper.getCroppedCanvas();
+    const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    const list = lists.find(l => l.id === currentListIdForImage);
+    if (list) {
+      list.mapImage = croppedDataUrl;
+      saveData();
+      if (currentListIdForImage === activeId) renderHome();
+      renderLists();
+      showSnack('Carte du magasin enregistrée');
+    }
+    closeSheet();
+    if (cropper) cropper.destroy();
+    cropper = null;
+  });
 
   // Swipe pour fermer les sheets
   let touchStartY = 0;
