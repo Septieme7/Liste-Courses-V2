@@ -498,6 +498,12 @@ input, select, textarea { font-family: inherit; }
   cursor: pointer;
 }
 
+/* ajout de la vidéo du scanner dans la carte du magasin */
+#scannerContainer video {
+  max-height: 300px;
+  object-fit: cover;
+}
+
 
 /* =============================================================
    10. BARRE DE RECHERCHE

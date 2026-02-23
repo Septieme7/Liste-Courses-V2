@@ -23,12 +23,10 @@
     20.  Attachement des écouteurs d'événements
 ============================================================= */
 
+// * =============================================================
+//    1. CONFIGURATION & CONSTANTES
+// ============================================================= */
 
-/* =============================================================
-   1. CONFIGURATION & CONSTANTES
-============================================================= */
-
-/** Palette de couleurs disponibles */
 const COLORS = [
   { n: 'blue',   h: '#3B82F6' },
   { n: 'green',  h: '#10B981' },
@@ -39,21 +37,14 @@ const COLORS = [
   { n: 'gold',   h: '#D97706' },
 ];
 
-/** Emojis proposés pour les listes */
 const EMOJIS = ['🛒', '🏪', '🍎', '🥗', '🏠', '🎉', '💊', '🐾', '🌿', '🍕', '🛍️', '📦'];
 
-/**
- * Suggestions rapides d'articles.
- * Cliquer sur un chip AJOUTE le nom au champ (avec virgule si déjà rempli),
- * permettant de constituer un lot d'articles en un clic.
- */
 const QUICK_ITEMS = [
   'Pain', 'Lait', 'Œufs', 'Beurre', 'Fromage', 'Yaourt',
   'Eau', 'Pommes', 'Bananes', 'Poulet', 'Pâtes', 'Riz',
   'Café', 'Jus', 'Farine', 'Sucre', 'Sel', 'Huile',
 ];
 
-/** Couleur associée à chaque catégorie */
 const CAT_COLORS = {
   '🥦 Fruits & Légumes':   '#10B981',
   '🥩 Viandes & Poissons': '#EF4444',
@@ -66,34 +57,33 @@ const CAT_COLORS = {
   '🍦 Surgelés':           '#60A5FA',
 };
 
-/** Clés localStorage */
 const LS_LISTS  = 'cm_lists';
 const LS_CFG    = 'cm_cfg';
 const LS_BUDGET = 'cm_budget';
 const LS_ACTIVE = 'cm_active';
 
-
 /* =============================================================
    2. ÉTAT GLOBAL
 ============================================================= */
-let lists        = [];      /* Toutes les listes */
-let cfg          = {};      /* Configuration */
-let budget       = 50;      /* Budget total */
-let activeId     = null;    /* ID liste active */
-let editItemId   = null;    /* ID article en édition (null = ajout) */
-let currentQty   = 1;       /* Quantité courante (stepper) */
-let alertPlayed  = false;   /* Alerte son déjà déclenchée */
-let openSheetId  = null;    /* Sheet actuellement ouvert */
-let snkTimer     = null;    /* Timer snackbar */
-let snkCallback  = null;    /* Callback "Annuler" snackbar */
-let audioInstance= null;    /* Instance audio en cours */
+let lists        = [];
+let cfg          = {};
+let budget       = 50;
+let activeId     = null;
+let editItemId   = null;
+let currentQty   = 1;
+let alertPlayed  = false;
+let openSheetId  = null;
+let snkTimer     = null;
+let snkCallback  = null;
+let audioInstance= null;
 
+// Pour le scan de code-barres
+let scanner = null;
+let isScanning = false;
 
 /* =============================================================
    3. INITIALISATION
 ============================================================= */
-
-/** Point d'entrée — appelé au DOMContentLoaded */
 function init() {
   loadData();
   buildColorGrid('cGrid',  cfg.color || 'blue', onMainColorPick);
@@ -106,12 +96,9 @@ function init() {
   renderAll();
 }
 
-
 /* =============================================================
-   4. PERSISTANCE (localStorage)
+   4. PERSISTANCE
 ============================================================= */
-
-/** Charge toutes les données */
 function loadData() {
   try { lists  = JSON.parse(localStorage.getItem(LS_LISTS))  || []; } catch { lists  = []; }
   try { cfg    = JSON.parse(localStorage.getItem(LS_CFG))    || {}; } catch { cfg    = {}; }
@@ -122,38 +109,31 @@ function loadData() {
   document.getElementById('budgetIn').value = budget;
 }
 
-/** Sauvegarde listes + budget + liste active */
 function saveData() {
   localStorage.setItem(LS_LISTS,  JSON.stringify(lists));
   localStorage.setItem(LS_BUDGET, budget);
   localStorage.setItem(LS_ACTIVE, activeId ?? '');
 }
 
-/** Sauvegarde la configuration */
 function saveConfig() {
   cfg.soundChoice = document.getElementById('soundSel').value;
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
 }
 
-/** Réinitialise tout après confirmation */
 function resetAll() {
   if (!confirm('Supprimer TOUTES les données de l\'application ?')) return;
   localStorage.clear();
   location.reload();
 }
 
-
 /* =============================================================
    5. THÈME & COULEURS
 ============================================================= */
-
-/** Applique data-theme et data-color sur <html> */
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', cfg.dark ? 'dark' : 'light');
   document.documentElement.setAttribute('data-color', cfg.color || 'blue');
 }
 
-/** Bascule le mode sombre */
 function toggleDark() {
   cfg.dark = !cfg.dark;
   const tog = document.getElementById('darkTog');
@@ -163,7 +143,6 @@ function toggleDark() {
   applyTheme();
 }
 
-/** Bascule l'alerte sonore */
 function toggleSound() {
   cfg.sound = (cfg.sound === false) ? true : false;
   const tog = document.getElementById('soundTog');
@@ -172,26 +151,12 @@ function toggleSound() {
   saveConfig();
 }
 
-/**
- * Construit la grille de pastilles de couleur.
- * @param {string}   gridId   - ID du conteneur
- * @param {string}   active   - Couleur sélectionnée
- * @param {Function} callback - Appelé avec le nom de la couleur
- */
 function buildColorGrid(gridId, active, callback) {
   const el = document.getElementById(gridId);
   if (!el) return;
 
   el.innerHTML = COLORS.map(c => `
-    <div
-      class="csw${active === c.n ? ' on' : ''}"
-      style="background:${c.h}"
-      data-name="${c.n}"
-      role="radio"
-      aria-checked="${active === c.n}"
-      aria-label="Couleur ${c.n}"
-      tabindex="0"
-    ></div>
+    <div class="csw${active === c.n ? ' on' : ''}" style="background:${c.h}" data-name="${c.n}" role="radio" aria-checked="${active === c.n}" aria-label="Couleur ${c.n}" tabindex="0"></div>
   `).join('');
 
   el.querySelectorAll('.csw').forEach(dot => {
@@ -202,7 +167,6 @@ function buildColorGrid(gridId, active, callback) {
   });
 }
 
-/** Callback : couleur principale (Réglages) */
 function onMainColorPick(name) {
   cfg.color = name;
   saveConfig();
@@ -210,13 +174,11 @@ function onMainColorPick(name) {
   buildColorGrid('cGrid', name, onMainColorPick);
 }
 
-/** Callback : couleur d'une liste (sheet) */
 function onListColorPick(name) {
   document.getElementById('lColor').value = COLORS.find(c => c.n === name)?.h || '#3B82F6';
   buildColorGrid('lCGrid', name, onListColorPick);
 }
 
-/** Synchronise l'UI des réglages avec cfg */
 function syncSettingsUI() {
   const soundOn = cfg.sound !== false;
   const darkTog  = document.getElementById('darkTog');
@@ -229,17 +191,11 @@ function syncSettingsUI() {
   document.getElementById('soundSel').value = cfg.soundChoice || 'A';
 }
 
-
 /* =============================================================
-   6. NAVIGATION (avec gestion du bouton retour)
+   6. NAVIGATION
 ============================================================= */
-
 let currentTab = 'home';
 
-/**
- * Navigue vers un onglet.
- * @param {string} tab - 'home' | 'lists' | 'settings'
- */
 function goTo(tab) {
   currentTab = tab;
 
@@ -254,7 +210,6 @@ function goTo(tab) {
   activeTab.classList.add('on');
   activeTab.setAttribute('aria-current', 'page');
 
-  // Gestion du bouton retour
   const btnBack = document.getElementById('btnBack');
   if (tab === 'home') {
     btnBack.style.display = 'none';
@@ -262,7 +217,6 @@ function goTo(tab) {
     btnBack.style.display = 'flex';
   }
 
-  // Titre du header et visibilité du bouton Ajouter
   const titles = { home: getActiveName(), lists: 'Mes Listes', settings: 'Réglages' };
   document.getElementById('htitle').textContent = titles[tab];
 
@@ -275,36 +229,26 @@ function goTo(tab) {
   if (tab === 'settings') buildColorGrid('cGrid', cfg.color || 'blue', onMainColorPick);
 }
 
-/** Nom de la liste active ou fallback */
 function getActiveName() {
   return lists.find(l => l.id === activeId)?.name || 'Mes Courses';
 }
 
-
 /* =============================================================
-   7. RENDU – VUE ACCUEIL
+   7. RENDU – ACCUEIL
 ============================================================= */
-
-/** Lance tous les rendus */
 function renderAll() {
   renderHome();
   renderLists();
 }
 
-/**
- * Construit l'affichage des articles de la liste active.
- * Gère la recherche incrémentale et le groupement par catégorie.
- */
 function renderHome() {
   const list  = lists.find(l => l.id === activeId);
   const items = list?.items || [];
 
-  /* Indicateur liste active */
   document.getElementById('htitle').textContent    = list?.name || 'Mes Courses';
   document.getElementById('aListName').textContent = list?.name || 'Aucune liste';
   document.getElementById('aListIco').textContent  = list?.emoji || '🛒';
 
-  /* Affichage de la carte du magasin (si existante) */
   const mapContainer = document.getElementById('listMapContainer');
   const mapThumb = document.getElementById('mapThumb');
   if (list && list.mapImage) {
@@ -315,11 +259,8 @@ function renderHome() {
     mapContainer.style.display = 'none';
   }
 
-  /* Filtrage par recherche */
   const query    = document.getElementById('searchIn').value.toLowerCase().trim();
-  const filtered = query
-    ? items.filter(i => i.text.toLowerCase().includes(query))
-    : items;
+  const filtered = query ? items.filter(i => i.text.toLowerCase().includes(query)) : items;
 
   const listEl  = document.getElementById('itemsList');
   const emptyEl = document.getElementById('emptyState');
@@ -333,7 +274,6 @@ function renderHome() {
     emptyEl.style.display = 'none';
     fab.classList.remove('pulse');
 
-    /* Groupement par catégorie */
     const groups = {};
     filtered.forEach(item => {
       const key = item.cat || '';
@@ -344,70 +284,29 @@ function renderHome() {
     let html = '';
 
     Object.entries(groups).forEach(([cat, groupItems]) => {
-      /* En-tête catégorie */
       if (cat) {
         const color = CAT_COLORS[cat] || '#64748B';
-        html += `
-          <div class="chdr" style="background:${color}18; color:${color}">
-            <span>${esc(cat)}</span>
-            <span class="chdr-count">${groupItems.length}</span>
-          </div>`;
+        html += `<div class="chdr" style="background:${color}18; color:${color}"><span>${esc(cat)}</span><span class="chdr-count">${groupItems.length}</span></div>`;
       }
-
-      /* Lignes articles */
       groupItems.forEach(item => {
-        const totalPrice = item.price
-          ? ' — ' + (item.price * (item.qty || 1)).toFixed(2) + ' €'
-          : '';
-
         html += `
           <li class="irow${item.ck ? ' ckd' : ''}" id="ir-${item.id}">
-
-            <!-- Checkbox ronde — couleur = thème via CSS (.icheck.on) -->
-            <button
-              class="icheck${item.ck ? ' on' : ''}"
-              onclick="toggleCheck('${item.id}')"
-              aria-label="${item.ck ? 'Décocher' : 'Cocher'} ${esc(item.text)}"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                   stroke="white" stroke-width="3.5" aria-hidden="true">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
+            <button class="icheck${item.ck ? ' on' : ''}" onclick="toggleCheck('${item.id}')" aria-label="${item.ck ? 'Décocher' : 'Cocher'} ${esc(item.text)}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-
-            <!-- Corps : nom + note + prix total -->
-            <div class="ibody" onclick="openEditItem('${item.id}')"
-                 role="button" tabindex="0"
-                 aria-label="Modifier ${esc(item.text)}">
+            <div class="ibody" onclick="openEditItem('${item.id}')" role="button" tabindex="0" aria-label="Modifier ${esc(item.text)}">
               <div class="itxt">${esc(item.text)}</div>
-              ${item.note
-                ? `<div class="imeta">${esc(item.note)}</div>`
-                : ''}
+              ${item.note ? `<div class="imeta">${esc(item.note)}</div>` : ''}
             </div>
-
-            <!-- Actions : quantité · prix unitaire · supprimer -->
             <div class="iact">
-              <button class="qbtn" onclick="adjustQty('${item.id}', -1)"
-                      aria-label="Diminuer quantité">−</button>
+              <button class="qbtn" onclick="adjustQty('${item.id}', -1)" aria-label="Diminuer quantité">−</button>
               <span class="qnum">${item.qty || 1}</span>
-              <button class="qbtn" onclick="adjustQty('${item.id}', 1)"
-                      aria-label="Augmenter quantité">+</button>
-
-              <div class="iprice"
-                   onclick="inlineEditPrice('${item.id}')"
-                   role="button" tabindex="0"
-                   aria-label="Prix de ${esc(item.text)}">
-                <span id="pr-${item.id}">
-                  ${item.price
-                    ? item.price.toFixed(2) + '€'
-                    : '<span style="color:var(--tx3)">€</span>'}
-                </span>
+              <button class="qbtn" onclick="adjustQty('${item.id}', 1)" aria-label="Augmenter quantité">+</button>
+              <div class="iprice" onclick="inlineEditPrice('${item.id}')" role="button" tabindex="0" aria-label="Prix de ${esc(item.text)}">
+                <span id="pr-${item.id}">${item.price ? item.price.toFixed(2) + '€' : '<span style="color:var(--tx3)">€</span>'}</span>
               </div>
-
-              <button class="idel" onclick="deleteItem('${item.id}')"
-                      aria-label="Supprimer ${esc(item.text)}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <button class="idel" onclick="deleteItem('${item.id}')" aria-label="Supprimer ${esc(item.text)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <polyline points="3 6 5 6 21 6"/>
                   <path d="M19 6l-1 14H6L5 6"/>
                   <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
@@ -417,22 +316,16 @@ function renderHome() {
           </li>`;
       });
     });
-
     listEl.innerHTML = html;
   }
 
-  document.getElementById('totCount').textContent =
-    `${items.length} article${items.length !== 1 ? 's' : ''}`;
-
+  document.getElementById('totCount').textContent = `${items.length} article${items.length !== 1 ? 's' : ''}`;
   updateBudget();
 }
 
-
 /* =============================================================
-   8. RENDU – GRILLE DE LISTES (avec bouton caméra)
+   8. RENDU – LISTES
 ============================================================= */
-
-/** Construit les cartes de listes */
 function renderLists() {
   const grid    = document.getElementById('lgrid');
   const emptyEl = document.getElementById('listsEmpty');
@@ -452,29 +345,19 @@ function renderLists() {
     const isActive = list.id === activeId;
 
     return `
-      <div class="lcard${isActive ? ' sel' : ''}"
-           onclick="pickList('${list.id}')"
-           role="button" tabindex="0"
-           aria-label="Sélectionner ${esc(list.name)}"
-           aria-pressed="${isActive}">
+      <div class="lcard${isActive ? ' sel' : ''}" onclick="pickList('${list.id}')" role="button" tabindex="0" aria-label="Sélectionner ${esc(list.name)}" aria-pressed="${isActive}">
         <div class="lbanner" style="background:${list.color}22">${list.emoji || '🛒'}</div>
         <div class="linfo">
           <div class="lname" title="${esc(list.name)}">${esc(list.name)}</div>
           <div class="lstats">${total} article${total !== 1 ? 's' : ''} · ${done} coché${done !== 1 ? 's' : ''}</div>
-          <div class="lprog" role="progressbar"
-               aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100">
+          <div class="lprog" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100">
             <div class="lprogf" style="width:${pct}%; background:${list.color}"></div>
           </div>
         </div>
         <div class="lbtns">
-          <!-- Bouton caméra pour ajouter/voir la carte du magasin -->
           <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="Ajouter une photo du magasin">📷</button>
-          <button class="lbtn"
-                  onclick="event.stopPropagation(); renameList('${list.id}')"
-                  aria-label="Renommer ${esc(list.name)}">✏️</button>
-          <button class="lbtn danger"
-                  onclick="event.stopPropagation(); removeList('${list.id}')"
-                  aria-label="Supprimer ${esc(list.name)}">🗑</button>
+          <button class="lbtn" onclick="event.stopPropagation(); renameList('${list.id}')" aria-label="Renommer ${esc(list.name)}">✏️</button>
+          <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="Supprimer ${esc(list.name)}">🗑</button>
         </div>
       </div>`;
   }).join('');
@@ -486,23 +369,15 @@ function renderLists() {
   });
 }
 
-
 /* =============================================================
-   9. GESTION DU BUDGET
+   9. BUDGET
 ============================================================= */
-
-/** Lit le budget saisi et sauvegarde */
 function onBudgetChange() {
   budget = parseFloat(document.getElementById('budgetIn').value) || 0;
   saveData();
   updateBudget();
 }
 
-/**
- * Recalcule dépensé / restant / barre / alerte.
- * La barre de progression utilise --p (thème) via CSS,
- * sauf quand elle passe en mode avertissement (.w) ou dépassement (.e).
- */
 function updateBudget() {
   const items = lists.find(l => l.id === activeId)?.items || [];
   const spent = items.reduce((acc, i) => acc + (i.price || 0) * (i.qty || 1), 0);
@@ -524,8 +399,7 @@ function updateBudget() {
   const alertEl = document.getElementById('balert');
   if (rem < 0) {
     alertEl.classList.add('on');
-    document.getElementById('balertTxt').textContent =
-      'Dépassement de ' + Math.abs(rem).toFixed(2) + ' €';
+    document.getElementById('balertTxt').textContent = 'Dépassement de ' + Math.abs(rem).toFixed(2) + ' €';
     if (cfg.sound !== false && !alertPlayed) {
       alertPlayed = true;
       playSound();
@@ -536,12 +410,9 @@ function updateBudget() {
   }
 }
 
-
 /* =============================================================
    10. CRUD ARTICLES
 ============================================================= */
-
-/** Coche / décoche un article */
 function toggleCheck(itemId) {
   const item = getItem(itemId);
   if (!item) return;
@@ -550,7 +421,6 @@ function toggleCheck(itemId) {
   renderHome();
 }
 
-/** Ajuste la quantité d'un article */
 function adjustQty(itemId, delta) {
   const item = getItem(itemId);
   if (!item) return;
@@ -559,7 +429,6 @@ function adjustQty(itemId, delta) {
   renderHome();
 }
 
-/** Supprime un article avec annulation possible */
 function deleteItem(itemId) {
   const list = lists.find(l => l.id === activeId);
   if (!list) return;
@@ -578,10 +447,6 @@ function deleteItem(itemId) {
   });
 }
 
-/**
- * Édition inline du prix directement dans la ligne article.
- * Remplace le span par un input temporaire.
- */
 function inlineEditPrice(itemId) {
   const priceSpan = document.getElementById(`pr-${itemId}`);
   if (!priceSpan || priceSpan.tagName === 'INPUT') return;
@@ -593,12 +458,7 @@ function inlineEditPrice(itemId) {
   input.min       = '0';
   input.value     = item?.price || '';
   input.inputMode = 'decimal';
-  input.style.cssText = `
-    width:60px; border:none;
-    border-bottom:1.5px solid var(--p);
-    background:transparent; text-align:right;
-    font-size:13px; font-family:inherit; color:var(--tx);
-  `;
+  input.style.cssText = `width:60px; border:none; border-bottom:1.5px solid var(--p); background:transparent; text-align:right; font-size:13px; font-family:inherit; color:var(--tx);`;
   input.addEventListener('blur',    () => { if (item) { item.price = parseFloat(input.value) || 0; saveData(); renderHome(); } });
   input.addEventListener('keydown', e  => { if (e.key === 'Enter') input.blur(); });
 
@@ -606,22 +466,13 @@ function inlineEditPrice(itemId) {
   setTimeout(() => input.focus(), 10);
 }
 
-/** Retourne un article par ID dans la liste active */
 function getItem(itemId) {
   return lists.find(l => l.id === activeId)?.items.find(i => i.id === itemId);
 }
 
-
 /* =============================================================
-   11. BOTTOM SHEET : AJOUTER / MODIFIER UN ARTICLE
-   MULTI-AJOUT : si le champ "Nom" contient des virgules,
-   chaque segment devient un article séparé.
-   Le prix, la note et la quantité s'appliquent à chaque article
-   en ajout simple. En multi-ajout, le prix est omis (à saisir
-   individuellement sur chaque ligne ensuite).
+   11. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
 ============================================================= */
-
-/** Ouvre le sheet en mode Ajout */
 function openAddItem() {
   if (!activeId) {
     showSnack('Créez d\'abord une liste 👉 Mes Listes');
@@ -641,14 +492,15 @@ function openAddItem() {
   document.getElementById('qDisp').textContent       = '1';
   document.getElementById('iNameHint').textContent   = '';
 
-  /* Affiche tous les champs (mode simple par défaut) */
   toggleMultiMode(false);
+
+  // Arrêter le scan si en cours
+  stopBarcodeScan();
 
   openSheet('shItem');
   setTimeout(() => document.getElementById('iName').focus(), 320);
 }
 
-/** Ouvre le sheet en mode Modification */
 function openEditItem(itemId) {
   const item = getItem(itemId);
   if (!item) return;
@@ -668,21 +520,17 @@ function openEditItem(itemId) {
 
   toggleMultiMode(false);
 
+  // Arrêter le scan si en cours
+  stopBarcodeScan();
+
   openSheet('shItem');
 }
 
-/** Ajuste la quantité dans le stepper */
 function adjustSheetQty(delta) {
   currentQty = Math.max(1, currentQty + delta);
   document.getElementById('qDisp').textContent = currentQty;
 }
 
-/**
- * Valide le champ nom et détecte le mode multi-ajout.
- * Si plusieurs noms séparés par des virgules sont détectés :
- *   - affiche un indicateur du nombre d'articles à créer
- *   - masque les champs prix/note/quantité (non pertinents en masse)
- */
 function validateItemForm() {
   const raw     = document.getElementById('iName').value;
   const filled  = raw.trim().length > 0;
@@ -691,7 +539,6 @@ function validateItemForm() {
 
   document.getElementById('iSubmit').disabled = !filled;
 
-  /* Indicateur multi-ajout */
   const hint = document.getElementById('iNameHint');
   if (isMulti) {
     hint.textContent = `${names.length} articles seront ajoutés · prix à renseigner individuellement`;
@@ -699,14 +546,9 @@ function validateItemForm() {
     hint.textContent = '';
   }
 
-  /* Masque qty/prix/note en mode multi, les affiche en mode simple */
   toggleMultiMode(isMulti && !editItemId);
 }
 
-/**
- * Affiche ou masque les champs qty/prix/note selon le mode.
- * @param {boolean} isMulti
- */
 function toggleMultiMode(isMulti) {
   ['fldQty', 'fldPrice', 'fldNote'].forEach(id => {
     const el = document.getElementById(id);
@@ -714,27 +556,10 @@ function toggleMultiMode(isMulti) {
   });
 }
 
-/**
- * Découpe la saisie en noms d'articles propres.
- * "Pain, Lait , Beurre" → ["Pain", "Lait", "Beurre"]
- * @param {string} raw
- * @returns {string[]}
- */
 function parseNames(raw) {
   return raw.split(',').map(n => n.trim()).filter(n => n.length > 0);
 }
 
-/**
- * Confirme l'ajout ou la modification.
- *
- * Mode MULTI (plusieurs noms séparés par virgule) :
- *   → Crée un article par nom, dans la catégorie choisie.
- *   → Prix à 0 (l'utilisateur les renseigne ensuite individuellement
- *     en cliquant sur "€" dans la ligne).
- *
- * Mode SIMPLE (un seul nom) :
- *   → Crée / modifie avec tous les champs (qty, prix, note, cat).
- */
 function confirmItem() {
   const raw   = document.getElementById('iName').value.trim();
   if (!raw) return;
@@ -747,13 +572,12 @@ function confirmItem() {
   const cat     = document.getElementById('iCat').value;
 
   if (isMulti) {
-    /* --- Multi-ajout --- */
     names.forEach((name, idx) => {
       list.items.push({
         id:    (Date.now() + idx).toString(),
         text:  name,
-        qty:   1,       /* quantité par défaut */
-        price: 0,       /* prix à saisir individuellement */
+        qty:   1,
+        price: 0,
         note:  '',
         cat,
         ck:    false,
@@ -763,14 +587,11 @@ function confirmItem() {
     closeSheet();
     renderHome();
     showSnack(`${names.length} articles ajoutés ✓`);
-
   } else {
-    /* --- Ajout ou modification simple --- */
     const price = parseFloat(document.getElementById('iPrice').value) || 0;
     const note  = document.getElementById('iNote').value.trim();
 
     if (editItemId) {
-      /* Modification */
       const item = list.items.find(i => i.id === editItemId);
       if (item) {
         item.text  = names[0];
@@ -780,7 +601,6 @@ function confirmItem() {
         item.cat   = cat;
       }
     } else {
-      /* Ajout simple */
       list.items.push({
         id:    Date.now().toString(),
         text:  names[0],
@@ -799,11 +619,6 @@ function confirmItem() {
   }
 }
 
-/**
- * Construit les chips de suggestions rapides.
- * COMPORTEMENT : cliquer AJOUTE le nom au champ avec une virgule,
- * permettant de constituer un lot en cliquant plusieurs chips.
- */
 function buildQuickChips() {
   const container = document.getElementById('qChips');
   container.innerHTML = QUICK_ITEMS.map(name =>
@@ -814,19 +629,15 @@ function buildQuickChips() {
     chip.addEventListener('click', () => {
       const input   = document.getElementById('iName');
       const current = input.value.trim();
-      /* Ajoute avec virgule si le champ contient déjà du texte */
       input.value = current ? current + ', ' + chip.textContent : chip.textContent;
-      input.dispatchEvent(new Event('input')); /* Déclenche la validation */
+      input.dispatchEvent(new Event('input'));
     });
   });
 }
 
-
 /* =============================================================
-   12. BOTTOM SHEET : CRÉER UNE LISTE
+   12. BOTTOM SHEET CRÉATION DE LISTE
 ============================================================= */
-
-/** Ouvre le sheet de création de liste */
 function openAddList() {
   document.getElementById('lName').value       = '';
   document.getElementById('lEmoji').value      = '🛒';
@@ -839,13 +650,10 @@ function openAddList() {
   setTimeout(() => document.getElementById('lName').focus(), 320);
 }
 
-/** Valide le bouton "Créer" */
 function validateListForm() {
-  document.getElementById('lSubmit').disabled =
-    !document.getElementById('lName').value.trim().length;
+  document.getElementById('lSubmit').disabled = !document.getElementById('lName').value.trim().length;
 }
 
-/** Confirme la création d'une liste */
 function confirmList() {
   const name  = document.getElementById('lName').value.trim();
   if (!name) return;
@@ -864,7 +672,6 @@ function confirmList() {
   showSnack(`${emoji} ${name} créée ✓`);
 }
 
-/** Construit les chips d'emojis */
 function buildEmojiChips() {
   const container = document.getElementById('eChips');
   container.innerHTML = EMOJIS.map(e =>
@@ -878,19 +685,15 @@ function buildEmojiChips() {
   });
 }
 
-
 /* =============================================================
-   13. GESTION DES LISTES (CRUD) + CARTE MAGASIN
+   13. GESTION DES LISTES + CARTE MAGASIN
 ============================================================= */
-
-/** Sélectionne une liste et redirige vers l'accueil */
 function pickList(listId) {
   activeId = listId;
   saveData();
   goTo('home');
 }
 
-/** Renomme une liste */
 function renameList(listId) {
   const list = lists.find(l => l.id === listId);
   if (!list) return;
@@ -907,7 +710,6 @@ function renameList(listId) {
   }
 }
 
-/** Supprime une liste après confirmation */
 function removeList(listId) {
   const list = lists.find(l => l.id === listId);
   if (!list) return;
@@ -923,15 +725,10 @@ function removeList(listId) {
   showSnack('Liste supprimée');
 }
 
-/**
- * Capture une image (carte du magasin) pour une liste.
- * L'utilisateur peut prendre une photo ou choisir une image depuis la galerie.
- */
 function captureMap(listId) {
   const list = lists.find(l => l.id === listId);
   if (!list) return;
 
-  // Créer un input file sans l'attribut "capture" pour laisser le choix
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
@@ -941,9 +738,8 @@ function captureMap(listId) {
 
     const reader = new FileReader();
     reader.onload = (readerEvent) => {
-      list.mapImage = readerEvent.target.result; // base64
+      list.mapImage = readerEvent.target.result;
       saveData();
-      // Mettre à jour l'affichage si c'est la liste active
       if (listId === activeId) renderHome();
       renderLists();
       showSnack('Carte du magasin enregistrée');
@@ -953,18 +749,15 @@ function captureMap(listId) {
   input.click();
 }
 
-/** Visualise la carte du magasin dans une modal simple */
 function viewMap() {
   const list = lists.find(l => l.id === activeId);
   if (!list || !list.mapImage) return;
-  // On utilise la même modal que le logo ? On peut en créer une dédiée ou réutiliser.
   const modal = document.getElementById('logoModal');
   const img = modal.querySelector('img');
   img.src = list.mapImage;
   modal.style.display = 'flex';
 }
 
-/** Supprime la carte du magasin de la liste active */
 function deleteMap() {
   const list = lists.find(l => l.id === activeId);
   if (!list || !list.mapImage) return;
@@ -975,64 +768,32 @@ function deleteMap() {
   showSnack('Carte supprimée');
 }
 
-
 /* =============================================================
    14. PARTAGE / EXPORT .TXT
-   Génère un fichier texte lisible de la liste active :
-     ✓ / ☐  Nom de l'article  x quantité  —  prix total  (note)
-   Tente d'abord l'API Web Share (mobile), sinon télécharge le .txt.
 ============================================================= */
-
-/** Exporte / partage la liste active au format .txt */
 function shareList() {
   const list = lists.find(l => l.id === activeId);
-
-  if (!list) {
-    showSnack('Aucune liste sélectionnée');
-    return;
-  }
-  if (!list.items.length) {
-    showSnack('La liste est vide, rien à partager');
-    return;
-  }
+  if (!list) { showSnack('Aucune liste sélectionnée'); return; }
+  if (!list.items.length) { showSnack('La liste est vide, rien à partager'); return; }
 
   const text = buildTxtContent(list);
 
-  /* Tente l'API Web Share (mobile / navigateurs récents) */
   if (navigator.share) {
-    navigator.share({
-      title: list.name,
-      text,
-    }).catch(() => {
-      /* Fallback téléchargement si l'utilisateur annule ou erreur */
-      downloadTxt(text, list.name);
-    });
+    navigator.share({ title: list.name, text }).catch(() => downloadTxt(text, list.name));
   } else {
     downloadTxt(text, list.name);
   }
 }
 
-/**
- * Construit le contenu texte lisible de la liste.
- * Format par article :
- *   ✓  Pain                x2  —  3.40 €  (bio si possible)
- *   ☐  Lait                x1
- *
- * @param {Object} list
- * @returns {string}
- */
 function buildTxtContent(list) {
   const sep  = '─'.repeat(36);
-  const date = new Date().toLocaleDateString('fr-FR', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
+  const date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   let txt = '';
   txt += `${list.emoji || '🛒'}  ${list.name.toUpperCase()}\n`;
   txt += `${sep}\n`;
   txt += `📅 ${date}\n\n`;
 
-  /* Groupement par catégorie */
   const groups = {};
   list.items.forEach(item => {
     const key = item.cat || 'Divers';
@@ -1041,49 +802,33 @@ function buildTxtContent(list) {
   });
 
   Object.entries(groups).forEach(([cat, items]) => {
-    /* Titre de catégorie (sauf si tout est dans "Divers" et une seule catégorie) */
     if (cat !== 'Divers' || Object.keys(groups).length > 1) {
       txt += `\n▸ ${cat}\n`;
     }
-
     items.forEach(item => {
       const check    = item.ck ? '✓' : '☐';
       const qty      = (item.qty || 1) > 1 ? `  x${item.qty}` : '    ';
-      const price    = item.price
-        ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} €`
-        : '';
+      const price    = item.price ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} €` : '';
       const note     = item.note ? `  (${item.note})` : '';
-      /* Alignement du nom sur 22 caractères */
       const name     = item.text.padEnd(22, ' ');
-
       txt += `  ${check}  ${name}${qty}${price}${note}\n`;
     });
   });
 
-  /* Total général */
   const total = list.items.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
   const done  = list.items.filter(i => i.ck).length;
 
   txt += `\n${sep}\n`;
   txt += `✅ Cochés : ${done} / ${list.items.length} article${list.items.length !== 1 ? 's' : ''}\n`;
-  if (total > 0) {
-    txt += `💰 Total  : ${total.toFixed(2)} €\n`;
-  }
+  if (total > 0) txt += `💰 Total  : ${total.toFixed(2)} €\n`;
   txt += `\n📱 Courses Malin\n`;
-
   return txt;
 }
 
-/**
- * Télécharge un fichier .txt.
- * @param {string} content
- * @param {string} listName
- */
 function downloadTxt(content, listName) {
   const blob     = new Blob([content], { type: 'text/plain;charset=utf-8' });
   const url      = URL.createObjectURL(blob);
   const anchor   = document.createElement('a');
-  /* Nom de fichier sécurisé (retire les caractères spéciaux) */
   const filename = listName.replace(/[^a-z0-9\-_]/gi, '_').toLowerCase();
 
   anchor.href     = url;
@@ -1092,12 +837,9 @@ function downloadTxt(content, listName) {
   URL.revokeObjectURL(url);
 }
 
-
 /* =============================================================
-   15. SON & ALERTE BUDGET
+   15. SON
 ============================================================= */
-
-/** Joue le son d'alerte sélectionné */
 function playSound() {
   stopSound();
   const choice = document.getElementById('soundSel').value;
@@ -1105,7 +847,6 @@ function playSound() {
   audioInstance.play().catch(playFallbackBeep);
 }
 
-/** Arrête le son en cours */
 function stopSound() {
   if (audioInstance) {
     audioInstance.pause();
@@ -1114,7 +855,6 @@ function stopSound() {
   }
 }
 
-/** Bip synthétique via Web Audio API (fallback si MP3 absent) */
 function playFallbackBeep() {
   try {
     const ctx  = new (window.AudioContext || window.webkitAudioContext)();
@@ -1127,17 +867,12 @@ function playFallbackBeep() {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
     osc.start();
     osc.stop(ctx.currentTime + 0.7);
-  } catch (e) {
-    console.warn('Web Audio API indisponible :', e);
-  }
+  } catch (e) { console.warn('Web Audio API indisponible :', e); }
 }
-
 
 /* =============================================================
    16. OVERLAY & SHEETS
 ============================================================= */
-
-/** Ouvre un bottom sheet */
 function openSheet(sheetId) {
   openSheetId = sheetId;
   document.getElementById('ovl').classList.add('on');
@@ -1145,8 +880,9 @@ function openSheet(sheetId) {
   document.getElementById(sheetId).setAttribute('aria-hidden', 'false');
 }
 
-/** Ferme le sheet ouvert */
 function closeSheet() {
+  // Arrêter le scan si en cours
+  stopBarcodeScan();
   if (openSheetId) {
     document.getElementById(openSheetId).classList.remove('on');
     document.getElementById(openSheetId).setAttribute('aria-hidden', 'true');
@@ -1155,11 +891,89 @@ function closeSheet() {
   openSheetId = null;
 }
 
+/* =============================================================
+   17. SCAN DE CODE-BARRES (avec Instascan + Open Food Facts)
+============================================================= */
+function startBarcodeScan() {
+  if (isScanning) return;
+  const container = document.getElementById('scannerContainer');
+  const video = document.getElementById('scannerVideo');
+  container.style.display = 'block';
+
+  Instascan.Camera.getCameras().then(cameras => {
+    if (cameras.length > 0) {
+      scanner = new Instascan.Scanner({ video: video, mirror: false });
+      scanner.addListener('scan', function (content) {
+        stopBarcodeScan();
+        fetchProductFromBarcode(content);
+      });
+      const backCamera = cameras.find(cam => cam.name.toLowerCase().includes('back')) || cameras[0];
+      scanner.start(backCamera);
+      isScanning = true;
+    } else {
+      showSnack('Aucune caméra trouvée');
+      container.style.display = 'none';
+    }
+  }).catch(err => {
+    console.error(err);
+    showSnack('Erreur accès caméra');
+    container.style.display = 'none';
+  });
+}
+
+function stopBarcodeScan() {
+  if (scanner) {
+    scanner.stop();
+    scanner = null;
+  }
+  document.getElementById('scannerContainer').style.display = 'none';
+  isScanning = false;
+}
+
+function fetchProductFromBarcode(barcode) {
+  showSnack(`Recherche du produit ${barcode}...`);
+  fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 1) {
+        const product = data.product;
+        document.getElementById('iName').value = product.product_name || '';
+
+        // Tentative de correspondance avec les catégories prédéfinies
+        const categories = product.categories_tags || [];
+        let matchedCat = '';
+        for (let cat of categories) {
+          const catLower = cat.toLowerCase();
+          if (catLower.includes('fruit') || catLower.includes('vegetable')) matchedCat = '🥦 Fruits & Légumes';
+          else if (catLower.includes('meat') || catLower.includes('fish')) matchedCat = '🥩 Viandes & Poissons';
+          else if (catLower.includes('dairy') || catLower.includes('milk')) matchedCat = '🥛 Produits Laitiers';
+          else if (catLower.includes('bread') || catLower.includes('bakery')) matchedCat = '🥖 Boulangerie';
+          else if (catLower.includes('drink') || catLower.includes('beverage')) matchedCat = '🧃 Boissons';
+          else if (catLower.includes('frozen')) matchedCat = '🍦 Surgelés';
+          if (matchedCat) break;
+        }
+        if (matchedCat) document.getElementById('iCat').value = matchedCat;
+
+        if (product.brands) {
+          document.getElementById('iNote').value = product.brands;
+        }
+
+        // Déclencher validation pour activer le bouton
+        document.getElementById('iName').dispatchEvent(new Event('input'));
+        showSnack('Produit trouvé !');
+      } else {
+        showSnack('Produit non trouvé');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      showSnack('Erreur API');
+    });
+}
 
 /* =============================================================
-   17. MODAL LOGO
+   18. MODAL LOGO
 ============================================================= */
-
 function showLogoModal() {
   document.getElementById('logoModal').style.display = 'flex';
 }
@@ -1168,46 +982,28 @@ function closeLogoModal() {
   document.getElementById('logoModal').style.display = 'none';
 }
 
-
 /* =============================================================
-   18. SNACKBAR
+   19. SNACKBAR
 ============================================================= */
-
-/**
- * Affiche une notification temporaire.
- * @param {string}   message  - Texte à afficher
- * @param {string}   [action] - Libellé du bouton optionnel
- * @param {Function} [cb]     - Callback si le bouton est cliqué
- */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
   snkCallback = cb || null;
-
   el.innerHTML = action
     ? `${esc(message)}<button onclick="triggerSnackAction()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;margin-left:8px">${esc(action)}</button>`
     : esc(message);
-
   el.classList.add('on');
   clearTimeout(snkTimer);
   snkTimer = setTimeout(() => el.classList.remove('on'), 4000);
 }
 
-/** Déclenche le callback du snackbar */
 function triggerSnackAction() {
   if (snkCallback) { snkCallback(); snkCallback = null; }
   document.getElementById('snk').classList.remove('on');
 }
 
-
 /* =============================================================
-   19. UTILITAIRES
+   20. UTILITAIRES
 ============================================================= */
-
-/**
- * Échappe les caractères HTML (anti-XSS).
- * @param {*} str
- * @returns {string}
- */
 function esc(str) {
   return String(str)
     .replace(/&/g,  '&amp;')
@@ -1217,31 +1013,27 @@ function esc(str) {
     .replace(/'/g,  '&#39;');
 }
 
-
 /* =============================================================
-   20. ATTACHEMENT DES ÉCOUTEURS D'ÉVÉNEMENTS
-   Centralisés ici → le HTML reste purement déclaratif.
+   21. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
-
 function attachListeners() {
-
-  /* ---- Header ---- */
+  // Header
   document.getElementById('btnBack').addEventListener('click', () => goTo('home'));
   document.getElementById('headerLogo').addEventListener('click', showLogoModal);
   document.getElementById('btnAdd').addEventListener('click', openAddItem);
 
-  /* ---- Navigation ---- */
+  // Navigation
   document.getElementById('t-home').addEventListener('click',     () => goTo('home'));
   document.getElementById('t-lists').addEventListener('click',    () => goTo('lists'));
   document.getElementById('t-settings').addEventListener('click', () => goTo('settings'));
 
-  /* ---- FAB ---- */
+  // FAB
   document.getElementById('fab').addEventListener('click', openAddItem);
 
-  /* ---- Overlay → ferme le sheet ---- */
+  // Overlay
   document.getElementById('ovl').addEventListener('click', closeSheet);
 
-  /* ---- Vue Accueil ---- */
+  // Accueil
   document.getElementById('budgetIn').addEventListener('change', onBudgetChange);
   document.getElementById('searchIn').addEventListener('input',  renderHome);
   document.getElementById('btnChangeList').addEventListener('click', () => goTo('lists'));
@@ -1253,32 +1045,33 @@ function attachListeners() {
   document.getElementById('deleteMapBtn').addEventListener('click', deleteMap);
   document.getElementById('mapThumb').addEventListener('click', viewMap);
 
-
-  /* ---- État vide (emptyState) : comportement conditionnel ---- */
+  // État vide
   document.getElementById('emptyState').addEventListener('click', () => {
     if (lists.length === 0) {
-      // Aucune liste n'existe → aller vers la création de liste
       goTo('lists');
     } else {
-      // Une liste existe (même si elle est vide) → ouvrir l'ajout d'article
       openAddItem();
     }
   });
 
-  /* ---- Sheet Article ---- */
+  // Sheet Article
   document.getElementById('iName').addEventListener('input', validateItemForm);
   document.getElementById('qtyMinus').addEventListener('click', () => adjustSheetQty(-1));
   document.getElementById('qtyPlus').addEventListener('click',  () => adjustSheetQty(+1));
   document.getElementById('iSubmit').addEventListener('click', confirmItem);
 
-  /* ---- Sheet Liste ---- */
+  // Scan
+  document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScan);
+  document.getElementById('btnStopScan').addEventListener('click', stopBarcodeScan);
+
+  // Sheet Liste
   document.getElementById('lName').addEventListener('input', validateListForm);
   document.getElementById('lSubmit').addEventListener('click', confirmList);
 
-  /* ---- Vue Mes Listes ---- */
+  // Mes Listes
   document.getElementById('btnNewList').addEventListener('click', openAddList);
 
-  /* ---- Réglages ---- */
+  // Réglages
   document.getElementById('darkTog').addEventListener('click',    toggleDark);
   document.getElementById('soundTog').addEventListener('click',   toggleSound);
   document.getElementById('soundSel').addEventListener('change',  saveConfig);
@@ -1286,7 +1079,7 @@ function attachListeners() {
   document.getElementById('btnStopSound').addEventListener('click', stopSound);
   document.getElementById('btnReset').addEventListener('click',   resetAll);
 
-  /* ---- Swipe bas pour fermer un sheet ---- */
+  // Swipe pour fermer les sheets
   let touchStartY = 0;
   document.querySelectorAll('.sheet').forEach(sheet => {
     sheet.addEventListener('touchstart', e => {
@@ -1297,15 +1090,14 @@ function attachListeners() {
     }, { passive: true });
   });
 
-  /* ---- Touche Échap → ferme le sheet ---- */
+  // Touche Échap
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && openSheetId) closeSheet();
   });
 
-  /* ---- Modal logo : clic sur l'overlay ferme ---- */
+  // Modal logo
   document.getElementById('logoModal').addEventListener('click', closeLogoModal);
 }
-
 
 /* =============================================================
    DÉMARRAGE
