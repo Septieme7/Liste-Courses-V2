@@ -495,6 +495,7 @@ input, select, textarea { font-family: inherit; }
   border-radius: var(--r-xs);
   object-fit: contain;
   background: var(--sur2);
+  cursor: pointer;
 }
 
 

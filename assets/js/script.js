@@ -1251,6 +1251,8 @@ function attachListeners() {
     if (activeId) captureMap(activeId);
   });
   document.getElementById('deleteMapBtn').addEventListener('click', deleteMap);
+  document.getElementById('mapThumb').addEventListener('click', viewMap);
+
 
   /* ---- État vide (emptyState) : comportement conditionnel ---- */
   document.getElementById('emptyState').addEventListener('click', () => {
