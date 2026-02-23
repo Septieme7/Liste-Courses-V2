@@ -1,0 +1,1076 @@
+/* =============================================================
+   COURSES MALIN · style.css
+   Style mobile-first – HTML5 – Dark Mode – Thème dynamique
+   Structure :
+     1.  Variables CSS (tokens de design)
+     2.  Reset & Base
+     3.  Layout principal (header, content, nav)
+     4.  Navigation bottom tab bar
+     5.  Bouton flottant FAB
+     6.  Vues (home / lists / settings)
+     7.  Bloc Budget
+     8.  Indicateur liste active
+     9.  Barre de recherche
+    10.  En-têtes de catégories
+    11.  Lignes d'articles
+    12.  État vide (empty state)
+    13.  Barre de total
+    14.  Grille de listes (cards)
+    15.  Page Réglages
+    16.  Overlay & Bottom Sheets
+    17.  Composants partagés (stepper, chips, toggle, couleurs)
+    18.  Snackbar
+    19.  Animations & Transitions
+    20.  Responsive (≥ 640px)
+============================================================= */
+
+
+/* =============================================================
+   1. VARIABLES CSS
+   IMPORTANT : --p (couleur primaire) est la couleur du thème.
+   Tous les éléments d'interaction (checkbox, barre budget,
+   toggles, progress…) utilisent --p pour suivre le thème choisi.
+   --ok reste réservé aux textes de statut positif (restant > 0).
+   --err et --warn restent sémantiques (danger, avertissement).
+============================================================= */
+:root {
+  /* --- Couleur primaire (thème "blue" par défaut) --- */
+  --p:   #3B82F6;
+  --pd:  #2563EB;
+
+  /* --- Couleurs sémantiques --- */
+  --ok:  #10B981;   /* Texte "Restant positif" uniquement */
+  --err: #EF4444;   /* Danger / dépassement budget */
+  --warn:#F59E0B;   /* Barre budget ≥ 80% */
+
+  /* --- Surfaces & fonds (mode clair) --- */
+  --bg:  #F8FAFC;
+  --sur: #FFFFFF;
+  --sur2:#F1F5F9;
+
+  /* --- Texte (mode clair) --- */
+  --tx:  #1E293B;
+  --tx2: #64748B;
+  --tx3: #94A3B8;
+
+  /* --- Bordures --- */
+  --bd:  #E2E8F0;
+
+  /* --- Effets --- */
+  --sh:    0 2px 10px rgba(0, 0, 0, 0.07);
+  --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+
+  /* --- Rayon --- */
+  --r:    16px;
+  --r-sm: 10px;
+  --r-xs:  8px;
+
+  /* --- Hauteurs fixes --- */
+  --hh: 56px;
+  --th: 60px;
+
+  /* --- Transition globale --- */
+  --tr: 0.2s ease;
+}
+
+/* --- Thèmes de couleur (data-color sur <html>) --- */
+[data-color="blue"]   { --p: #3B82F6; --pd: #2563EB; }
+[data-color="green"]  { --p: #10B981; --pd: #059669; }
+[data-color="red"]    { --p: #EF4444; --pd: #DC2626; }
+[data-color="purple"] { --p: #8B5CF6; --pd: #7C3AED; }
+[data-color="orange"] { --p: #F59E0B; --pd: #D97706; }
+[data-color="pink"]   { --p: #EC4899; --pd: #DB2777; }
+[data-color="gold"]   { --p: #D97706; --pd: #B45309; }
+
+/* --- Mode sombre (data-theme="dark" sur <html>) --- */
+[data-theme="dark"] {
+  --bg:  #0F172A;
+  --sur: #1E293B;
+  --sur2:#334155;
+  --tx:  #F1F5F9;
+  --tx2: #94A3B8;
+  --tx3: #475569;
+  --bd:  #334155;
+  --sh:    0 2px 10px rgba(0, 0, 0, 0.35);
+  --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.50);
+}
+
+
+/* =============================================================
+   2. RESET & BASE
+============================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background-color: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+               'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  background: var(--bg);
+  color: var(--tx);
+  height: 100dvh;
+  overflow: hidden;
+  transition: background var(--tr), color var(--tr);
+}
+
+a   { color: var(--p); text-decoration: none; }
+ul  { list-style: none; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+
+
+/* =============================================================
+   3. LAYOUT PRINCIPAL
+============================================================= */
+#hdr {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--hh);
+  background: var(--sur);
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  z-index: 100;
+  box-shadow: var(--sh);
+  transition: background var(--tr), border-color var(--tr);
+}
+
+/* Conteneur logo + titre (centre du header) */
+.htitle-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* Logo dans le header */
+.hlogo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+  /* Légère ombre pour lisibilité sur fond clair/sombre */
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+
+#hdr h1 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--tx);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Boutons icône header */
+.hbtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--tx2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--tr), color var(--tr);
+}
+.hbtn:hover,
+.hbtn:focus-visible { background: var(--sur2); }
+
+/* Bouton + primaire */
+.hbtn.pri {
+  background: var(--p);
+  color: #fff;
+}
+.hbtn.pri:hover,
+.hbtn.pri:focus-visible { background: var(--pd); }
+
+/* Zone de contenu scrollable */
+#content {
+  position: fixed;
+  top: var(--hh);
+  bottom: var(--th);
+  left: 0; right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+
+/* =============================================================
+   4. NAVIGATION BOTTOM TAB BAR
+============================================================= */
+#nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--th);
+  background: var(--sur);
+  border-top: 1px solid var(--bd);
+  display: flex;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  padding-bottom: env(safe-area-inset-bottom);
+  transition: background var(--tr), border-color var(--tr);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: none;
+  background: transparent;
+  color: var(--tx3);
+  font-size: 10px;
+  font-weight: 500;
+  transition: color var(--tr);
+}
+.tab svg { width: 22px; height: 22px; stroke-width: 1.75; }
+.tab.on  { color: var(--p); }            /* ← suit le thème */
+.tab:active { transform: scale(0.9); }
+
+
+/* =============================================================
+   5. BOUTON FLOTTANT (FAB)
+============================================================= */
+#fab {
+  position: fixed;
+  bottom: calc(var(--th) + 16px);
+  right: 18px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--p);               /* ← suit le thème */
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 55%, transparent);
+  z-index: 90;
+  transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
+}
+#fab:hover   { background: var(--pd); }
+#fab:active  { transform: scale(0.92); }
+#fab.pulse   { animation: pulse 2s infinite; }
+
+
+/* =============================================================
+   6. VUES
+============================================================= */
+.view { display: none; padding: 12px 16px 16px; }
+.view.on { display: block; }
+
+.vtitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--tx);
+}
+
+.vhdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.vhdr h2 { font-size: 22px; font-weight: 700; color: var(--tx); }
+
+.addbtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  background: var(--p);               /* ← suit le thème */
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--tr);
+}
+.addbtn:hover { background: var(--pd); }
+
+
+/* =============================================================
+   7. BLOC BUDGET
+============================================================= */
+.card {
+  background: var(--sur);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  overflow: hidden;
+  margin-bottom: 12px;
+  transition: background var(--tr);
+}
+.bcard { padding: 16px; }
+
+.brow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.btag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tx2);
+}
+
+.btotal { display: flex; align-items: baseline; gap: 3px; }
+.btotal input {
+  width: 76px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--p);                    /* ← suit le thème */
+  border: none;
+  background: transparent;
+  text-align: right;
+  -moz-appearance: textfield;
+}
+.btotal input::-webkit-outer-spin-button,
+.btotal input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.btotal input:focus { outline: none; border-bottom: 2px solid var(--p); }
+.btotal span { font-size: 16px; font-weight: 600; color: var(--tx2); }
+
+.bstats { display: flex; gap: 12px; margin-bottom: 10px; }
+.bst {
+  flex: 1;
+  background: var(--sur2);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+.bst-lbl {
+  font-size: 11px;
+  color: var(--tx2);
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.bst-val { font-size: 16px; font-weight: 700; transition: color var(--tr); }
+
+/*
+ * .bst-val.ok = "Restant" quand budget positif
+ * Utilise --p (couleur du thème) pour cohérence visuelle
+ */
+.bst-val.ok  { color: var(--p); }      /* ← CORRIGÉ : suit le thème */
+.bst-val.err { color: var(--err); }
+
+/* Barre de progression */
+.pbar {
+  height: 6px;
+  background: var(--sur2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pfill {
+  height: 100%;
+  background: var(--p);               /* ← CORRIGÉ : suit le thème */
+  border-radius: 3px;
+  transition: width 0.4s ease, background 0.3s;
+}
+.pfill.w { background: var(--warn); } /* ≥ 80% → orange */
+.pfill.e { background: var(--err);  } /* 100% → rouge */
+
+/* Alerte dépassement */
+.balert {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  background: #FEE2E2;
+  color: var(--err);
+  border-radius: var(--r-sm);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.balert.on { display: flex; }
+[data-theme="dark"] .balert { background: #450a0a; }
+
+
+/* =============================================================
+   8. INDICATEUR LISTE ACTIVE
+============================================================= */
+.alist {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sur);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  box-shadow: var(--sh);
+  margin-bottom: 12px;
+  transition: background var(--tr);
+}
+#aListIco { font-size: 26px; line-height: 1; flex-shrink: 0; }
+.alist-info { flex: 1; min-width: 0; }
+.alist-sub {
+  font-size: 11px;
+  color: var(--tx3);
+  margin-bottom: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.alist-name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--tx);
+}
+
+/* Bouton Partager */
+.alist-share {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--bd);
+  background: transparent;
+  color: var(--p);                    /* ← suit le thème */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--tr), border-color var(--tr);
+}
+.alist-share:hover {
+  background: var(--sur2);
+  border-color: var(--p);
+}
+
+/* Bouton Changer */
+.alist-chg {
+  padding: 7px 13px;
+  background: var(--sur2);
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--tx2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background var(--tr);
+}
+.alist-chg:hover { background: var(--bd); }
+
+
+/* =============================================================
+   9. BARRE DE RECHERCHE
+============================================================= */
+.sbar { position: relative; margin-bottom: 12px; }
+.sbar svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tx3);
+  pointer-events: none;
+}
+.sbar input {
+  width: 100%;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  background: var(--sur2);
+  padding: 0 16px 0 40px;
+  font-size: 15px;
+  color: var(--tx);
+  transition: background var(--tr);
+}
+.sbar input::placeholder { color: var(--tx3); }
+.sbar input:focus { outline: 2px solid var(--p); background: var(--sur); }
+
+
+/* =============================================================
+   10. EN-TÊTES DE CATÉGORIES
+============================================================= */
+.chdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 14px;
+  border-radius: var(--r-xs);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 10px 0 4px;
+}
+.chdr-count { font-size: 10px; opacity: 0.7; font-weight: 600; }
+
+
+/* =============================================================
+   11. LIGNES D'ARTICLES
+============================================================= */
+.irow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--bd);
+  min-height: 54px;
+  background: var(--sur);
+  transition: background var(--tr);
+  animation: slideIn 0.15s ease-out;
+}
+.irow:last-child { border-bottom: none; }
+.irow.ckd .itxt { text-decoration: line-through; color: var(--tx3); }
+
+/*
+ * Checkbox circulaire
+ * CORRIGÉ : utilise --p pour suivre le thème choisi
+ */
+.icheck {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--bd);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--tr), border-color var(--tr);
+}
+.icheck.on {
+  background: var(--p);              /* ← CORRIGÉ : suit le thème */
+  border-color: var(--p);            /* ← CORRIGÉ : suit le thème */
+}
+.icheck svg { display: none; }
+.icheck.on svg { display: block; }
+
+.ibody { flex: 1; min-width: 0; cursor: pointer; }
+.itxt  { font-size: 15px; font-weight: 400; color: var(--tx); transition: color var(--tr); }
+.imeta {
+  font-size: 12px;
+  color: var(--tx2);
+  font-style: italic;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Actions droite */
+.iact { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+.qbtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--bd);
+  background: transparent;
+  color: var(--tx2);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--tr), border-color var(--tr), color var(--tr);
+}
+.qbtn:hover {
+  background: var(--sur2);
+  border-color: var(--p);
+  color: var(--p);
+}
+.qnum {
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+  color: var(--p);                   /* ← suit le thème */
+}
+
+/* Prix inline */
+.iprice {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tx2);
+  cursor: pointer;
+  min-width: 44px;
+  text-align: right;
+}
+.iprice input {
+  width: 60px;
+  border: none;
+  border-bottom: 1.5px solid var(--p);
+  background: transparent;
+  text-align: right;
+  font-size: 13px;
+  color: var(--tx);
+  -moz-appearance: textfield;
+}
+.iprice input::-webkit-outer-spin-button,
+.iprice input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.iprice input:focus { outline: none; }
+
+.idel {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--tx3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--tr), color var(--tr);
+}
+.idel:hover,
+.idel:active { background: #FEE2E2; color: var(--err); }
+
+
+/* =============================================================
+   12. ÉTAT VIDE
+============================================================= */
+.empty { text-align: center; padding: 48px 24px; color: var(--tx3); }
+.empty svg { width: 68px; height: 68px; margin-bottom: 14px; opacity: 0.3; }
+.empty h2  { font-size: 17px; font-weight: 600; margin-bottom: 6px; color: var(--tx2); }
+.empty p   { font-size: 14px; line-height: 1.5; }
+
+
+/* =============================================================
+   13. BARRE DE TOTAL
+============================================================= */
+.tbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sur);
+  border-radius: var(--r);
+  padding: 11px 16px;
+  box-shadow: var(--sh);
+  margin-bottom: 12px;
+}
+.tbar-lbl { font-size: 13px; color: var(--tx2); }
+.tbar-val { font-size: 15px; font-weight: 700; color: var(--p); } /* ← suit le thème */
+
+
+/* =============================================================
+   14. GRILLE DE LISTES (Cards)
+============================================================= */
+.lgrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.lcard {
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--sur);
+  box-shadow: var(--sh);
+  cursor: pointer;
+  transition: transform var(--tr), box-shadow var(--tr), background var(--tr);
+}
+.lcard:hover   { box-shadow: var(--sh-lg); }
+.lcard:active  { transform: scale(0.97); }
+.lcard.sel     { outline: 2.5px solid var(--p); }  /* ← suit le thème */
+
+.lbanner {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+.linfo    { padding: 10px 12px 4px; }
+.lname    { font-size: 14px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); }
+.lstats   { font-size: 11px; color: var(--tx2); }
+
+.lprog  { height: 3px; background: var(--sur2); margin: 7px 0 6px; border-radius: 2px; overflow: hidden; }
+.lprogf { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+
+.lbtns { display: flex; gap: 5px; padding: 0 10px 10px; justify-content: flex-end; }
+.lbtn  {
+  padding: 4px 9px;
+  border: none;
+  border-radius: var(--r-xs);
+  font-size: 11px;
+  background: var(--sur2);
+  color: var(--tx2);
+  transition: background var(--tr);
+}
+.lbtn:hover { background: var(--bd); }
+.lbtn.danger { background: #FEE2E2; color: var(--err); }
+[data-theme="dark"] .lbtn.danger { background: #450a0a; }
+
+
+/* =============================================================
+   15. PAGE RÉGLAGES
+============================================================= */
+.ssec { margin-bottom: 20px; }
+.stitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--tx2);
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+.sgroup {
+  background: var(--sur);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--sh);
+}
+.srow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--bd);
+}
+.srow:last-child { border-bottom: none; }
+.srow-col { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+.slbl { font-size: 15px; color: var(--tx); }
+.sbl-danger { color: var(--err); }
+
+.sact-btn {
+  padding: 7px 14px;
+  background: var(--p);              /* ← suit le thème */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background var(--tr);
+}
+.sact-btn:hover { background: var(--pd); }
+.sact-btn.sact-muted { background: var(--sur2); color: var(--tx2); }
+.sact-btn.sact-muted:hover { background: var(--bd); }
+.sact-btn.sact-danger { background: #FEE2E2; color: var(--err); }
+.sact-btn.sact-danger:hover { background: #FECACA; }
+[data-theme="dark"] .sact-btn.sact-danger { background: #450a0a; }
+
+.ssel {
+  padding: 7px 10px;
+  border-radius: var(--r-xs);
+  border: 1.5px solid var(--bd);
+  background: var(--sur2);
+  color: var(--tx);
+  font-size: 14px;
+  transition: border-color var(--tr);
+}
+.ssel:focus { outline: none; border-color: var(--p); }
+
+.app-version { font-size: 12px; color: var(--tx3); text-align: center; padding: 4px 0 8px; }
+
+
+/* =============================================================
+   16. OVERLAY & BOTTOM SHEETS
+============================================================= */
+#ovl {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+#ovl.on { opacity: 1; pointer-events: all; }
+
+.sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--sur);
+  border-radius: 20px 20px 0 0;
+  z-index: 210;
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 90dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--sh-lg);
+}
+.sheet.on { transform: translateY(0); }
+
+.shandle {
+  width: 38px;
+  height: 4px;
+  background: var(--bd);
+  border-radius: 2px;
+  margin: 12px auto 0;
+}
+.stit {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 16px 16px;
+  color: var(--tx);
+}
+.sbody { padding: 0 16px 40px; }
+
+.fld { margin-bottom: 16px; }
+.fld label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tx2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* Texte d'aide en gris dans les labels */
+.hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--tx3);
+  font-size: 10px;
+}
+
+/* Indice multi-ajout sous le champ nom */
+.multi-hint {
+  font-size: 12px;
+  color: var(--p);                   /* ← suit le thème */
+  margin-top: 5px;
+  font-weight: 500;
+  min-height: 16px;
+}
+
+/* Inputs, selects, textareas */
+.fld input[type="text"],
+.fld input[type="number"],
+.fld select,
+.fld textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--bd);
+  border-radius: var(--r-sm);
+  font-size: 16px;
+  background: var(--sur);
+  color: var(--tx);
+  transition: border-color var(--tr);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.fld input:focus,
+.fld select:focus,
+.fld textarea:focus { outline: none; border-color: var(--p); }
+.fld textarea { height: 72px; resize: none; line-height: 1.5; }
+
+.fld input[type="number"]::-webkit-outer-spin-button,
+.fld input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.fld input[type="number"] { -moz-appearance: textfield; }
+
+.emoji-input {
+  width: 64px !important;
+  text-align: center !important;
+  font-size: 22px !important;
+  padding: 8px !important;
+  margin-top: 6px;
+  border-radius: var(--r-sm) !important;
+}
+
+/* Bouton de validation pleine largeur */
+.sbtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--r-sm);
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background var(--tr), opacity var(--tr);
+}
+.sbtn.pri { background: var(--p); color: #fff; }
+.sbtn.pri:hover { background: var(--pd); }
+.sbtn.pri:disabled { opacity: 0.4; cursor: not-allowed; }
+
+
+/* =============================================================
+   17. COMPOSANTS PARTAGÉS
+============================================================= */
+
+/* --- Stepper --- */
+.stepper { display: flex; align-items: center; gap: 20px; justify-content: center; padding: 4px 0; }
+.stbtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--bd);
+  background: transparent;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--p);                   /* ← suit le thème */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--tr), border-color var(--tr);
+}
+.stbtn:hover { background: var(--sur2); border-color: var(--p); }
+.stbtn:active { transform: scale(0.92); }
+.stval { font-size: 24px; font-weight: 700; min-width: 40px; text-align: center; color: var(--tx); }
+
+/* --- Chips --- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  padding: 7px 14px;
+  background: var(--sur2);
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+  color: var(--tx);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background var(--tr), color var(--tr);
+}
+.chip:hover  { background: var(--bd); }
+.chip:active { background: var(--p); color: #fff; } /* ← suit le thème */
+
+/*
+ * Toggle switch
+ * CORRIGÉ : .tog.on utilise --p (couleur du thème)
+ */
+.tog {
+  width: 48px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--tx3);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.tog.on { background: var(--p); }    /* ← CORRIGÉ : suit le thème */
+.tog::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+.tog.on::after { transform: translateX(20px); }
+
+/* --- Pastilles couleur --- */
+.cgrid { display: flex; gap: 8px; flex-wrap: wrap; }
+.csw {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform var(--tr), border-color var(--tr);
+}
+.csw:hover { transform: scale(1.15); }
+.csw.on    { border-color: var(--tx); transform: scale(1.1); }
+
+
+/* =============================================================
+   18. SNACKBAR
+============================================================= */
+#snk {
+  position: fixed;
+  bottom: calc(var(--th) + 78px);
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--tx);
+  color: var(--bg);
+  padding: 10px 18px;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#snk.on { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+
+
+/* =============================================================
+   19. ANIMATIONS
+============================================================= */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse du FAB — couleur dynamique via --p */
+@keyframes pulse {
+  0%,100% { box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 45%, transparent); }
+  50%     { box-shadow: 0 4px 28px color-mix(in srgb, var(--p) 80%, transparent); }
+}
+
+@keyframes checkBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.icheck.on { animation: checkBounce 0.25s ease-out; }
+
+
+/* =============================================================
+   20. RESPONSIVE (≥ 640px)
+============================================================= */
+@media (min-width: 640px) {
+  .lgrid { grid-template-columns: repeat(3, 1fr); }
+
+  #fab { right: 24px; bottom: calc(var(--th) + 20px); }
+
+  .sheet {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+  }
+  .sheet.on { transform: translateX(-50%) translateY(0); }
+
+  #content {
+    max-width: 640px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    width: 100%;
+  }
+
+  #hdr, #nav {
+    max-width: 640px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    width: 100%;
+  }
+}

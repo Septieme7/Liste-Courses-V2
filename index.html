@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light" data-color="blue">
+<head>
+  <!-- =============================================
+       META & SEO
+  ============================================= -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Courses Malin – Gérez vos listes de courses, suivez votre budget et organisez vos achats intelligemment.">
+  <meta name="theme-color" content="#3B82F6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Courses Malin · Liste & Budget</title>
+
+  <!-- =============================================
+       FAVICONS & MANIFEST
+  ============================================= -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
+  <link rel="manifest" href="assets/manifest/site.webmanifest">
+
+  <!-- =============================================
+       FEUILLE DE STYLE PRINCIPALE
+  ============================================= -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- =============================================
+       EN-TÊTE (HEADER STICKY)
+       - Bouton Réglages à gauche
+       - Logo + Titre au centre
+       - Bouton Ajouter (+) à droite
+  ============================================= -->
+  <header id="hdr" role="banner">
+    <button class="hbtn" id="btnSettings" aria-label="Réglages">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+    </button>
+
+    <!-- Logo + Titre centrés -->
+    <div class="htitle-wrap">
+      <img src="assets/images/LogoCourses.png" alt="" class="hlogo" aria-hidden="true">
+      <h1 id="htitle">Mes Courses</h1>
+    </div>
+
+    <button class="hbtn pri" id="btnAdd" aria-label="Ajouter un article">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- =============================================
+       CONTENU PRINCIPAL (SCROLLABLE)
+  ============================================= -->
+  <main id="content" role="main">
+
+    <!-- ==========================================
+         VUE : ACCUEIL
+    =========================================== -->
+    <section class="view on" id="v-home" aria-label="Accueil">
+
+      <!-- Bloc Budget -->
+      <div class="card bcard" aria-label="Suivi du budget">
+        <div class="brow">
+          <span class="btag">💰 Budget</span>
+          <div class="btotal">
+            <input
+              type="number"
+              id="budgetIn"
+              step="1"
+              min="0"
+              value="50"
+              aria-label="Budget total en euros"
+              inputmode="decimal"
+            >
+            <span aria-hidden="true">€</span>
+          </div>
+        </div>
+        <div class="bstats">
+          <div class="bst">
+            <div class="bst-lbl">Dépensé</div>
+            <div class="bst-val" id="spentV" aria-live="polite">0.00 €</div>
+          </div>
+          <div class="bst">
+            <div class="bst-lbl">Restant</div>
+            <div class="bst-val ok" id="remV" aria-live="polite">50.00 €</div>
+          </div>
+        </div>
+        <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbarWrap">
+          <div class="pfill" id="pfill" style="width:0%"></div>
+        </div>
+        <div class="balert" id="balert" role="alert" aria-live="assertive">
+          ⚠️ <span id="balertTxt"></span>
+        </div>
+      </div>
+
+      <!-- Indicateur liste active + boutons Partager / Changer -->
+      <div class="alist" aria-label="Liste active sélectionnée">
+        <span id="aListIco" aria-hidden="true">🛒</span>
+        <div class="alist-info">
+          <div class="alist-sub">Liste active</div>
+          <div class="alist-name" id="aListName">Aucune liste</div>
+        </div>
+        <!-- Bouton Partager la liste active -->
+        <button class="alist-share" id="btnShare" aria-label="Partager la liste">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+        <button class="alist-chg" id="btnChangeList" aria-label="Changer de liste active">Changer</button>
+      </div>
+
+      <!-- Barre de recherche incrémentale -->
+      <div class="sbar" role="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          id="searchIn"
+          placeholder="Rechercher un article…"
+          aria-label="Rechercher dans la liste"
+          autocomplete="off"
+        >
+      </div>
+
+      <!-- Conteneur articles -->
+      <div class="card" id="itemsCont" aria-label="Articles de la liste">
+        <div class="empty" id="emptyState">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          <h2>Liste vide</h2>
+          <p>Appuyez sur + pour ajouter votre premier article</p>
+        </div>
+        <ul id="itemsList" aria-label="Articles"></ul>
+      </div>
+
+      <!-- Barre de total -->
+      <div class="tbar" aria-label="Résumé">
+        <span class="tbar-lbl">Total articles</span>
+        <span class="tbar-val" id="totCount" aria-live="polite">0 article</span>
+      </div>
+
+    </section><!-- /v-home -->
+
+    <!-- ==========================================
+         VUE : MES LISTES
+    =========================================== -->
+    <section class="view" id="v-lists" aria-label="Mes listes de courses">
+      <div class="vhdr">
+        <h2>Mes Listes</h2>
+        <button class="addbtn" id="btnNewList" aria-label="Créer une nouvelle liste">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Nouvelle
+        </button>
+      </div>
+      <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
+      <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <line x1="8" y1="8" x2="16" y2="8"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="8" y1="16" x2="12" y2="16"/>
+        </svg>
+        <h2>Aucune liste</h2>
+        <p>Créez votre première liste de courses</p>
+      </div>
+    </section><!-- /v-lists -->
+
+    <!-- ==========================================
+         VUE : RÉGLAGES
+    =========================================== -->
+    <section class="view" id="v-settings" aria-label="Réglages de l'application">
+      <h2 class="vtitle">Réglages</h2>
+
+      <!-- Groupe : Apparence -->
+      <div class="ssec">
+        <p class="stitle">Apparence</p>
+        <div class="sgroup">
+          <div class="srow">
+            <span class="slbl">Mode sombre</span>
+            <button class="tog" id="darkTog" role="switch" aria-checked="false" aria-label="Activer le mode sombre"></button>
+          </div>
+          <div class="srow srow-col">
+            <span class="slbl">Couleur principale</span>
+            <div class="cgrid" id="cGrid" role="group" aria-label="Choisir la couleur principale"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Groupe : Alerte Budget -->
+      <div class="ssec">
+        <p class="stitle">Alerte Budget</p>
+        <div class="sgroup">
+          <div class="srow">
+            <span class="slbl">Activer l'alerte sonore</span>
+            <button class="tog" id="soundTog" role="switch" aria-checked="true" aria-label="Activer ou désactiver l'alerte sonore"></button>
+          </div>
+          <div class="srow">
+            <span class="slbl">Son d'alerte</span>
+            <select class="ssel" id="soundSel" aria-label="Choisir le son d'alerte">
+              <option value="A">Son A</option>
+              <option value="B">Son B</option>
+              <option value="C">Son C</option>
+              <option value="D">Son D</option>
+              <option value="E">Son E</option>
+              <option value="F">Son F</option>
+              <option value="G">Son G</option>
+            </select>
+          </div>
+          <div class="srow">
+            <span class="slbl">Tester le son</span>
+            <button class="sact-btn" id="btnPlaySound" aria-label="Tester le son d'alerte">▶ Test</button>
+          </div>
+          <div class="srow">
+            <span class="slbl">Arrêter le son</span>
+            <button class="sact-btn sact-muted" id="btnStopSound" aria-label="Arrêter le son d'alerte">⏹ Stop</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Groupe : Outils -->
+      <div class="ssec">
+        <p class="stitle">Outils</p>
+        <div class="sgroup">
+          <div class="srow">
+            <span class="slbl">Calculatrice Conso</span>
+            <a
+              href="https://calcul-conso.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="sact-btn"
+              aria-label="Ouvrir la calculatrice (nouvel onglet)"
+            >🧮 Ouvrir</a>
+          </div>
+          <div class="srow">
+            <span class="slbl sbl-danger">Réinitialiser toutes les données</span>
+            <button class="sact-btn sact-danger" id="btnReset" aria-label="Effacer toutes les données">Effacer</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="app-version">Courses Malin · v2.0</p>
+    </section><!-- /v-settings -->
+
+  </main><!-- /content -->
+
+  <!-- =============================================
+       NAVIGATION BAS DE PAGE
+  ============================================= -->
+  <nav id="nav" role="navigation" aria-label="Navigation principale">
+    <button class="tab on" id="t-home" aria-label="Accueil" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Accueil
+    </button>
+    <button class="tab" id="t-lists" aria-label="Mes Listes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="8" y1="6" x2="21" y2="6"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      Mes Listes
+    </button>
+    <button class="tab" id="t-settings" aria-label="Réglages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+      Réglages
+    </button>
+  </nav>
+
+  <!-- =============================================
+       BOUTON FLOTTANT (FAB)
+  ============================================= -->
+  <button id="fab" class="pulse" aria-label="Ajouter un article">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  </button>
+
+  <!-- =============================================
+       OVERLAY
+  ============================================= -->
+  <div id="ovl" aria-hidden="true"></div>
+
+  <!-- =============================================
+       BOTTOM SHEET : Ajouter / Modifier un article
+  ============================================= -->
+  <div class="sheet" id="shItem" role="dialog" aria-modal="true" aria-labelledby="shItemTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shItemTitle">Ajouter un article</h2>
+    <div class="sbody">
+
+      <!-- Chips de suggestions rapides (cumulables par virgule) -->
+      <div class="fld">
+        <label>Suggestions rapides <span class="hint">(cliquez pour cumuler)</span></label>
+        <div class="chips" id="qChips" role="group" aria-label="Suggestions rapides"></div>
+      </div>
+
+      <!-- Champ nom — supporte plusieurs articles séparés par une virgule -->
+      <div class="fld">
+        <label for="iName">
+          Nom
+          <span aria-hidden="true">*</span>
+          <span class="hint"> — séparez par une virgule pour en ajouter plusieurs</span>
+        </label>
+        <input
+          type="text"
+          id="iName"
+          placeholder="Ex : Pain, Lait, Beurre…"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="iNameHint"
+        >
+        <!-- Indicateur multi-ajout (affiché dynamiquement par JS) -->
+        <p class="multi-hint" id="iNameHint"></p>
+      </div>
+
+      <!-- Quantité (masquée en mode multi-ajout) -->
+      <div class="fld" id="fldQty">
+        <label id="qtyLbl">Quantité</label>
+        <div class="stepper" role="group" aria-labelledby="qtyLbl">
+          <button class="stbtn" id="qtyMinus" aria-label="Diminuer la quantité">−</button>
+          <span class="stval" id="qDisp" aria-live="polite">1</span>
+          <button class="stbtn" id="qtyPlus" aria-label="Augmenter la quantité">+</button>
+        </div>
+      </div>
+
+      <!-- Prix (masqué en mode multi-ajout) -->
+      <div class="fld" id="fldPrice">
+        <label for="iPrice">Prix unitaire (€)</label>
+        <input type="number" id="iPrice" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
+      </div>
+
+      <!-- Catégorie -->
+      <div class="fld">
+        <label for="iCat">Catégorie</label>
+        <select id="iCat">
+          <option value="">Sans catégorie</option>
+          <option value="🥦 Fruits &amp; Légumes">🥦 Fruits &amp; Légumes</option>
+          <option value="🥩 Viandes &amp; Poissons">🥩 Viandes &amp; Poissons</option>
+          <option value="🥛 Produits Laitiers">🥛 Produits Laitiers</option>
+          <option value="🥖 Boulangerie">🥖 Boulangerie</option>
+          <option value="🥫 Épicerie">🥫 Épicerie</option>
+          <option value="🧴 Hygiène">🧴 Hygiène</option>
+          <option value="🧹 Entretien">🧹 Entretien</option>
+          <option value="🧃 Boissons">🧃 Boissons</option>
+          <option value="🍦 Surgelés">🍦 Surgelés</option>
+        </select>
+      </div>
+
+      <!-- Note / Marque (masquée en mode multi-ajout) -->
+      <div class="fld" id="fldNote">
+        <label for="iNote">Note / Marque</label>
+        <textarea id="iNote" placeholder="Précisions, marque préférée…"></textarea>
+      </div>
+
+      <button class="sbtn pri" id="iSubmit" disabled>Ajouter</button>
+    </div>
+  </div><!-- /shItem -->
+
+  <!-- =============================================
+       BOTTOM SHEET : Créer une nouvelle liste
+  ============================================= -->
+  <div class="sheet" id="shList" role="dialog" aria-modal="true" aria-labelledby="shListTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shListTitle">Nouvelle liste</h2>
+    <div class="sbody">
+
+      <div class="fld">
+        <label for="lName">Nom <span aria-hidden="true">*</span></label>
+        <input type="text" id="lName" placeholder="Ex : Supermarché, Semaine…" autocomplete="off" aria-required="true">
+      </div>
+
+      <div class="fld">
+        <label for="lEmoji">Emoji</label>
+        <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
+        <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
+      </div>
+
+      <div class="fld">
+        <label>Couleur</label>
+        <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
+        <input type="hidden" id="lColor" value="#3B82F6">
+      </div>
+
+      <button class="sbtn pri" id="lSubmit" disabled>Créer la liste</button>
+    </div>
+  </div><!-- /shList -->
+
+  <!-- =============================================
+       SNACKBAR
+  ============================================= -->
+  <div id="snk" role="status" aria-live="polite"></div>
+
+  <!-- =============================================
+       SCRIPT PRINCIPAL
+  ============================================= -->
+  <script src="assets/js/script.js"></script>
+
+</body>
+</html>
