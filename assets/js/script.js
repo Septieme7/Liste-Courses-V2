@@ -925,17 +925,16 @@ function removeList(listId) {
 
 /**
  * Capture une image (carte du magasin) pour une liste.
- * Utilise l'API input file pour accéder à l'appareil photo ou à la galerie.
+ * L'utilisateur peut prendre une photo ou choisir une image depuis la galerie.
  */
 function captureMap(listId) {
   const list = lists.find(l => l.id === listId);
   if (!list) return;
 
-  // Créer un input file dynamique
+  // Créer un input file sans l'attribut "capture" pour laisser le choix
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
-  input.capture = 'environment'; // suggère l'appareil photo arrière
   input.onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -944,9 +943,8 @@ function captureMap(listId) {
     reader.onload = (readerEvent) => {
       list.mapImage = readerEvent.target.result; // base64
       saveData();
-      // Si on est dans la liste active, mettre à jour l'affichage
+      // Mettre à jour l'affichage si c'est la liste active
       if (listId === activeId) renderHome();
-      // Mettre à jour la grille (pour la pastille caméra, on ne change pas l'affichage, mais on pourrait ajouter un indicateur)
       renderLists();
       showSnack('Carte du magasin enregistrée');
     };
