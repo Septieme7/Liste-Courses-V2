@@ -73,12 +73,20 @@
     "feature_export": "📤 CSV Export/Import",
     "feature_custom": "🎨 Theme customization",
     "feature_location": "📍 Store location: save the address and get notified when you're near",
+    "feature_units": "⚖️ Units of measure (kg, L, piece) and price per unit",
+    "feature_dragdrop": "🖱️ Drag and drop to reorder items",
+    "feature_voice": "🎤 Voice input for items",
     "tips": "Tips",
     "tip_empty": "• The empty state is smart: click it to create a list or add an item.",
     "tip_scan": "• Multi-scan mode lets you scan items continuously.",
     "tip_price": "• Click on an item's price to edit it inline.",
     "support": "Support",
-    "support_text": "For any question, open an issue on <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "For any question, open an issue on <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "tip_units": "• For weighed items, choose 'kg' unit and enter the price per kg for automatic calculation.",
+    "tip_drag": "• To move an item, long-press its name and drag.",
+    "tip_voice": "• Use the microphone in the add form to dictate the item's name.",
+    "tip_location": "• Store location helps you find the address (no automatic notifications).",
+    "tip_thresholds": "• In settings, you can choose at which budget thresholds to trigger an alert."
   },
   "share": {
     "no_list": "No list selected",

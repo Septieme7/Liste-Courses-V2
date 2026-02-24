@@ -19,12 +19,15 @@
 ### 🛒 Gestion des articles
 - Ajout rapide via suggestions (Pain, Lait, Œufs…) ou saisie libre
 - **Scan de code-barres** : ajoutez un article en flashant son code-barres (via l’appareil photo) – les données (nom, catégorie, marque) sont automatiquement récupérées grâce à l’API **Open Food Facts**
-- **Mode scan multiple** : activez le mode multi-scan pour enchaîner les scans sans fermer la caméra ; à chaque scan, vous pouvez :
+- **Mode scan multiple** : activez le mode multi-scan pour enchaîner les scans sans fermer la caméra ; à chaque scan, vous pouvez : 
   - **Ajouter** l’article à la liste
   - **Ignorer** le scan
   - **Arrêter** le scan
 - **Détection automatique des doublons** : si un article déjà présent est scanné ou saisi, une proposition d’augmentation de la quantité est faite
 - Modification du nom, de la quantité (+/-), du prix, de la catégorie et d'une note
+- **Unités de mesure** : choisissez l'unité (kg, L, pièce, paquet…) et saisissez un prix au kilo pour faciliter les comparaisons
+- **Glisser‑déposer** : réorganisez vos articles en les déplaçant par leur nom
+- **Saisie vocale** : ajoutez des articles en parlant (Web Speech API)
 - Regroupement automatique par **catégorie** (Fruits & Légumes, Boulangerie, Hygiène…)
 - Case à cocher pour marquer un article comme acheté (texte barré)
 - Édition du prix en ligne directement dans la liste
@@ -35,6 +38,7 @@
 - Définissez un budget total modifiable à tout moment
 - Calcul automatique du **montant dépensé** et du **restant**
 - Barre de progression visuelle (vert → orange → rouge)
+- **Alertes personnalisées** : choisissez des seuils (50 %, 80 %, 100 %) avec notification sonore
 - **Alerte de dépassement** avec le montant excédentaire affiché
 
 ### 🔔 Alerte sonore
@@ -50,11 +54,11 @@
 - Renommer ou supprimer une liste en un tap
 - Navigation rapide entre les listes
 
-### 🗺️ Carte du magasin
+### 🗺️ Carte et localisation du magasin
 - Associez une **photo de la carte du magasin** à chaque liste (prise via l’appareil photo ou depuis la galerie)
 - **Éditeur d’image intégré** : recadrez, faites pivoter ou retournez l’image avant de l’enregistrer
+- **Géolocalisation** : enregistrez l'adresse du magasin (via OpenStreetMap) pour vous repérer
 - Visualisez la carte directement dans l’accueil, avec options pour voir, changer ou supprimer l’image
-- Idéal pour ne pas oublier le plan du magasin lors de vos courses
 
 ### 📤 Export / Import des listes (CSV)
 - **Exportez une ou plusieurs listes** au format CSV (compatible avec Excel, Numbers, Google Sheets)
@@ -63,9 +67,15 @@
 - **Importez un fichier CSV** pour remplacer vos listes existantes par celles du fichier (confirmation avant remplacement)
 - Permet de sauvegarder, partager ou modifier vos listes sur ordinateur ou mobile
 
+### 📱 Partage amélioré
+- **Partagez votre liste** sous forme de texte lisible (prêt à être collé dans un message) via l'API Web Share
+- Si le partage n'est pas disponible, le texte est copié dans le presse-papiers
+- En dernier recours, un fichier `.txt` est téléchargé
+
 ### 🎨 Personnalisation
 - **7 thèmes de couleurs** : Bleu, Vert, Rouge, Violet, Orange, Rose, Or
 - **Mode sombre / clair** avec détection automatique possible
+- **Choix de la langue** : français, anglais, espagnol, chinois, russe
 - Tous les réglages sont sauvegardés entre les sessions
 
 ### 💾 Persistance des données
@@ -93,22 +103,27 @@
 │
 └── assets/
 ├── css/
-│ └── style.css # Styles (thèmes, composants, responsive)
+│ ├── style.css # Styles principaux
+│ └── style2.css # Styles additionnels (unités, géolocalisation…)
 ├── js/
-│ └── script.js # Logique complète de l'application
+│ ├── script.js # Logique principale
+│ ├── i18n.js # Gestion des langues
+│ ├── units.js # Gestion des unités
+│ ├── dragdrop.js # Glisser‑déposer
+│ ├── speech.js # Reconnaissance vocale
+│ └── geolocation.js # Géolocalisation
+├── lang/
+│ ├── fr.json
+│ ├── en.json
+│ ├── es.json
+│ ├── zh.json
+│ └── ru.json
 ├── sound/
 │ ├── AlarmA.mp3 # Sons d'alerte (A à G)
 │ └── ...
 ├── images/ # Illustrations et logos
-├── icon/
-│ ├── favicon.ico
-│ ├── favicon-16x16.png
-│ ├── favicon-32x32.png
-│ └── apple-touch-icon.png
-└── manifest/
-└── site.webmanifest # Manifest PWA
-
-text
+├── icon/ # Icônes pour PWA
+└── manifest/ # Manifest PWA
 
 ---
 
@@ -118,7 +133,6 @@ text
 Aucun — l'application fonctionne entièrement côté client, sans serveur ni dépendance.
 
 ### Étapes
-
 1. **Clonez** le dépôt :
    ```bash
    git clone https://github.com/Septieme7/Liste-Courses-V2.git
@@ -126,8 +140,7 @@ Aucun — l'application fonctionne entièrement côté client, sans serveur ni d
 Ouvrez index.html dans un navigateur moderne (Chrome, Firefox, Edge, Safari) :
 
 bash
-# Ou simplement double-cliquez sur index.html
-open index.html
+open index.html   # ou double-cliquez sur le fichier
 C'est tout. Aucune installation, aucun npm install.
 
 💡 Pour bénéficier des sons d'alerte, placez vos fichiers AlarmA.mp3 à AlarmG.mp3 dans assets/sound/.
@@ -142,6 +155,10 @@ Web Audio API	Fallback son si MP3 indisponible
 Open Food Facts API	Récupération des informations produits par code‑barres
 html5-qrcode	Scanner de code‑barres léger et performant
 Cropper.js	Édition d’image (recadrage, rotation)
+SortableJS	Glisser‑déposer des articles
+Web Speech API	Reconnaissance vocale pour ajout d'articles
+Nominatim (OpenStreetMap)	Géocodage inverse pour localiser le magasin
+i18n	Système maison de traduction (JSON)
 PWA (manifest)	Installable sur l'écran d'accueil
 Netlify	Hébergement et déploiement continu
 🎯 Guide d'utilisation rapide
@@ -153,11 +170,16 @@ Saisissez un nom, choisissez un emoji et une couleur
 Appuyez sur Créer la liste
 
 Ajouter un article
-Manuellement : bouton + (en bas à droite ou en haut à droite) → remplissez le formulaire
+Manuellement : bouton + (en bas à droite ou en haut à droite) → remplissez le formulaire (nom, quantité, prix, unité, catégorie…)
 
-Par scan : bouton Scanner dans le formulaire d’ajout → scannez le code‑barres
+Par scan : bouton 📷 Scanner dans le formulaire → scannez le code‑barres
+
+Par la voix : bouton 🎤 dans le formulaire → dictez le nom de l'article
 
 Mode scan multiple : activez le toggle dans le formulaire, puis scannez plusieurs articles ; après chaque scan, choisissez Ajouter, Ignorer ou Arrêter
+
+Réorganiser les articles
+Appuyez longuement sur le nom d'un article et glissez‑le pour changer son ordre
 
 Suivre son budget
 Modifiez le budget total en haut de l'accueil
@@ -166,27 +188,33 @@ Renseignez les prix de vos articles
 
 La barre de progression et les montants se mettent à jour automatiquement
 
-Ajouter une carte de magasin à une liste
+Dans les réglages, activez des seuils d'alerte (50 %, 80 %, 100 %)
+
+Ajouter une carte / localisation du magasin
 Dans Mes Listes, cliquez sur l’icône 📷 de la liste souhaitée
 
 Prenez une photo ou sélectionnez une image depuis votre galerie
 
 Éditez l’image (recadrage, rotation, retournement) puis validez
 
-La carte apparaîtra dans l’accueil de cette liste
+Pour ajouter la position, cliquez sur 📍 Localiser dans la carte (autorisez la géolocalisation)
+
+La carte et la localisation apparaîtront dans l’accueil de cette liste
 
 Exporter / Importer des listes
 Exporter : dans Mes Listes, cliquez sur 📤 Exporter les listes → sélectionnez les listes à exporter, puis confirmez → un fichier CSV est téléchargé
 
 Importer : dans Mes Listes, cliquez sur 📥 Importer un fichier, sélectionnez un fichier CSV au même format → les listes existantes sont remplacées (confirmation)
 
-Cocher un article
-Appuyez sur le cercle à gauche de l'article pour le marquer comme acheté
+Partager une liste
+Dans l'accueil, cliquez sur l'icône de partage à côté du nom de la liste
 
-Changer de thème
+La liste est copiée sous forme de texte lisible (prêt à être collé) ; si votre appareil le permet, une boîte de partage native s'ouvre
+
+Changer de langue ou de thème
 Onglet Réglages
 
-Choisissez une couleur principale et/ou activez le mode sombre
+Choisissez la langue, le mode sombre/clair, la couleur principale
 
 ♿ Accessibilité
 Attributs aria-label, aria-live, aria-checked, aria-current sur tous les éléments interactifs
@@ -200,7 +228,6 @@ Contrastes conformes aux recommandations WCAG
 📄 Licence
 Ce projet est libre d'utilisation.
 
-👤 Auteur
-Seven7 — Projet personnel.
+👤 Auteur : Seven7...
 
-💬 Des suggestions ? Ouvrez une issue ou proposez une Pull Request !
+💬 Des suggestions ? Ouvrez une issue ou proposez une Pull Request 
