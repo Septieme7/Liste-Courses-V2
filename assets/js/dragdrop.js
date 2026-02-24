@@ -14,20 +14,20 @@ function initDragDrop() {
 
   sortableInstance = new Sortable(listContainer, {
     animation: 150,
-    handle: '.irow',
+    handle: '.ibody', // Seulement sur le nom de l'article
     draggable: '.irow',
     onEnd: function(evt) {
       const list = lists.find(l => l.id === activeId);
       if (!list) return;
 
-      // Get new order from DOM
+      // Récupérer l'ordre des IDs depuis le DOM
       const newOrder = [];
       document.querySelectorAll('#itemsList .irow').forEach(row => {
         const id = row.id.replace('ir-', '');
         if (id) newOrder.push(id);
       });
 
-      // Reorder items array
+      // Réorganiser le tableau items selon newOrder
       const itemsMap = new Map(list.items.map(item => [item.id, item]));
       list.items = newOrder.map(id => itemsMap.get(id)).filter(item => item);
 

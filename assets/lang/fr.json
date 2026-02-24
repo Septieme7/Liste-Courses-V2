@@ -6,7 +6,7 @@
     "settings": "Réglages",
     "help": "Aide"
   },
-  "home": {
+ "home": {
     "budget": "💰 Budget",
     "spent": "Dépensé",
     "remaining": "Restant",
@@ -16,8 +16,13 @@
     "search_placeholder": "Rechercher un article…",
     "empty_title": "Liste vide",
     "empty_text": "Appuyez sur + pour ajouter votre premier article",
-    "total_articles": "Total articles"
-  },
+    "total_articles": "Total articles",
+    "map_title": "🗺️ Carte du magasin",
+    "view_map": "Voir",
+    "change_map": "Changer",
+    "delete_map": "Supprimer",
+    "locate_store": "📍 Localiser"
+},
   "lists": {
     "title": "Mes Listes",
     "new_list": "Nouvelle",
@@ -55,6 +60,7 @@
     "feature_map": "🗺️ Carte du magasin associée à chaque liste",
     "feature_export": "📤 Export/Import CSV",
     "feature_custom": "🎨 Personnalisation des thèmes",
+    "feature_location": "📍 Localisation du magasin : enregistrez l'adresse et recevez une notification à l'approche",
     "tips": "Astuces",
     "tip_empty": "• L'état vide est intelligent : cliquez dessus pour créer une liste ou ajouter un article.",
     "tip_scan": "• Le mode scan multiple permet d'enchaîner les scans sans fermer la caméra.",

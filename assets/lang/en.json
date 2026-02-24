@@ -6,7 +6,7 @@
     "settings": "Settings",
     "help": "Help"
   },
-  "home": {
+"home": {
     "budget": "💰 Budget",
     "spent": "Spent",
     "remaining": "Remaining",
@@ -16,8 +16,13 @@
     "search_placeholder": "Search items…",
     "empty_title": "Empty list",
     "empty_text": "Tap + to add your first item",
-    "total_articles": "Total items"
-  },
+    "total_articles": "Total items",
+    "map_title": "🗺️ Store map",
+    "view_map": "View",
+    "change_map": "Change",
+    "delete_map": "Delete",
+    "locate_store": "📍 Locate"
+},
   "lists": {
     "title": "My Lists",
     "new_list": "New",
@@ -55,6 +60,7 @@
     "feature_map": "🗺️ Store map attached to each list",
     "feature_export": "📤 CSV Export/Import",
     "feature_custom": "🎨 Theme customization",
+    "feature_location": "📍 Store location: save the address and get notified when you're near",
     "tips": "Tips",
     "tip_empty": "• The empty state is smart: click it to create a list or add an item.",
     "tip_scan": "• Multi-scan mode lets you scan items continuously.",

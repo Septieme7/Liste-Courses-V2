@@ -1,5 +1,5 @@
 {
-  "app_name": "Lista de Compras",
+  "app_name": "Lista de la Compra",
   "nav": {
     "home": "Inicio",
     "lists": "Mis Listas",
@@ -7,6 +7,7 @@
     "help": "Ayuda"
   },
   "home": {
+    "map_title": "🗺️ Plano de la tienda",
     "budget": "💰 Presupuesto",
     "spent": "Gastado",
     "remaining": "Restante",
@@ -23,8 +24,8 @@
     "new_list": "Nueva",
     "export": "📤 Exportar listas",
     "import": "📥 Importar archivo",
-    "empty_title": "Sin listas",
-    "empty_text": "Crea tu primera lista de compras"
+    "empty_title": "No hay listas",
+    "empty_text": "Crea tu primera lista de la compra"
   },
   "settings": {
     "title": "Ajustes",
@@ -37,7 +38,7 @@
     "test_sound": "Probar sonido",
     "stop_sound": "Detener sonido",
     "tools": "Herramientas",
-    "calculator": "Calculadora",
+    "calculator": "Calculadora de consumo",
     "reset": "Reiniciar todos los datos",
     "help": "Ayuda",
     "help_button": "Abrir",
@@ -46,19 +47,20 @@
   },
   "help": {
     "title": "Ayuda",
-    "overview": "Resumen",
-    "overview_text": "Lista de Compras te ayuda a gestionar tus listas de la compra, controlar tu presupuesto y organizar tus compras.",
+    "overview": "Visión general",
+    "overview_text": "Lista de la Compra te ayuda a gestionar tus listas de la compra, controlar tu presupuesto y organizar tus compras.",
     "features": "Características principales",
-    "feature_lists": "📋 Crear y gestionar múltiples listas",
+    "feature_lists": "📋 Creación y gestión de múltiples listas",
     "feature_scan": "📷 Escaneo de códigos de barras (vía Open Food Facts)",
-    "feature_budget": "💰 Seguimiento de presupuesto con alertas",
-    "feature_map": "🗺️ Mapa de la tienda asociado a cada lista",
+    "feature_budget": "💰 Seguimiento del presupuesto con alertas",
+    "feature_map": "🗺️ Plano del supermercado asociado a cada lista",
     "feature_export": "📤 Exportación/Importación CSV",
     "feature_custom": "🎨 Personalización de temas",
+    "feature_location": "📍 Ubicación de la tienda: guarda la dirección y recibe una notificación cuando te acerques",
     "tips": "Consejos",
-    "tip_empty": "• El estado vacío es inteligente: haz clic para crear una lista o añadir un artículo.",
-    "tip_scan": "• El modo de escaneo múltiple permite escanear continuamente.",
-    "tip_price": "• Haz clic en el precio de un artículo para editarlo directamente.",
+    "tip_empty": "• El estado vacío es inteligente: pulsa para crear una lista o añadir un artículo.",
+    "tip_scan": "• El modo multi-escaneo permite escanear artículos continuamente.",
+    "tip_price": "• Pulsa sobre el precio de un artículo para editarlo directamente.",
     "support": "Soporte",
     "support_text": "Para cualquier pregunta, abre un issue en <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
   },

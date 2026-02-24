@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
   <link rel="manifest" href="assets/manifest/site.webmanifest">
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/style2.css"> <!-- Nouveaux styles -->
+  <link rel="stylesheet" href="assets/css/style2.css">
   <!-- Cropper.js pour l'édition d'image -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 </head>
@@ -28,7 +28,7 @@
     </button>
     <div class="htitle-wrap">
       <img src="assets/images/LogoCourses.png" alt="" class="hlogo" id="headerLogo" aria-hidden="false" role="button" tabindex="0" aria-label="Afficher le logo en grand">
-      <h1 id="htitle" data-i18n="app_name">Mes Courses</h1>
+      <h1 id="htitle">Mes Courses</h1>
     </div>
     <button class="hbtn pri" id="btnAdd" aria-label="Ajouter un article">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
@@ -55,7 +55,6 @@
             <div class="bst-val" id="spentV" aria-live="polite">0.00 €</div>
           </div>
           <div class="bst">
-            <!-- Ajout de l'id pour le label Restant -->
             <div class="bst-lbl" id="remLbl" data-i18n="home.remaining">Restant</div>
             <div class="bst-val" id="remV" aria-live="polite">50.00 €</div>
           </div>
@@ -89,7 +88,7 @@
       <div id="listMapContainer" style="margin-bottom: 12px; display: none;">
         <div class="card" style="padding: 12px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <span style="font-weight: 600;">🗺️ Carte du magasin</span>
+            <span style="font-weight: 600;" data-i18n="home.map_title">🗺️ Carte du magasin</span>
             <button class="sact-btn" id="viewMapBtn" style="padding: 5px 12px;">Voir</button>
             <button class="sact-btn sact-muted" id="changeMapBtn" style="padding: 5px 12px;">Changer</button>
             <button class="sact-btn sact-danger" id="deleteMapBtn" style="padding: 5px 12px;">Supprimer</button>
@@ -129,7 +128,7 @@
     <!-- MES LISTES -->
     <section class="view" id="v-lists" aria-label="Mes listes de courses">
       <div class="vhdr">
-        <h2 data-i18n="nav.lists">Mes Listes</h2>
+        <h2 data-i18n="lists.title">Mes Listes</h2>
         <button class="addbtn" id="btnNewList" aria-label="Créer une nouvelle liste">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
             <line x1="12" y1="5" x2="12" y2="19"/>
@@ -157,7 +156,7 @@
 
     <!-- RÉGLAGES -->
     <section class="view" id="v-settings" aria-label="Réglages de l'application">
-      <h2 class="vtitle" data-i18n="nav.settings">Réglages</h2>
+      <h2 class="vtitle" data-i18n="settings.title">Réglages</h2>
       <div class="ssec">
         <p class="stitle" data-i18n="settings.appearance">Apparence</p>
         <div class="sgroup">
@@ -240,7 +239,7 @@
 
     <!-- AIDE -->
     <section class="view" id="v-help" aria-label="Aide">
-      <h2 class="vtitle" data-i18n="nav.help">Aide</h2>
+      <h2 class="vtitle" data-i18n="help.title">Aide</h2>
       <div class="card" style="padding: 16px;">
         <div class="ssec">
           <p class="stitle" data-i18n="help.overview">Vue d'ensemble</p>
@@ -255,6 +254,7 @@
             <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
             <li data-i18n="help.feature_export">📤 Export/Import CSV</li>
             <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes</li>
+            <li data-i18n="help.feature_location">📍 Localisation du magasin : enregistrez l'adresse et recevez une notification à l'approche</li>
           </ul>
         </div>
         <div class="ssec">

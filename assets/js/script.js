@@ -245,9 +245,9 @@ function goTo(tab) {
   // Titres traduits
   const titles = {
     home: getActiveName(),
-    lists: t('Mes Listes'),
-    settings: t('Réglages'),
-    help: t('Help')
+    lists: t('nav.lists'),
+    settings: t('nav.settings'),
+    help: t('nav.help')
   };
   document.getElementById('htitle').textContent = titles[tab] || t('nav.help');
 
@@ -867,45 +867,82 @@ function deleteMap() {
 }
 
 /* =============================================================
-   14. PARTAGE / EXPORT .TXT (amélioré avec partage de fichier)
+   14. PARTAGE / EXPORT .TXT (partage texte lisible)
 ============================================================= */
+function buildTxtContent(list) {
+  const sep  = '─'.repeat(36);
+  const date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  let txt = '';
+  txt += `${list.emoji || '🛒'}  ${list.name.toUpperCase()}\n`;
+  txt += `${sep}\n`;
+  txt += `📅 ${date}\n\n`;
+
+  const groups = {};
+  list.items.forEach(item => {
+    const key = item.cat || 'Divers';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
+
+  Object.entries(groups).forEach(([cat, items]) => {
+    if (cat !== 'Divers' || Object.keys(groups).length > 1) {
+      txt += `\n▸ ${cat}\n`;
+    }
+    items.forEach(item => {
+      const check    = item.ck ? '✓' : '☐';
+      const qty      = (item.qty || 1) > 1 ? `  x${item.qty}` : '    ';
+      const price    = item.price ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} €` : '';
+      const note     = item.note ? `  (${item.note})` : '';
+      const name     = item.text.padEnd(22, ' ');
+      txt += `  ${check}  ${name}${qty}${price}${note}\n`;
+    });
+  });
+
+  const total = list.items.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+  const done  = list.items.filter(i => i.ck).length;
+
+  txt += `\n${sep}\n`;
+  txt += `✅ Cochés : ${done} / ${list.items.length} article${list.items.length !== 1 ? 's' : ''}\n`;
+  if (total > 0) txt += `💰 Total  : ${total.toFixed(2)} €\n`;
+  txt += `\n📱 Courses Malin\n`;
+  return txt;
+}
+
 function shareList() {
   const list = lists.find(l => l.id === activeId);
   if (!list) { showSnack(t('share.no_list')); return; }
   if (!list.items.length) { showSnack(t('share.empty_list')); return; }
 
-  // Construire le contenu CSV
-  let csvContent = "liste;article;quantite;prix;categorie;note;coché\n";
-  list.items.forEach(item => {
-    const ligne = [
-      `"${list.name}"`,
-      `"${item.text}"`,
-      item.qty || 1,
-      item.price || 0,
-      `"${item.cat || ''}"`,
-      `"${item.note || ''}"`,
-      item.ck ? 1 : 0
-    ].join(';');
-    csvContent += ligne + '\n';
-  });
+  const content = buildTxtContent(list);
+  const blob = new Blob([content], { type: 'text/plain' });
+  const file = new File([blob], `${list.name.replace(/[^a-z0-9]/gi, '_')}.txt`, { type: 'text/plain' });
 
-  // Créer un fichier à partir du CSV
-  const blob = new Blob([csvContent], { type: 'text/csv' });
-  const file = new File([blob], `${list.name.replace(/[^a-z0-9]/gi, '_')}.csv`, { type: 'text/csv' });
-
-  // Vérifier si le partage de fichiers est supporté
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     navigator.share({
       title: list.name,
       files: [file]
     }).catch(() => {
-      downloadCSV(csvContent, list.name);
+      downloadTxt(content, list.name);
     });
   } else {
-    downloadCSV(csvContent, list.name);
+    downloadTxt(content, list.name);
   }
 }
 
+function downloadTxt(content, listName) {
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${listName.replace(/[^a-z0-9]/gi, '_')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* =============================================================
+   15. EXPORT CSV (pour le bouton Exporter)
+============================================================= */
 function downloadCSV(content, listName) {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -917,7 +954,7 @@ function downloadCSV(content, listName) {
 }
 
 /* =============================================================
-   15. SON
+   16. SON
 ============================================================= */
 function playSound() {
   stopSound();
@@ -950,7 +987,7 @@ function playFallbackBeep() {
 }
 
 /* =============================================================
-   16. OVERLAY & SHEETS
+   17. OVERLAY & SHEETS
 ============================================================= */
 function openSheet(sheetId) {
   openSheetId = sheetId;
@@ -971,7 +1008,7 @@ function closeSheet() {
 }
 
 /* =============================================================
-   17. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
+   18. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
 function startBarcodeScan() {
   if (html5QrCode) return; // déjà en cours
@@ -1145,7 +1182,7 @@ function addProductFromScan(product) {
 }
 
 /* =============================================================
-   18. ÉDITEUR D'IMAGE (recadrage, rotation)
+   19. ÉDITEUR D'IMAGE (recadrage, rotation)
 ============================================================= */
 function openImageEditor(imageDataUrl, listId) {
   currentListIdForImage = listId;
@@ -1165,7 +1202,7 @@ function openImageEditor(imageDataUrl, listId) {
 }
 
 /* =============================================================
-   19. MODAL LOGO
+   20. MODAL LOGO
 ============================================================= */
 function showLogoModal() {
   document.getElementById('logoModal').style.display = 'flex';
@@ -1176,7 +1213,7 @@ function closeLogoModal() {
 }
 
 /* =============================================================
-   20. SNACKBAR
+   21. SNACKBAR
 ============================================================= */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
@@ -1195,7 +1232,7 @@ function triggerSnackAction() {
 }
 
 /* =============================================================
-   21. UTILITAIRES
+   22. UTILITAIRES
 ============================================================= */
 function esc(str) {
   return String(str)
@@ -1207,7 +1244,7 @@ function esc(str) {
 }
 
 /* =============================================================
-   22. EXPORT / IMPORT CSV (avec sélection)
+   23. EXPORT / IMPORT CSV (avec sélection)
 ============================================================= */
 function showExportSelector() {
   const container = document.getElementById('exportListCheckboxes');
@@ -1273,14 +1310,7 @@ function confirmExport() {
   const date = new Date().toISOString().slice(0,10);
   const filename = `${baseName}_${date}.csv`;
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-
+  downloadCSV(csvContent, filename);
   closeSheet();
 }
 
@@ -1365,7 +1395,7 @@ function importListsFromCSV() {
 }
 
 /* =============================================================
-   23. ATTACHEMENT DES ÉCOUTEURS
+   24. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
   // Header
