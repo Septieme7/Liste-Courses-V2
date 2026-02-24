@@ -1,6 +1,8 @@
 /* =============================================================
    COURSES MALIN · script.js
-   Version finale avec édition d'image, scan multiple, export/import CSV
+   Version finale avec édition d'image, scan multiple, export/import CSV,
+   internationalisation, unités, glisser-déposer, notes vocales, géolocalisation,
+   alertes de budget personnalisées.
 ============================================================= */
 
 /* =============================================================
@@ -35,9 +37,9 @@ const CAT_COLORS = {
   '🧃 Boissons':           '#06B6D4',
   '🍦 Surgelés':           '#60A5FA',
   '🖕 Sheet List':         '#d4ea46',
-  '🧙‍♂️ Magic List':          '#a855f7',
-  '🤬 SaMére List':          '#ef4444',
-  '💕 Love 💕':        '#ec4899',
+  '🧙‍♂️ Magic List':        '#a855f7',
+  '🤬 SaMére List':        '#ef4444',
+  '💕 Love 💕':            '#ec4899',
 };
 
 const LS_LISTS  = 'cm_lists';
@@ -59,6 +61,7 @@ let openSheetId  = null;
 let snkTimer     = null;
 let snkCallback  = null;
 let audioInstance= null;
+let triggeredThresholds = {}; // pour les alertes de seuils
 
 // Scan
 let html5QrCode = null;
@@ -83,6 +86,15 @@ function init() {
   syncSettingsUI();
   attachListeners();
   renderAll();
+  
+  // Charger la langue si définie dans cfg
+  if (cfg.lang) {
+    loadLanguage(cfg.lang);
+  }
+  // Initialiser les seuils d'alerte
+  if (!cfg.thresholds) {
+    cfg.thresholds = { 50: true, 80: true, 100: true };
+  }
 }
 
 /* =============================================================
@@ -96,6 +108,8 @@ function loadData() {
   activeId = localStorage.getItem(LS_ACTIVE) || (lists[0]?.id ?? null);
 
   document.getElementById('budgetIn').value = budget;
+  
+  window.cfg = cfg; // pour i18n.js
 }
 
 function saveData() {
@@ -106,6 +120,11 @@ function saveData() {
 
 function saveConfig() {
   cfg.soundChoice = document.getElementById('soundSel').value;
+  cfg.thresholds = {
+    50: document.getElementById('threshold50')?.checked || false,
+    80: document.getElementById('threshold80')?.checked || false,
+    100: document.getElementById('threshold100')?.checked || false
+  };
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
 }
 
@@ -178,6 +197,21 @@ function syncSettingsUI() {
   soundTog.classList.toggle('on', soundOn);
   soundTog.setAttribute('aria-checked', soundOn);
   document.getElementById('soundSel').value = cfg.soundChoice || 'A';
+  
+  // Langue
+  const langSel = document.getElementById('langSelector');
+  if (langSel) {
+    langSel.value = cfg.lang || 'fr';
+    langSel.addEventListener('change', (e) => {
+      loadLanguage(e.target.value);
+    });
+  }
+  
+  // Seuils
+  const thres = cfg.thresholds || { 50: true, 80: true, 100: true };
+  document.getElementById('threshold50').checked = thres[50] || false;
+  document.getElementById('threshold80').checked = thres[80] || false;
+  document.getElementById('threshold100').checked = thres[100] || false;
 }
 
 /* =============================================================
@@ -195,9 +229,11 @@ function goTo(tab) {
     t.classList.remove('on');
     t.removeAttribute('aria-current');
   });
-  const activeTab = document.getElementById(`t-${tab}`);
-  activeTab.classList.add('on');
-  activeTab.setAttribute('aria-current', 'page');
+  if (tab === 'home' || tab === 'lists' || tab === 'settings') {
+    const activeTab = document.getElementById(`t-${tab}`);
+    activeTab.classList.add('on');
+    activeTab.setAttribute('aria-current', 'page');
+  }
 
   const btnBack = document.getElementById('btnBack');
   if (tab === 'home') {
@@ -206,8 +242,14 @@ function goTo(tab) {
     btnBack.style.display = 'flex';
   }
 
-  const titles = { home: getActiveName(), lists: 'Mes Listes', settings: 'Réglages' };
-  document.getElementById('htitle').textContent = titles[tab];
+  // Titres traduits
+  const titles = {
+    home: getActiveName(),
+    lists: t('Mes Listes'),
+    settings: t('Réglages'),
+    help: t('Help')
+  };
+  document.getElementById('htitle').textContent = titles[tab] || t('nav.help');
 
   const onHome = tab === 'home';
   document.getElementById('fab').style.display    = onHome ? 'flex' : 'none';
@@ -219,7 +261,7 @@ function goTo(tab) {
 }
 
 function getActiveName() {
-  return lists.find(l => l.id === activeId)?.name || 'Mes Courses';
+  return lists.find(l => l.id === activeId)?.name || t('app_name');
 }
 
 /* =============================================================
@@ -234,8 +276,8 @@ function renderHome() {
   const list  = lists.find(l => l.id === activeId);
   const items = list?.items || [];
 
-  document.getElementById('htitle').textContent    = list?.name || 'Mes Courses';
-  document.getElementById('aListName').textContent = list?.name || 'Aucune liste';
+  document.getElementById('htitle').textContent    = list?.name || t('app_name');
+  document.getElementById('aListName').textContent = list?.name || t('home.no_list');
   document.getElementById('aListIco').textContent  = list?.emoji || '🛒';
 
   const mapContainer = document.getElementById('listMapContainer');
@@ -278,6 +320,10 @@ function renderHome() {
         html += `<div class="chdr" style="background:${color}18; color:${color}"><span>${esc(cat)}</span><span class="chdr-count">${groupItems.length}</span></div>`;
       }
       groupItems.forEach(item => {
+        const qtyDisplay = item.unit ? formatQuantity(item.qty, item.unit) : item.qty;
+        const priceDisplay = item.price ? item.price.toFixed(2) + '€' : '<span style="color:var(--tx3)">€</span>';
+        const pricePerUnitDisplay = item.pricePerUnit ? ` <span class="price-per-unit">(${item.pricePerUnit.toFixed(2)}€/${getUnitSymbol(item.unit)})</span>` : '';
+
         html += `
           <li class="irow${item.ck ? ' ckd' : ''}" id="ir-${item.id}">
             <button class="icheck${item.ck ? ' on' : ''}" onclick="toggleCheck('${item.id}')" aria-label="${item.ck ? 'Décocher' : 'Cocher'} ${esc(item.text)}">
@@ -289,10 +335,10 @@ function renderHome() {
             </div>
             <div class="iact">
               <button class="qbtn" onclick="adjustQty('${item.id}', -1)" aria-label="Diminuer quantité">−</button>
-              <span class="qnum">${item.qty || 1}</span>
+              <span class="qnum">${qtyDisplay}</span>
               <button class="qbtn" onclick="adjustQty('${item.id}', 1)" aria-label="Augmenter quantité">+</button>
               <div class="iprice" onclick="inlineEditPrice('${item.id}')" role="button" tabindex="0" aria-label="Prix de ${esc(item.text)}">
-                <span id="pr-${item.id}">${item.price ? item.price.toFixed(2) + '€' : '<span style="color:var(--tx3)">€</span>'}</span>
+                <span id="pr-${item.id}">${priceDisplay}${pricePerUnitDisplay}</span>
               </div>
               <button class="idel" onclick="deleteItem('${item.id}')" aria-label="Supprimer ${esc(item.text)}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -306,6 +352,10 @@ function renderHome() {
       });
     });
     listEl.innerHTML = html;
+    
+    if (window.reinitDragDrop) {
+      setTimeout(reinitDragDrop, 0);
+    }
   }
 
   document.getElementById('totCount').textContent = `${items.length} article${items.length !== 1 ? 's' : ''}`;
@@ -397,6 +447,24 @@ function updateBudget() {
     alertEl.classList.remove('on');
     alertPlayed = false;
   }
+
+  // Changer le libellé "Restant" en "Dépassement" si négatif
+  const remLbl = document.getElementById('remLbl');
+  if (remLbl) {
+    remLbl.textContent = rem < 0 ? t('home.overbudget') : t('home.remaining');
+  }
+
+  // Gestion des seuils
+  const thresholds = cfg.thresholds || { 50: true, 80: true, 100: true };
+  const roundedPct = Math.round(pct);
+  for (let [threshold, enabled] of Object.entries(thresholds)) {
+    if (enabled && roundedPct >= threshold && !triggeredThresholds[threshold]) {
+      triggeredThresholds[threshold] = true;
+      if (cfg.sound !== false) playSound();
+      showSnack(`⚠️ Seuil de ${threshold}% atteint !`);
+    }
+  }
+  if (pct < 50) triggeredThresholds = {};
 }
 
 /* =============================================================
@@ -480,6 +548,11 @@ function openAddItem() {
   document.getElementById('iCat').value              = '';
   document.getElementById('qDisp').textContent       = '1';
   document.getElementById('iNameHint').textContent   = '';
+  
+  // Réinitialiser les champs d'unité
+  document.getElementById('iUnit').value = 'pce';
+  document.getElementById('fldPricePerUnit').style.display = 'none';
+  document.getElementById('iPricePerUnit').value = '';
 
   toggleMultiMode(false);
 
@@ -506,6 +579,17 @@ function openEditItem(itemId) {
   document.getElementById('iCat').value              = item.cat   || '';
   document.getElementById('qDisp').textContent       = currentQty;
   document.getElementById('iNameHint').textContent   = '';
+  
+  // Unités
+  document.getElementById('iUnit').value = item.unit || 'pce';
+  if (item.pricePerUnit) {
+    document.getElementById('iPricePerUnit').value = item.pricePerUnit;
+    if (item.unit === 'kg' || item.unit === 'l' || item.unit === 'g' || item.unit === 'ml') {
+      document.getElementById('fldPricePerUnit').style.display = 'block';
+    }
+  } else {
+    document.getElementById('fldPricePerUnit').style.display = 'none';
+  }
 
   toggleMultiMode(false);
 
@@ -539,7 +623,7 @@ function validateItemForm() {
 }
 
 function toggleMultiMode(isMulti) {
-  ['fldQty', 'fldPrice', 'fldNote'].forEach(id => {
+  ['fldQty', 'fldPrice', 'fldNote', 'fldUnit', 'fldPricePerUnit'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = isMulti ? 'none' : 'block';
   });
@@ -570,6 +654,8 @@ function confirmItem() {
         note:  '',
         cat,
         ck:    false,
+        unit:  'pce',
+        pricePerUnit: 0
       });
     });
     saveData();
@@ -577,7 +663,14 @@ function confirmItem() {
     renderHome();
     showSnack(`${names.length} articles ajoutés ✓`);
   } else {
-    const price = parseFloat(document.getElementById('iPrice').value) || 0;
+    const unit = document.getElementById('iUnit').value;
+    const pricePerUnit = parseFloat(document.getElementById('iPricePerUnit').value) || 0;
+    let price = 0;
+    if (pricePerUnit > 0 && (unit === 'kg' || unit === 'l' || unit === 'g' || unit === 'ml')) {
+      price = pricePerUnit * currentQty;
+    } else {
+      price = parseFloat(document.getElementById('iPrice').value) || 0;
+    }
     const note  = document.getElementById('iNote').value.trim();
 
     // Détection des doublons en mode simple
@@ -601,6 +694,8 @@ function confirmItem() {
         item.text  = names[0];
         item.qty   = currentQty;
         item.price = price;
+        item.pricePerUnit = pricePerUnit;
+        item.unit  = unit;
         item.note  = note;
         item.cat   = cat;
       }
@@ -609,9 +704,11 @@ function confirmItem() {
         id:    Date.now().toString(),
         text:  names[0],
         qty:   currentQty,
-        price,
-        note,
-        cat,
+        price: price,
+        pricePerUnit: pricePerUnit,
+        unit:  unit,
+        note:  note,
+        cat:   cat,
         ck:    false,
       });
     }
@@ -770,71 +867,52 @@ function deleteMap() {
 }
 
 /* =============================================================
-   14. PARTAGE / EXPORT .TXT
+   14. PARTAGE / EXPORT .TXT (amélioré avec partage de fichier)
 ============================================================= */
 function shareList() {
   const list = lists.find(l => l.id === activeId);
-  if (!list) { showSnack('Aucune liste sélectionnée'); return; }
-  if (!list.items.length) { showSnack('La liste est vide, rien à partager'); return; }
+  if (!list) { showSnack(t('share.no_list')); return; }
+  if (!list.items.length) { showSnack(t('share.empty_list')); return; }
 
-  const text = buildTxtContent(list);
+  // Construire le contenu CSV
+  let csvContent = "liste;article;quantite;prix;categorie;note;coché\n";
+  list.items.forEach(item => {
+    const ligne = [
+      `"${list.name}"`,
+      `"${item.text}"`,
+      item.qty || 1,
+      item.price || 0,
+      `"${item.cat || ''}"`,
+      `"${item.note || ''}"`,
+      item.ck ? 1 : 0
+    ].join(';');
+    csvContent += ligne + '\n';
+  });
 
-  if (navigator.share) {
-    navigator.share({ title: list.name, text }).catch(() => downloadTxt(text, list.name));
+  // Créer un fichier à partir du CSV
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const file = new File([blob], `${list.name.replace(/[^a-z0-9]/gi, '_')}.csv`, { type: 'text/csv' });
+
+  // Vérifier si le partage de fichiers est supporté
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({
+      title: list.name,
+      files: [file]
+    }).catch(() => {
+      downloadCSV(csvContent, list.name);
+    });
   } else {
-    downloadTxt(text, list.name);
+    downloadCSV(csvContent, list.name);
   }
 }
 
-function buildTxtContent(list) {
-  const sep  = '─'.repeat(36);
-  const date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-  let txt = '';
-  txt += `${list.emoji || '🛒'}  ${list.name.toUpperCase()}\n`;
-  txt += `${sep}\n`;
-  txt += `📅 ${date}\n\n`;
-
-  const groups = {};
-  list.items.forEach(item => {
-    const key = item.cat || 'Divers';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
-
-  Object.entries(groups).forEach(([cat, items]) => {
-    if (cat !== 'Divers' || Object.keys(groups).length > 1) {
-      txt += `\n▸ ${cat}\n`;
-    }
-    items.forEach(item => {
-      const check    = item.ck ? '✓' : '☐';
-      const qty      = (item.qty || 1) > 1 ? `  x${item.qty}` : '    ';
-      const price    = item.price ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} €` : '';
-      const note     = item.note ? `  (${item.note})` : '';
-      const name     = item.text.padEnd(22, ' ');
-      txt += `  ${check}  ${name}${qty}${price}${note}\n`;
-    });
-  });
-
-  const total = list.items.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
-  const done  = list.items.filter(i => i.ck).length;
-
-  txt += `\n${sep}\n`;
-  txt += `✅ Cochés : ${done} / ${list.items.length} article${list.items.length !== 1 ? 's' : ''}\n`;
-  if (total > 0) txt += `💰 Total  : ${total.toFixed(2)} €\n`;
-  txt += `\n📱 Courses Malin\n`;
-  return txt;
-}
-
-function downloadTxt(content, listName) {
-  const blob     = new Blob([content], { type: 'text/plain;charset=utf-8' });
-  const url      = URL.createObjectURL(blob);
-  const anchor   = document.createElement('a');
-  const filename = listName.replace(/[^a-z0-9\-_]/gi, '_').toLowerCase();
-
-  anchor.href     = url;
-  anchor.download = `${filename}.txt`;
-  anchor.click();
+function downloadCSV(content, listName) {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${listName.replace(/[^a-z0-9]/gi, '_')}.csv`;
+  a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -895,7 +973,6 @@ function closeSheet() {
 /* =============================================================
    17. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
-
 function startBarcodeScan() {
   if (html5QrCode) return; // déjà en cours
 
@@ -1058,7 +1135,9 @@ function addProductFromScan(product) {
     note: product.brands || '',
     cat: cat,
     ck: false,
-    barcode: lastScannedBarcode
+    barcode: lastScannedBarcode,
+    unit: 'pce',
+    pricePerUnit: 0
   });
   saveData();
   renderHome();
@@ -1130,7 +1209,6 @@ function esc(str) {
 /* =============================================================
    22. EXPORT / IMPORT CSV (avec sélection)
 ============================================================= */
-
 function showExportSelector() {
   const container = document.getElementById('exportListCheckboxes');
   if (lists.length === 0) {
@@ -1260,7 +1338,9 @@ function importListsFromCSV() {
           price: parseFloat(cols[3]) || 0,
           cat: cols[4] || '',
           note: cols[5] || '',
-          ck: cols[6] === '1' ? true : false
+          ck: cols[6] === '1' ? true : false,
+          unit: 'pce',
+          pricePerUnit: 0
         };
         listMap[listName].items.push(item);
       }
@@ -1315,6 +1395,9 @@ function attachListeners() {
   });
   document.getElementById('deleteMapBtn').addEventListener('click', deleteMap);
   document.getElementById('mapThumb').addEventListener('click', viewMap);
+  document.getElementById('locateStoreBtn').addEventListener('click', () => {
+    if (activeId) locateStore(activeId);
+  });
 
   // État vide
   document.getElementById('emptyState').addEventListener('click', () => {
@@ -1330,6 +1413,15 @@ function attachListeners() {
   document.getElementById('qtyMinus').addEventListener('click', () => adjustSheetQty(-1));
   document.getElementById('qtyPlus').addEventListener('click',  () => adjustSheetQty(+1));
   document.getElementById('iSubmit').addEventListener('click', confirmItem);
+  document.getElementById('iUnit').addEventListener('change', function() {
+    const unit = this.value;
+    const pricePerUnitField = document.getElementById('fldPricePerUnit');
+    if (unit === 'kg' || unit === 'l' || unit === 'g' || unit === 'ml') {
+      pricePerUnitField.style.display = 'block';
+    } else {
+      pricePerUnitField.style.display = 'none';
+    }
+  });
 
   // Toggle scan multiple
   document.getElementById('multiScanToggle').addEventListener('click', () => {
@@ -1358,6 +1450,9 @@ function attachListeners() {
     document.getElementById('scanResultPanel').style.display = 'none';
   });
 
+  // Speech
+  document.getElementById('btnSpeech').addEventListener('click', startListening);
+
   // Sheet Liste
   document.getElementById('lName').addEventListener('input', validateListForm);
   document.getElementById('lSubmit').addEventListener('click', confirmList);
@@ -1380,6 +1475,7 @@ function attachListeners() {
   document.getElementById('btnPlaySound').addEventListener('click', playSound);
   document.getElementById('btnStopSound').addEventListener('click', stopSound);
   document.getElementById('btnReset').addEventListener('click',   resetAll);
+  document.getElementById('btnHelp').addEventListener('click', () => goTo('help'));
 
   // Éditeur d'image
   document.getElementById('btnRotateLeft').addEventListener('click', () => {

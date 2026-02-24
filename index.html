@@ -13,6 +13,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
   <link rel="manifest" href="assets/manifest/site.webmanifest">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style2.css"> <!-- Nouveaux styles -->
   <!-- Cropper.js pour l'édition d'image -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 </head>
@@ -27,7 +28,7 @@
     </button>
     <div class="htitle-wrap">
       <img src="assets/images/LogoCourses.png" alt="" class="hlogo" id="headerLogo" aria-hidden="false" role="button" tabindex="0" aria-label="Afficher le logo en grand">
-      <h1 id="htitle">Mes Courses</h1>
+      <h1 id="htitle" data-i18n="app_name">Mes Courses</h1>
     </div>
     <button class="hbtn pri" id="btnAdd" aria-label="Ajouter un article">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
@@ -38,10 +39,11 @@
   </header>
 
   <main id="content" role="main">
+    <!-- ACCUEIL -->
     <section class="view on" id="v-home" aria-label="Accueil">
       <div class="card bcard" aria-label="Suivi du budget">
         <div class="brow">
-          <span class="btag">💰 Budget</span>
+          <span class="btag" data-i18n="home.budget">💰 Budget</span>
           <div class="btotal">
             <input type="number" id="budgetIn" step="1" min="0" value="50" aria-label="Budget total en euros" inputmode="decimal">
             <span aria-hidden="true">€</span>
@@ -49,12 +51,13 @@
         </div>
         <div class="bstats">
           <div class="bst">
-            <div class="bst-lbl">Dépensé</div>
+            <div class="bst-lbl" data-i18n="home.spent">Dépensé</div>
             <div class="bst-val" id="spentV" aria-live="polite">0.00 €</div>
           </div>
           <div class="bst">
-            <div class="bst-lbl">Restant</div>
-            <div class="bst-val ok" id="remV" aria-live="polite">50.00 €</div>
+            <!-- Ajout de l'id pour le label Restant -->
+            <div class="bst-lbl" id="remLbl" data-i18n="home.remaining">Restant</div>
+            <div class="bst-val" id="remV" aria-live="polite">50.00 €</div>
           </div>
         </div>
         <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbarWrap">
@@ -68,7 +71,7 @@
       <div class="alist" aria-label="Liste active sélectionnée">
         <span id="aListIco" aria-hidden="true">🛒</span>
         <div class="alist-info">
-          <div class="alist-sub">Liste active</div>
+          <div class="alist-sub" data-i18n="home.active_list">Liste active</div>
           <div class="alist-name" id="aListName">Aucune liste</div>
         </div>
         <button class="alist-share" id="btnShare" aria-label="Partager la liste">
@@ -90,6 +93,7 @@
             <button class="sact-btn" id="viewMapBtn" style="padding: 5px 12px;">Voir</button>
             <button class="sact-btn sact-muted" id="changeMapBtn" style="padding: 5px 12px;">Changer</button>
             <button class="sact-btn sact-danger" id="deleteMapBtn" style="padding: 5px 12px;">Supprimer</button>
+            <button class="sact-btn sact-muted" id="locateStoreBtn" style="padding: 5px 12px;">📍 Localiser</button>
           </div>
           <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
@@ -100,7 +104,7 @@
           <circle cx="11" cy="11" r="8"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        <input type="search" id="searchIn" placeholder="Rechercher un article…" aria-label="Rechercher dans la liste" autocomplete="off">
+        <input type="search" id="searchIn" data-i18n="home.search_placeholder" placeholder="Rechercher un article…" aria-label="Rechercher dans la liste" autocomplete="off">
       </div>
 
       <div class="card" id="itemsCont" aria-label="Articles de la liste">
@@ -110,32 +114,33 @@
             <line x1="3" y1="6" x2="21" y2="6"/>
             <path d="M16 10a4 4 0 01-8 0"/>
           </svg>
-          <h2>Liste vide</h2>
-          <p>Appuyez sur + pour ajouter votre premier article</p>
+          <h2 data-i18n="home.empty_title">Liste vide</h2>
+          <p data-i18n="home.empty_text">Appuyez sur + pour ajouter votre premier article</p>
         </div>
         <ul id="itemsList" aria-label="Articles"></ul>
       </div>
 
       <div class="tbar" aria-label="Résumé">
-        <span class="tbar-lbl">Total articles</span>
+        <span class="tbar-lbl" data-i18n="home.total_articles">Total articles</span>
         <span class="tbar-val" id="totCount" aria-live="polite">0 article</span>
       </div>
     </section>
 
+    <!-- MES LISTES -->
     <section class="view" id="v-lists" aria-label="Mes listes de courses">
       <div class="vhdr">
-        <h2>Mes Listes</h2>
+        <h2 data-i18n="nav.lists">Mes Listes</h2>
         <button class="addbtn" id="btnNewList" aria-label="Créer une nouvelle liste">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          Nouvelle
+          <span data-i18n="lists.new_list">Nouvelle</span>
         </button>
       </div>
       <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-        <button class="sact-btn" id="btnExportLists">📤 Exporter les listes</button>
-        <button class="sact-btn" id="btnImportLists">📥 Importer un fichier</button>
+        <button class="sact-btn" id="btnExportLists" data-i18n="lists.export">📤 Exporter les listes</button>
+        <button class="sact-btn" id="btnImportLists" data-i18n="lists.import">📥 Importer un fichier</button>
       </div>
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
@@ -145,35 +150,46 @@
           <line x1="8" y1="12" x2="16" y2="12"/>
           <line x1="8" y1="16" x2="12" y2="16"/>
         </svg>
-        <h2>Aucune liste</h2>
-        <p>Créez votre première liste de courses</p>
+        <h2 data-i18n="lists.empty_title">Aucune liste</h2>
+        <p data-i18n="lists.empty_text">Créez votre première liste de courses</p>
       </div>
     </section>
 
+    <!-- RÉGLAGES -->
     <section class="view" id="v-settings" aria-label="Réglages de l'application">
-      <h2 class="vtitle">Réglages</h2>
+      <h2 class="vtitle" data-i18n="nav.settings">Réglages</h2>
       <div class="ssec">
-        <p class="stitle">Apparence</p>
+        <p class="stitle" data-i18n="settings.appearance">Apparence</p>
         <div class="sgroup">
           <div class="srow">
-            <span class="slbl">Mode sombre</span>
+            <span class="slbl" data-i18n="settings.dark_mode">Mode sombre</span>
             <button class="tog" id="darkTog" role="switch" aria-checked="false" aria-label="Activer le mode sombre"></button>
           </div>
           <div class="srow srow-col">
-            <span class="slbl">Couleur principale</span>
+            <span class="slbl" data-i18n="settings.primary_color">Couleur principale</span>
             <div class="cgrid" id="cGrid" role="group" aria-label="Choisir la couleur principale"></div>
+          </div>
+          <div class="srow">
+            <span class="slbl" data-i18n="settings.language">Langue</span>
+            <select id="langSelector" class="ssel" aria-label="Langue">
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="zh">中文</option>
+              <option value="ru">Русский</option>
+            </select>
           </div>
         </div>
       </div>
       <div class="ssec">
-        <p class="stitle">Alerte Budget</p>
+        <p class="stitle" data-i18n="settings.budget_alert">Alerte Budget</p>
         <div class="sgroup">
           <div class="srow">
-            <span class="slbl">Activer l'alerte sonore</span>
+            <span class="slbl" data-i18n="settings.enable_sound">Activer l'alerte sonore</span>
             <button class="tog" id="soundTog" role="switch" aria-checked="true" aria-label="Activer ou désactiver l'alerte sonore"></button>
           </div>
           <div class="srow">
-            <span class="slbl">Son d'alerte</span>
+            <span class="slbl" data-i18n="settings.sound">Son d'alerte</span>
             <select class="ssel" id="soundSel" aria-label="Choisir le son d'alerte">
               <option value="A">Son A</option>
               <option value="B">Son B</option>
@@ -185,29 +201,73 @@
             </select>
           </div>
           <div class="srow">
-            <span class="slbl">Tester le son</span>
+            <span class="slbl" data-i18n="settings.test_sound">Tester le son</span>
             <button class="sact-btn" id="btnPlaySound" aria-label="Tester le son d'alerte">▶ Test</button>
           </div>
           <div class="srow">
-            <span class="slbl">Arrêter le son</span>
+            <span class="slbl" data-i18n="settings.stop_sound">Arrêter le son</span>
             <button class="sact-btn sact-muted" id="btnStopSound" aria-label="Arrêter le son d'alerte">⏹ Stop</button>
+          </div>
+          <div class="srow">
+            <span class="slbl" data-i18n="settings.thresholds">Seuils d'alerte</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <label class="threshold-checkbox"><input type="checkbox" id="threshold50" checked> 50%</label>
+              <label class="threshold-checkbox"><input type="checkbox" id="threshold80" checked> 80%</label>
+              <label class="threshold-checkbox"><input type="checkbox" id="threshold100" checked> 100%</label>
+            </div>
           </div>
         </div>
       </div>
       <div class="ssec">
-        <p class="stitle">Outils</p>
+        <p class="stitle" data-i18n="settings.tools">Outils</p>
         <div class="sgroup">
           <div class="srow">
-            <span class="slbl">Calculatrice Conso</span>
+            <span class="slbl" data-i18n="settings.calculator">Calculatrice Conso</span>
             <a href="https://calcul-conso.netlify.app/" target="_blank" rel="noopener noreferrer" class="sact-btn" aria-label="Ouvrir la calculatrice (nouvel onglet)">🧮 Ouvrir</a>
           </div>
           <div class="srow">
-            <span class="slbl sbl-danger">Réinitialiser toutes les données</span>
+            <span class="slbl" data-i18n="settings.help">Aide</span>
+            <button class="sact-btn" id="btnHelp" aria-label="Aide" data-i18n="settings.help_button">Ouvrir</button>
+          </div>
+          <div class="srow">
+            <span class="slbl sbl-danger" data-i18n="settings.reset">Réinitialiser toutes les données</span>
             <button class="sact-btn sact-danger" id="btnReset" aria-label="Effacer toutes les données">Effacer</button>
           </div>
         </div>
       </div>
       <p class="app-version">Courses Malin · v2.3</p>
+    </section>
+
+    <!-- AIDE -->
+    <section class="view" id="v-help" aria-label="Aide">
+      <h2 class="vtitle" data-i18n="nav.help">Aide</h2>
+      <div class="card" style="padding: 16px;">
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.overview">Vue d'ensemble</p>
+          <p data-i18n="help.overview_text">Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.features">Fonctionnalités principales</p>
+          <ul style="list-style: disc; padding-left: 20px;">
+            <li data-i18n="help.feature_lists">📋 Création et gestion de plusieurs listes</li>
+            <li data-i18n="help.feature_scan">📷 Scan de codes-barres (via Open Food Facts)</li>
+            <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes</li>
+            <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
+            <li data-i18n="help.feature_export">📤 Export/Import CSV</li>
+            <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes</li>
+          </ul>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.tips">Astuces</p>
+          <p data-i18n="help.tip_empty">• L'état vide est intelligent : cliquez dessus pour créer une liste ou ajouter un article.</p>
+          <p data-i18n="help.tip_scan">• Le mode scan multiple permet d'enchaîner les scans sans fermer la caméra.</p>
+          <p data-i18n="help.tip_price">• Cliquez sur le prix d'un article pour le modifier directement.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.support">Support</p>
+          <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -217,7 +277,7 @@
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Accueil
+      <span data-i18n="nav.home">Accueil</span>
     </button>
     <button class="tab" id="t-lists" aria-label="Mes Listes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -228,14 +288,14 @@
         <line x1="3" y1="12" x2="3.01" y2="12"/>
         <line x1="3" y1="18" x2="3.01" y2="18"/>
       </svg>
-      Mes Listes
+      <span data-i18n="nav.lists">Mes Listes</span>
     </button>
     <button class="tab" id="t-settings" aria-label="Réglages">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
       </svg>
-      Réglages
+      <span data-i18n="nav.settings">Réglages</span>
     </button>
   </nav>
 
@@ -267,6 +327,7 @@
         <div style="display: flex; gap: 8px;">
           <input type="text" id="iName" placeholder="Ex : Pain, Lait, Beurre…" autocomplete="off" aria-required="true" aria-describedby="iNameHint" style="flex: 1;">
           <button type="button" id="btnScanBarcode" class="sact-btn" style="padding: 0 12px; white-space: nowrap;" aria-label="Scanner un code-barres">📷 Scanner</button>
+          <button type="button" id="btnSpeech" class="sact-btn" style="padding: 0 12px;" aria-label="Ajouter par la voix">🎤</button>
         </div>
         <p class="multi-hint" id="iNameHint"></p>
       </div>
@@ -306,6 +367,24 @@
         <label for="iPrice">Prix unitaire (€)</label>
         <input type="number" id="iPrice" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
       </div>
+
+      <!-- NOUVEAU : Unité et prix au kilo -->
+      <div class="fld" id="fldUnit">
+        <label for="iUnit">Unité</label>
+        <select id="iUnit">
+          <option value="pce">pièce</option>
+          <option value="kg">kilogramme (kg)</option>
+          <option value="g">gramme (g)</option>
+          <option value="l">litre (L)</option>
+          <option value="ml">millilitre (mL)</option>
+          <option value="pack">paquet</option>
+        </select>
+      </div>
+      <div class="fld" id="fldPricePerUnit" style="display: none;">
+        <label for="iPricePerUnit">Prix au kg/L (€)</label>
+        <input type="number" id="iPricePerUnit" step="0.01" min="0" placeholder="0.00">
+      </div>
+
       <div class="fld">
         <label for="iCat">Catégorie</label>
         <select id="iCat">
@@ -403,6 +482,14 @@
   <!-- Bibliothèques externes -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <!-- Nouveaux scripts -->
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/units.js"></script>
+  <script src="assets/js/dragdrop.js"></script>
+  <script src="assets/js/speech.js"></script>
+  <script src="assets/js/geolocation.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 </html>

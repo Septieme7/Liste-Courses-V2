@@ -1,0 +1,39 @@
+/* Additional styles for new features */
+
+.unit-badge {
+  font-size: 11px;
+  color: var(--tx2);
+  margin-left: 4px;
+}
+
+.price-per-unit {
+  font-size: 10px;
+  color: var(--tx3);
+  display: block;
+  line-height: 1.2;
+}
+
+#locateStoreBtn {
+  margin-left: auto;
+}
+
+#langSelector {
+  width: auto;
+  min-width: 100px;
+}
+
+.threshold-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--tx2);
+}
+
+.help-section {
+  margin-bottom: 20px;
+}
+.help-section ul {
+  list-style: disc;
+  padding-left: 20px;
+}

@@ -1,0 +1,84 @@
+{
+  "app_name": "Smart Shopping",
+  "nav": {
+    "home": "Home",
+    "lists": "My Lists",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "home": {
+    "budget": "💰 Budget",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "overbudget": "Overshoot",
+    "active_list": "Active list",
+    "no_list": "No list",
+    "search_placeholder": "Search items…",
+    "empty_title": "Empty list",
+    "empty_text": "Tap + to add your first item",
+    "total_articles": "Total items"
+  },
+  "lists": {
+    "title": "My Lists",
+    "new_list": "New",
+    "export": "📤 Export lists",
+    "import": "📥 Import file",
+    "empty_title": "No lists",
+    "empty_text": "Create your first shopping list"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "dark_mode": "Dark mode",
+    "primary_color": "Primary color",
+    "budget_alert": "Budget Alert",
+    "enable_sound": "Enable sound alert",
+    "sound": "Alert sound",
+    "test_sound": "Test sound",
+    "stop_sound": "Stop sound",
+    "tools": "Tools",
+    "calculator": "Calculator",
+    "reset": "Reset all data",
+    "help": "Help",
+    "help_button": "Open",
+    "language": "Language",
+    "thresholds": "Alert thresholds"
+  },
+  "help": {
+    "title": "Help",
+    "overview": "Overview",
+    "overview_text": "Smart Shopping helps you manage your shopping lists, track your budget and organize your purchases.",
+    "features": "Main features",
+    "feature_lists": "📋 Create and manage multiple lists",
+    "feature_scan": "📷 Barcode scanning (via Open Food Facts)",
+    "feature_budget": "💰 Budget tracking with alerts",
+    "feature_map": "🗺️ Store map attached to each list",
+    "feature_export": "📤 CSV Export/Import",
+    "feature_custom": "🎨 Theme customization",
+    "tips": "Tips",
+    "tip_empty": "• The empty state is smart: click it to create a list or add an item.",
+    "tip_scan": "• Multi-scan mode lets you scan items continuously.",
+    "tip_price": "• Click on an item's price to edit it inline.",
+    "support": "Support",
+    "support_text": "For any question, open an issue on <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+  },
+  "share": {
+    "no_list": "No list selected",
+    "empty_list": "The list is empty, nothing to share"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "units": {
+    "piece": "piece",
+    "kg": "kilogram",
+    "g": "gram",
+    "l": "liter",
+    "ml": "milliliter",
+    "pack": "pack"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "app_name": "Courses Malin",
+  "nav": {
+    "home": "Accueil",
+    "lists": "Mes Listes",
+    "settings": "Réglages",
+    "help": "Aide"
+  },
+  "home": {
+    "budget": "💰 Budget",
+    "spent": "Dépensé",
+    "remaining": "Restant",
+    "overbudget": "Dépassement",
+    "active_list": "Liste active",
+    "no_list": "Aucune liste",
+    "search_placeholder": "Rechercher un article…",
+    "empty_title": "Liste vide",
+    "empty_text": "Appuyez sur + pour ajouter votre premier article",
+    "total_articles": "Total articles"
+  },
+  "lists": {
+    "title": "Mes Listes",
+    "new_list": "Nouvelle",
+    "export": "📤 Exporter les listes",
+    "import": "📥 Importer un fichier",
+    "empty_title": "Aucune liste",
+    "empty_text": "Créez votre première liste de courses"
+  },
+  "settings": {
+    "title": "Réglages",
+    "appearance": "Apparence",
+    "dark_mode": "Mode sombre",
+    "primary_color": "Couleur principale",
+    "budget_alert": "Alerte Budget",
+    "enable_sound": "Activer l'alerte sonore",
+    "sound": "Son d'alerte",
+    "test_sound": "Tester le son",
+    "stop_sound": "Arrêter le son",
+    "tools": "Outils",
+    "calculator": "Calculatrice Conso",
+    "reset": "Réinitialiser toutes les données",
+    "help": "Aide",
+    "help_button": "Ouvrir",
+    "language": "Langue",
+    "thresholds": "Seuils d'alerte"
+  },
+  "help": {
+    "title": "Aide",
+    "overview": "Vue d'ensemble",
+    "overview_text": "Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.",
+    "features": "Fonctionnalités principales",
+    "feature_lists": "📋 Création et gestion de plusieurs listes",
+    "feature_scan": "📷 Scan de codes-barres (via Open Food Facts)",
+    "feature_budget": "💰 Suivi du budget avec alertes",
+    "feature_map": "🗺️ Carte du magasin associée à chaque liste",
+    "feature_export": "📤 Export/Import CSV",
+    "feature_custom": "🎨 Personnalisation des thèmes",
+    "tips": "Astuces",
+    "tip_empty": "• L'état vide est intelligent : cliquez dessus pour créer une liste ou ajouter un article.",
+    "tip_scan": "• Le mode scan multiple permet d'enchaîner les scans sans fermer la caméra.",
+    "tip_price": "• Cliquez sur le prix d'un article pour le modifier directement.",
+    "support": "Support",
+    "support_text": "Pour toute question, ouvrez une issue sur <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+  },
+  "share": {
+    "no_list": "Aucune liste sélectionnée",
+    "empty_list": "La liste est vide, rien à partager"
+  },
+  "common": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier"
+  },
+  "units": {
+    "piece": "pièce",
+    "kg": "kilogramme",
+    "g": "gramme",
+    "l": "litre",
+    "ml": "millilitre",
+    "pack": "paquet"
+  }
+}

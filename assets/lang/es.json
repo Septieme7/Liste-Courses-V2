@@ -1,0 +1,84 @@
+{
+  "app_name": "Lista de Compras",
+  "nav": {
+    "home": "Inicio",
+    "lists": "Mis Listas",
+    "settings": "Ajustes",
+    "help": "Ayuda"
+  },
+  "home": {
+    "budget": "💰 Presupuesto",
+    "spent": "Gastado",
+    "remaining": "Restante",
+    "overbudget": "Excedido",
+    "active_list": "Lista activa",
+    "no_list": "Sin lista",
+    "search_placeholder": "Buscar artículo…",
+    "empty_title": "Lista vacía",
+    "empty_text": "Pulsa + para añadir tu primer artículo",
+    "total_articles": "Total artículos"
+  },
+  "lists": {
+    "title": "Mis Listas",
+    "new_list": "Nueva",
+    "export": "📤 Exportar listas",
+    "import": "📥 Importar archivo",
+    "empty_title": "Sin listas",
+    "empty_text": "Crea tu primera lista de compras"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "appearance": "Apariencia",
+    "dark_mode": "Modo oscuro",
+    "primary_color": "Color principal",
+    "budget_alert": "Alerta de presupuesto",
+    "enable_sound": "Activar alerta sonora",
+    "sound": "Sonido de alerta",
+    "test_sound": "Probar sonido",
+    "stop_sound": "Detener sonido",
+    "tools": "Herramientas",
+    "calculator": "Calculadora",
+    "reset": "Reiniciar todos los datos",
+    "help": "Ayuda",
+    "help_button": "Abrir",
+    "language": "Idioma",
+    "thresholds": "Umbrales de alerta"
+  },
+  "help": {
+    "title": "Ayuda",
+    "overview": "Resumen",
+    "overview_text": "Lista de Compras te ayuda a gestionar tus listas de la compra, controlar tu presupuesto y organizar tus compras.",
+    "features": "Características principales",
+    "feature_lists": "📋 Crear y gestionar múltiples listas",
+    "feature_scan": "📷 Escaneo de códigos de barras (vía Open Food Facts)",
+    "feature_budget": "💰 Seguimiento de presupuesto con alertas",
+    "feature_map": "🗺️ Mapa de la tienda asociado a cada lista",
+    "feature_export": "📤 Exportación/Importación CSV",
+    "feature_custom": "🎨 Personalización de temas",
+    "tips": "Consejos",
+    "tip_empty": "• El estado vacío es inteligente: haz clic para crear una lista o añadir un artículo.",
+    "tip_scan": "• El modo de escaneo múltiple permite escanear continuamente.",
+    "tip_price": "• Haz clic en el precio de un artículo para editarlo directamente.",
+    "support": "Soporte",
+    "support_text": "Para cualquier pregunta, abre un issue en <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+  },
+  "share": {
+    "no_list": "Ninguna lista seleccionada",
+    "empty_list": "La lista está vacía, nada que compartir"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar"
+  },
+  "units": {
+    "piece": "pieza",
+    "kg": "kilogramo",
+    "g": "gramo",
+    "l": "litro",
+    "ml": "mililitro",
+    "pack": "paquete"
+  }
+}
