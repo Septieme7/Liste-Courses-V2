@@ -82,17 +82,17 @@
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
         </button>
-        <button class="alist-chg" id="btnChangeList" aria-label="Changer de liste active">Changer</button>
+        <button class="alist-chg" id="btnChangeList" data-i18n="home.change_list" aria-label="Changer de liste active">Changer</button>
       </div>
 
       <div id="listMapContainer" style="margin-bottom: 12px; display: none;">
         <div class="card" style="padding: 12px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-weight: 600;" data-i18n="home.map_title">🗺️ Carte du magasin</span>
-            <button class="sact-btn" id="viewMapBtn" style="padding: 5px 12px;">Voir</button>
-            <button class="sact-btn sact-muted" id="changeMapBtn" style="padding: 5px 12px;">Changer</button>
-            <button class="sact-btn sact-danger" id="deleteMapBtn" style="padding: 5px 12px;">Supprimer</button>
-            <button class="sact-btn sact-muted" id="locateStoreBtn" style="padding: 5px 12px;">📍 Localiser</button>
+            <button class="sact-btn" id="viewMapBtn" data-i18n="home.view_map" style="padding: 5px 12px;">Voir</button>
+            <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n="home.change_map" style="padding: 5px 12px;">Changer</button>
+            <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n="home.delete_map" style="padding: 5px 12px;">Supprimer</button>
+            <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n="home.locate_store" style="padding: 5px 12px;">📍 Localiser</button>
           </div>
           <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
@@ -226,11 +226,11 @@
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.help">Aide</span>
-            <button class="sact-btn" id="btnHelp" aria-label="Aide" data-i18n="settings.help_button">Ouvrir</button>
+            <button class="sact-btn" id="btnHelp" data-i18n="settings.help_button" aria-label="Aide">Ouvrir</button>
           </div>
           <div class="srow">
             <span class="slbl sbl-danger" data-i18n="settings.reset">Réinitialiser toutes les données</span>
-            <button class="sact-btn sact-danger" id="btnReset" aria-label="Effacer toutes les données">Effacer</button>
+            <button class="sact-btn sact-danger" id="btnReset" data-i18n="settings.reset_button" aria-label="Effacer toutes les données">Effacer</button>
           </div>
         </div>
       </div>
@@ -314,19 +314,19 @@
     <h2 class="stit" id="shItemTitle">Ajouter un article</h2>
     <div class="sbody">
       <div class="fld">
-        <label>Suggestions rapides <span class="hint">(cliquez pour cumuler)</span></label>
+        <label data-i18n="item.quick_suggestions">Suggestions rapides <span class="hint" data-i18n="item.click_to_add">(cliquez pour cumuler)</span></label>
         <div class="chips" id="qChips" role="group" aria-label="Suggestions rapides"></div>
       </div>
 
       <div class="fld">
         <label for="iName">
-          Nom
+          <span data-i18n="item.name_label">Nom</span>
           <span aria-hidden="true">*</span>
-          <span class="hint"> — séparez par une virgule pour en ajouter plusieurs</span>
+          <span class="hint" data-i18n="item.name_hint"> — séparez par une virgule pour en ajouter plusieurs</span>
         </label>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="iName" placeholder="Ex : Pain, Lait, Beurre…" autocomplete="off" aria-required="true" aria-describedby="iNameHint" style="flex: 1;">
-          <button type="button" id="btnScanBarcode" class="sact-btn" style="padding: 0 12px; white-space: nowrap;" aria-label="Scanner un code-barres">📷 Scanner</button>
+          <input type="text" id="iName" data-i18n="item.name_placeholder" placeholder="Ex : Pain, Lait, Beurre…" autocomplete="off" aria-required="true" aria-describedby="iNameHint" style="flex: 1;">
+          <button type="button" id="btnScanBarcode" class="sact-btn" style="padding: 0 12px; white-space: nowrap;" data-i18n="item.scan_button" aria-label="Scanner un code-barres">📷 Scanner</button>
           <button type="button" id="btnSpeech" class="sact-btn" style="padding: 0 12px;" aria-label="Ajouter par la voix">🎤</button>
         </div>
         <p class="multi-hint" id="iNameHint"></p>
@@ -334,7 +334,7 @@
 
       <!-- Mode scan multiple -->
       <div class="fld" style="display: flex; align-items: center; justify-content: space-between;">
-        <label for="multiScanToggle">Mode scan multiple</label>
+        <label for="multiScanToggle" data-i18n="item.multi_scan">Mode scan multiple</label>
         <button class="tog" id="multiScanToggle" role="switch" aria-checked="false"></button>
       </div>
 
@@ -342,21 +342,21 @@
       <div id="scannerContainer" style="display: none; margin-top: 10px; border-radius: var(--r-sm); overflow: hidden; background: #000; min-height: 250px;">
         <div id="qr-reader" style="width: 100%;"></div>
         <div style="display: flex; gap: 8px; padding: 8px; justify-content: center;">
-          <button class="sact-btn sact-muted" id="btnStopScan">Arrêter</button>
+          <button class="sact-btn sact-muted" id="btnStopScan" data-i18n="item.stop_scan">Arrêter</button>
         </div>
         <!-- Panneau de résultat pour le scan multiple -->
         <div id="scanResultPanel" style="display: none; background: var(--sur); padding: 10px; border-radius: 8px; margin-top: 8px;">
           <div id="scanProductName" style="font-weight: 600; margin-bottom: 5px;"></div>
           <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-            <button class="sact-btn sact-muted" id="scanIgnoreBtn">Ignorer</button>
-            <button class="sact-btn" id="scanAddBtn">Ajouter</button>
-            <button class="sact-btn sact-danger" id="scanStopBtn">Arrêter</button>
+            <button class="sact-btn sact-muted" id="scanIgnoreBtn" data-i18n="item.scan_ignore">Ignorer</button>
+            <button class="sact-btn" id="scanAddBtn" data-i18n="item.scan_add">Ajouter</button>
+            <button class="sact-btn sact-danger" id="scanStopBtn" data-i18n="item.scan_stop">Arrêter</button>
           </div>
         </div>
       </div>
 
       <div class="fld" id="fldQty">
-        <label id="qtyLbl">Quantité</label>
+        <label id="qtyLbl" data-i18n="item.quantity">Quantité</label>
         <div class="stepper" role="group" aria-labelledby="qtyLbl">
           <button class="stbtn" id="qtyMinus" aria-label="Diminuer la quantité">−</button>
           <span class="stval" id="qDisp" aria-live="polite">1</span>
@@ -364,31 +364,31 @@
         </div>
       </div>
       <div class="fld" id="fldPrice">
-        <label for="iPrice">Prix unitaire (€)</label>
-        <input type="number" id="iPrice" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
+        <label for="iPrice" data-i18n="item.price_label">Prix unitaire (€)</label>
+        <input type="number" id="iPrice" data-i18n="item.price_placeholder" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
       </div>
 
       <!-- NOUVEAU : Unité et prix au kilo -->
       <div class="fld" id="fldUnit">
-        <label for="iUnit">Unité</label>
+        <label for="iUnit" data-i18n="item.unit_label">Unité</label>
         <select id="iUnit">
-          <option value="pce">pièce</option>
-          <option value="kg">kilogramme (kg)</option>
-          <option value="g">gramme (g)</option>
-          <option value="l">litre (L)</option>
-          <option value="ml">millilitre (mL)</option>
-          <option value="pack">paquet</option>
+          <option value="pce" data-i18n="units.piece">pièce</option>
+          <option value="kg" data-i18n="units.kg">kilogramme (kg)</option>
+          <option value="g" data-i18n="units.g">gramme (g)</option>
+          <option value="l" data-i18n="units.l">litre (L)</option>
+          <option value="ml" data-i18n="units.ml">millilitre (mL)</option>
+          <option value="pack" data-i18n="units.pack">paquet</option>
         </select>
       </div>
       <div class="fld" id="fldPricePerUnit" style="display: none;">
-        <label for="iPricePerUnit">Prix au kg/L (€)</label>
+        <label for="iPricePerUnit" data-i18n="item.price_per_unit_label">Prix au kg/L (€)</label>
         <input type="number" id="iPricePerUnit" step="0.01" min="0" placeholder="0.00">
       </div>
 
       <div class="fld">
-        <label for="iCat">Catégorie</label>
+        <label for="iCat" data-i18n="item.category_label">Catégorie</label>
         <select id="iCat">
-          <option value="">Sans catégorie</option>
+          <option value="" data-i18n="item.no_category">Sans catégorie</option>
           <option value="🥦 Fruits &amp; Légumes">🥦 Fruits &amp; Légumes</option>
           <option value="🥩 Viandes &amp; Poissons">🥩 Viandes &amp; Poissons</option>
           <option value="🥛 Produits Laitiers">🥛 Produits Laitiers</option>
@@ -405,21 +405,21 @@
         </select>
       </div>
       <div class="fld" id="fldNote">
-        <label for="iNote">Note / Marque</label>
-        <textarea id="iNote" placeholder="Précisions, marque préférée…"></textarea>
+        <label for="iNote" data-i18n="item.note_label">Note / Marque</label>
+        <textarea id="iNote" data-i18n="item.note_placeholder" placeholder="Précisions, marque préférée…"></textarea>
       </div>
-      <button class="sbtn pri" id="iSubmit" disabled>Ajouter</button>
+      <button class="sbtn pri" id="iSubmit" data-i18n="item.add_button" disabled>Ajouter</button>
     </div>
   </div>
 
   <!-- Bottom Sheet : Créer une liste -->
   <div class="sheet" id="shList" role="dialog" aria-modal="true" aria-labelledby="shListTitle">
     <div class="shandle" aria-hidden="true"></div>
-    <h2 class="stit" id="shListTitle">Nouvelle liste</h2>
+    <h2 class="stit" id="shListTitle" data-i18n="lists.new_list_title">Nouvelle liste</h2>
     <div class="sbody">
       <div class="fld">
-        <label for="lName">Nom <span aria-hidden="true">*</span></label>
-        <input type="text" id="lName" placeholder="Ex : Supermarché, Semaine…" autocomplete="off" aria-required="true">
+        <label for="lName" data-i18n="lists.name_label">Nom <span aria-hidden="true">*</span></label>
+        <input type="text" id="lName" data-i18n="lists.name_placeholder" placeholder="Ex : Supermarché, Semaine…" autocomplete="off" aria-required="true">
       </div>
       <div class="fld">
         <label for="lEmoji">Emoji</label>
@@ -431,7 +431,7 @@
         <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
         <input type="hidden" id="lColor" value="#3B82F6">
       </div>
-      <button class="sbtn pri" id="lSubmit" disabled>Créer la liste</button>
+      <button class="sbtn pri" id="lSubmit" data-i18n="lists.create_button" disabled>Créer la liste</button>
     </div>
   </div>
 

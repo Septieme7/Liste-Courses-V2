@@ -85,12 +85,16 @@ function init() {
   applyTheme();
   syncSettingsUI();
   attachListeners();
-  renderAll();
-  
-  // Charger la langue si définie dans cfg
+
+  // Charger la langue avant le premier rendu
   if (cfg.lang) {
-    loadLanguage(cfg.lang);
+    loadLanguage(cfg.lang).then(() => {
+      renderAll();
+    });
+  } else {
+    renderAll();
   }
+
   // Initialiser les seuils d'alerte
   if (!cfg.thresholds) {
     cfg.thresholds = { 50: true, 80: true, 100: true };
@@ -358,8 +362,9 @@ function renderHome() {
     }
   }
 
-  document.getElementById('totCount').textContent = `${items.length} article${items.length !== 1 ? 's' : ''}`;
-  updateBudget();
+  let count = items.length;
+  let countText = count + ' ' + (count > 1 ? t('home.article_plural') : t('home.article_singular'));
+  document.getElementById('totCount').textContent = countText;
 }
 
 /* =============================================================
@@ -382,13 +387,15 @@ function renderLists() {
     const done     = list.items.filter(i => i.ck).length;
     const pct      = total > 0 ? (done / total) * 100 : 0;
     const isActive = list.id === activeId;
+    const totalText = total + ' ' + (total > 1 ? t('home.article_plural') : t('home.article_singular'));
+    const doneText = done + ' ' + (done > 1 ? t('home.checked_plural') : t('home.checked_singular'));
 
     return `
       <div class="lcard${isActive ? ' sel' : ''}" onclick="pickList('${list.id}')" role="button" tabindex="0" aria-label="Sélectionner ${esc(list.name)}" aria-pressed="${isActive}">
         <div class="lbanner" style="background:${list.color}22">${list.emoji || '🛒'}</div>
         <div class="linfo">
           <div class="lname" title="${esc(list.name)}">${esc(list.name)}</div>
-          <div class="lstats">${total} article${total !== 1 ? 's' : ''} · ${done} coché${done !== 1 ? 's' : ''}</div>
+          <div class="lstats">${totalText} · ${doneText}</div>
           <div class="lprog" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100">
             <div class="lprogf" style="width:${pct}%; background:${list.color}"></div>
           </div>

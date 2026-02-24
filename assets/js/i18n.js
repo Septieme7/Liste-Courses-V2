@@ -16,10 +16,11 @@ async function loadLanguage(lang) {
       if (typeof saveConfig === 'function') saveConfig();
     }
     applyTranslations();
-    // Re-render current view if needed
-    if (typeof renderHome === 'function' && currentTab === 'home') renderHome();
-    if (typeof renderLists === 'function' && currentTab === 'lists') renderLists();
-    if (currentTab !== 'home') {
+    // Re-render all views
+    if (typeof renderHome === 'function') renderHome();
+    if (typeof renderLists === 'function') renderLists();
+    // Update header title if not home
+    if (typeof currentTab !== 'undefined' && currentTab !== 'home') {
       document.getElementById('htitle').textContent = t(`nav.${currentTab}`);
     }
   } catch (error) {
@@ -49,6 +50,8 @@ function applyTranslations() {
     const key = el.getAttribute('data-i18n');
     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
       el.placeholder = t(key);
+    } else if (el.tagName === 'OPTION') {
+      el.textContent = t(key);
     } else {
       el.innerHTML = t(key);
     }

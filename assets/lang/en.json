@@ -6,7 +6,7 @@
     "settings": "Settings",
     "help": "Help"
   },
-"home": {
+  "home": {
     "budget": "💰 Budget",
     "spent": "Spent",
     "remaining": "Remaining",
@@ -21,11 +21,20 @@
     "view_map": "View",
     "change_map": "Change",
     "delete_map": "Delete",
-    "locate_store": "📍 Locate"
-},
+    "locate_store": "📍 Locate",
+    "change_list": "Change",
+    "article_singular": "item",
+    "article_plural": "items",
+    "checked_singular": "checked",
+    "checked_plural": "checked"
+  },
   "lists": {
     "title": "My Lists",
     "new_list": "New",
+    "new_list_title": "New list",
+    "name_label": "Name *",
+    "name_placeholder": "Ex: Supermarket, Week…",
+    "create_button": "Create list",
     "export": "📤 Export lists",
     "import": "📥 Import file",
     "empty_title": "No lists",
@@ -44,6 +53,7 @@
     "tools": "Tools",
     "calculator": "Calculator",
     "reset": "Reset all data",
+    "reset_button": "Reset",
     "help": "Help",
     "help_button": "Open",
     "language": "Language",
@@ -81,10 +91,33 @@
   },
   "units": {
     "piece": "piece",
-    "kg": "kilogram",
-    "g": "gram",
-    "l": "liter",
-    "ml": "milliliter",
+    "kg": "kilogram (kg)",
+    "g": "gram (g)",
+    "l": "liter (L)",
+    "ml": "milliliter (mL)",
     "pack": "pack"
+  },
+  "item": {
+    "quick_suggestions": "Quick suggestions",
+    "click_to_add": "(click to add)",
+    "name_label": "Name",
+    "name_hint": " — separate with commas to add multiple",
+    "name_placeholder": "Ex: Bread, Milk, Eggs…",
+    "scan_button": "📷 Scan",
+    "multi_scan": "Multi-scan mode",
+    "stop_scan": "Stop",
+    "scan_ignore": "Ignore",
+    "scan_add": "Add",
+    "scan_stop": "Stop",
+    "quantity": "Quantity",
+    "price_label": "Unit price (€)",
+    "price_placeholder": "0.00",
+    "unit_label": "Unit",
+    "price_per_unit_label": "Price per kg/L (€)",
+    "category_label": "Category",
+    "no_category": "No category",
+    "note_label": "Note / Brand",
+    "note_placeholder": "Details, preferred brand…",
+    "add_button": "Add"
   }
 }

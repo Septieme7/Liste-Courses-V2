@@ -6,7 +6,7 @@
     "settings": "Réglages",
     "help": "Aide"
   },
- "home": {
+  "home": {
     "budget": "💰 Budget",
     "spent": "Dépensé",
     "remaining": "Restant",
@@ -21,11 +21,20 @@
     "view_map": "Voir",
     "change_map": "Changer",
     "delete_map": "Supprimer",
-    "locate_store": "📍 Localiser"
-},
+    "locate_store": "📍 Localiser",
+    "change_list": "Changer",
+    "article_singular": "article",
+    "article_plural": "articles",
+    "checked_singular": "coché",
+    "checked_plural": "cochés"
+  },
   "lists": {
     "title": "Mes Listes",
     "new_list": "Nouvelle",
+    "new_list_title": "Nouvelle liste",
+    "name_label": "Nom *",
+    "name_placeholder": "Ex : Supermarché, Semaine…",
+    "create_button": "Créer la liste",
     "export": "📤 Exporter les listes",
     "import": "📥 Importer un fichier",
     "empty_title": "Aucune liste",
@@ -44,6 +53,7 @@
     "tools": "Outils",
     "calculator": "Calculatrice Conso",
     "reset": "Réinitialiser toutes les données",
+    "reset_button": "Effacer",
     "help": "Aide",
     "help_button": "Ouvrir",
     "language": "Langue",
@@ -81,10 +91,33 @@
   },
   "units": {
     "piece": "pièce",
-    "kg": "kilogramme",
-    "g": "gramme",
-    "l": "litre",
-    "ml": "millilitre",
+    "kg": "kilogramme (kg)",
+    "g": "gramme (g)",
+    "l": "litre (L)",
+    "ml": "millilitre (mL)",
     "pack": "paquet"
+  },
+  "item": {
+    "quick_suggestions": "Suggestions rapides",
+    "click_to_add": "(cliquez pour cumuler)",
+    "name_label": "Nom",
+    "name_hint": " — séparez par une virgule pour en ajouter plusieurs",
+    "name_placeholder": "Ex : Pain, Lait, Beurre…",
+    "scan_button": "📷 Scanner",
+    "multi_scan": "Mode scan multiple",
+    "stop_scan": "Arrêter",
+    "scan_ignore": "Ignorer",
+    "scan_add": "Ajouter",
+    "scan_stop": "Arrêter",
+    "quantity": "Quantité",
+    "price_label": "Prix unitaire (€)",
+    "price_placeholder": "0.00",
+    "unit_label": "Unité",
+    "price_per_unit_label": "Prix au kg/L (€)",
+    "category_label": "Catégorie",
+    "no_category": "Sans catégorie",
+    "note_label": "Note / Marque",
+    "note_placeholder": "Précisions, marque préférée…",
+    "add_button": "Ajouter"
   }
 }
