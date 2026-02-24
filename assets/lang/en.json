@@ -38,7 +38,9 @@
     "export": "📤 Export lists",
     "import": "📥 Import file",
     "empty_title": "No lists",
-    "empty_text": "Create your first shopping list"
+    "empty_text": "Create your first shopping list",
+    "emoji_label": "Emoji",
+    "color_label": "Color"
   },
   "settings": {
     "title": "Settings",

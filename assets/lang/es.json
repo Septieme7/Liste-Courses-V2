@@ -38,7 +38,9 @@
     "export": "📤 Exportar listas",
     "import": "📥 Importar archivo",
     "empty_title": "No hay listas",
-    "empty_text": "Crea tu primera lista de la compra"
+    "empty_text": "Crea tu primera lista de la compra",
+    "emoji_label": "Emoji",
+    "color_label": "Color"
   },
   "settings": {
     "title": "Ajustes",

@@ -38,7 +38,9 @@
     "export": "📤 导出清单",
     "import": "📥 导入文件",
     "empty_title": "暂无清单",
-    "empty_text": "创建您的第一个购物清单"
+    "empty_text": "创建您的第一个购物清单",
+    "emoji_label": "表情符号",
+    "color_label": "颜色"
   },
   "settings": {
     "title": "设置",

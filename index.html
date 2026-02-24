@@ -421,16 +421,16 @@
         <label for="lName" data-i18n="lists.name_label">Nom <span aria-hidden="true">*</span></label>
         <input type="text" id="lName" data-i18n="lists.name_placeholder" placeholder="Ex : Supermarché, Semaine…" autocomplete="off" aria-required="true">
       </div>
-      <div class="fld">
-        <label for="lEmoji">Emoji</label>
-        <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
-        <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
-      </div>
-      <div class="fld">
-        <label>Couleur</label>
-        <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
-        <input type="hidden" id="lColor" value="#3B82F6">
-      </div>
+        <div class="fld">
+          <label for="lEmoji" data-i18n="lists.emoji_label">Emoji</label>
+          <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
+          <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
+        </div>
+        <div class="fld">
+          <label data-i18n="lists.color_label">Couleur</label>
+          <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
+          <input type="hidden" id="lColor" value="#3B82F6">
+        </div>
       <button class="sbtn pri" id="lSubmit" data-i18n="lists.create_button" disabled>Créer la liste</button>
     </div>
   </div>

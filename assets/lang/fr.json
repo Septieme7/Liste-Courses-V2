@@ -38,7 +38,9 @@
     "export": "📤 Exporter les listes",
     "import": "📥 Importer un fichier",
     "empty_title": "Aucune liste",
-    "empty_text": "Créez votre première liste de courses"
+    "empty_text": "Créez votre première liste de courses",
+    "emoji_label": "Emoji",
+    "color_label": "Couleur"
   },
   "settings": {
     "title": "Réglages",

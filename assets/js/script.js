@@ -365,6 +365,9 @@ function renderHome() {
   let count = items.length;
   let countText = count + ' ' + (count > 1 ? t('home.article_plural') : t('home.article_singular'));
   document.getElementById('totCount').textContent = countText;
+  
+  // Mise à jour du budget
+  updateBudget();
 }
 
 /* =============================================================
@@ -922,18 +925,35 @@ function shareList() {
   if (!list.items.length) { showSnack(t('share.empty_list')); return; }
 
   const content = buildTxtContent(list);
-  const blob = new Blob([content], { type: 'text/plain' });
-  const file = new File([blob], `${list.name.replace(/[^a-z0-9]/gi, '_')}.txt`, { type: 'text/plain' });
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+  // Essayer d'utiliser l'API Web Share pour le texte
+  if (navigator.share) {
     navigator.share({
       title: list.name,
-      files: [file]
-    }).catch(() => {
-      downloadTxt(content, list.name);
+      text: content
+    }).catch(err => {
+      console.warn('Partage annulé ou erreur:', err);
+      // Fallback : copier dans le presse-papiers
+      copyToClipboard(content, list.name);
     });
   } else {
-    downloadTxt(content, list.name);
+    // API Share non supportée, copier dans le presse-papiers
+    copyToClipboard(content, list.name);
+  }
+}
+
+function copyToClipboard(text, listName) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showSnack('Liste copiée dans le presse-papiers !');
+    }).catch(err => {
+      console.error('Erreur de copie:', err);
+      showSnack('Impossible de copier, téléchargement...');
+      downloadTxt(text, listName);
+    });
+  } else {
+    // Fallback ultime : téléchargement
+    downloadTxt(text, listName);
   }
 }
 
