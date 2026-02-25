@@ -82,6 +82,14 @@
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
         </button>
+        <!-- Nouveau bouton : importer une autre liste -->
+        <button class="alist-share" id="btnImportToList" aria-label="Importer une autre liste">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </button>
         <button class="alist-chg" id="btnChangeList" data-i18n="home.change_list" aria-label="Changer de liste active">Changer</button>
       </div>
 
@@ -93,6 +101,8 @@
             <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n="home.change_map" style="padding: 5px 12px;">Changer</button>
             <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n="home.delete_map" style="padding: 5px 12px;">Supprimer</button>
             <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n="home.locate_store" style="padding: 5px 12px;">📍 Localiser</button>
+            <!-- Nouveau bouton itinéraire -->
+            <button class="sact-btn sact-muted" id="routeStoreBtn" data-i18n="home.route_store" style="padding: 5px 12px;">🧭 Itinéraire</button>
           </div>
           <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
@@ -137,9 +147,11 @@
           <span data-i18n="lists.new_list">Nouvelle</span>
         </button>
       </div>
-      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+      <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
         <button class="sact-btn" id="btnExportLists" data-i18n="lists.export">📤 Exporter les listes</button>
         <button class="sact-btn" id="btnImportLists" data-i18n="lists.import">📥 Importer un fichier</button>
+        <!-- Nouveau bouton : partage texte -->
+        <button class="sact-btn" id="btnShareListsText" data-i18n="lists.share_text">📤 Partager en texte</button>
       </div>
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
@@ -222,7 +234,7 @@
         <div class="sgroup">
           <div class="srow">
             <span class="slbl" data-i18n="settings.calculator">Calculatrice Conso</span>
-            <a href="https://calcul-conso.netlify.app/" target="_blank" rel="noopener noreferrer" class="sact-btn" aria-label="Ouvrir la calculatrice (nouvel onglet)">🧮</a>
+            <a href="https://calcul-conso.netlify.app/" target="_blank" rel="noopener noreferrer" class="sact-btn" aria-label="Ouvrir la calculatrice (nouvel onglet)">🧮 Ouvrir</a>
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.help">Aide</span>
@@ -250,11 +262,11 @@
           <ul style="list-style: disc; padding-left: 20px;">
             <li data-i18n="help.feature_lists">📋 Création et gestion de plusieurs listes</li>
             <li data-i18n="help.feature_scan">📷 Scan de codes-barres (via Open Food Facts)</li>
-            <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes</li>
+            <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
             <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
             <li data-i18n="help.feature_export">📤 Export/Import CSV</li>
-            <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes</li>
-            <li data-i18n="help.feature_location">📍 Localisation du magasin : enregistrez l'adresse et recevez une notification à l'approche</li>
+            <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes et de la langue</li>
+            <li data-i18n="help.feature_location">📍 Localisation du magasin : enregistrez l'adresse et visualisez-la</li>
             <li data-i18n="help.feature_units">⚖️ Unités de mesure (kg, L, pièce) et prix au kilo</li>
             <li data-i18n="help.feature_dragdrop">🖱️ Glisser-déposer pour réorganiser les articles</li>
             <li data-i18n="help.feature_voice">🎤 Saisie vocale des articles</li>
@@ -262,18 +274,15 @@
         </div>
         <div class="ssec">
           <p class="stitle" data-i18n="help.tips">Astuces</p>
-          <p data-i18n="help.tip_empty">• L'état vide est intelligent : cliquez dessus pour créer une liste ou ajouter un article.</p>
-          <p data-i18n="help.tip_scan">• Le mode scan multiple permet d'enchaîner les scans sans fermer la caméra.</p>
-          <p data-i18n="help.tip_price">• Cliquez sur le prix d'un article pour le modifier directement.</p>
-        </div>
-        <div class="ssec">
-          <p class="stitle" data-i18n="help.support">Support</p>
-          <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
           <p data-i18n="help.tip_units">• Pour les articles au poids, choisissez l'unité 'kg' et saisissez le prix au kilo pour un calcul automatique.</p>
           <p data-i18n="help.tip_drag">• Pour déplacer un article, appuyez longuement sur son nom et glissez-le.</p>
           <p data-i18n="help.tip_voice">• Utilisez le microphone dans le formulaire d'ajout pour dicter le nom de l'article.</p>
           <p data-i18n="help.tip_location">• La localisation du magasin vous aide à retrouver son adresse (pas de notification automatique).</p>
           <p data-i18n="help.tip_thresholds">• Dans les réglages, vous pouvez choisir à quels seuils de budget déclencher une alerte.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.support">Support</p>
+          <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
         </div>
       </div>
     </section>
@@ -376,7 +385,7 @@
         <input type="number" id="iPrice" data-i18n="item.price_placeholder" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
       </div>
 
-      <!-- NOUVEAU : Unité et prix au kilo -->
+      <!-- Unité et prix au kilo -->
       <div class="fld" id="fldUnit">
         <label for="iUnit" data-i18n="item.unit_label">Unité</label>
         <select id="iUnit">
@@ -397,19 +406,19 @@
         <label for="iCat" data-i18n="item.category_label">Catégorie</label>
         <select id="iCat">
           <option value="" data-i18n="item.no_category">Sans catégorie</option>
-          <option value="🥦 Fruits &amp; Légumes">🥦 Fruits &amp; Légumes</option>
-          <option value="🥩 Viandes &amp; Poissons">🥩 Viandes &amp; Poissons</option>
-          <option value="🥛 Produits Laitiers">🥛 Produits Laitiers</option>
-          <option value="🥖 Boulangerie">🥖 Boulangerie</option>
-          <option value="🥫 Épicerie">🥫 Épicerie</option>
-          <option value="🧴 Hygiène">🧴 Hygiène</option>
-          <option value="🧹 Entretien">🧹 Entretien</option>
-          <option value="🧃 Boissons">🧃 Boissons</option>
-          <option value="🍦 Surgelés">🍦 Surgelés</option>
-          <option value="💕 Love">💕 Love</option>
-          <option value="🤬 SaMéreList">🤬 SaMéreList</option>
-          <option value="🖕 Sheet List">🖕 Sheet List</option>
-          <option value="🧙‍♂️ Magic List">🧙‍♂️ Magic List</option>
+          <option value="🥦 Fruits &amp; Légumes" data-i18n="category.fruits">🥦 Fruits & Légumes</option>
+          <option value="🥩 Viandes &amp; Poissons" data-i18n="category.meat">🥩 Viandes & Poissons</option>
+          <option value="🥛 Produits Laitiers" data-i18n="category.dairy">🥛 Produits Laitiers</option>
+          <option value="🥖 Boulangerie" data-i18n="category.bakery">🥖 Boulangerie</option>
+          <option value="🥫 Épicerie" data-i18n="category.grocery">🥫 Épicerie</option>
+          <option value="🧴 Hygiène" data-i18n="category.hygiene">🧴 Hygiène</option>
+          <option value="🧹 Entretien" data-i18n="category.cleaning">🧹 Entretien</option>
+          <option value="🧃 Boissons" data-i18n="category.drinks">🧃 Boissons</option>
+          <option value="🍦 Surgelés" data-i18n="category.frozen">🍦 Surgelés</option>
+          <option value="💕 Love" data-i18n="category.love">💕 Love</option>
+          <option value="🤬 SaMéreList" data-i18n="category.mother">🤬 SaMéreList</option>
+          <option value="🖕 Sheet List" data-i18n="category.sheet">🖕 Sheet List</option>
+          <option value="🧙‍♂️ Magic List" data-i18n="category.magic">🧙‍♂️ Magic List</option>
         </select>
       </div>
       <div class="fld" id="fldNote">
@@ -429,16 +438,16 @@
         <label for="lName" data-i18n="lists.name_label">Nom <span aria-hidden="true">*</span></label>
         <input type="text" id="lName" data-i18n="lists.name_placeholder" placeholder="Ex : Supermarché, Semaine…" autocomplete="off" aria-required="true">
       </div>
-        <div class="fld">
-          <label for="lEmoji" data-i18n="lists.emoji_label">Emoji</label>
-          <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
-          <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
-        </div>
-        <div class="fld">
-          <label data-i18n="lists.color_label">Couleur</label>
-          <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
-          <input type="hidden" id="lColor" value="#3B82F6">
-        </div>
+      <div class="fld">
+        <label for="lEmoji" data-i18n="lists.emoji_label">Emoji</label>
+        <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
+        <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
+      </div>
+      <div class="fld">
+        <label data-i18n="lists.color_label">Couleur</label>
+        <div class="cgrid" id="lCGrid" role="group" aria-label="Choisir la couleur de la liste"></div>
+        <input type="hidden" id="lColor" value="#3B82F6">
+      </div>
       <button class="sbtn pri" id="lSubmit" data-i18n="lists.create_button" disabled>Créer la liste</button>
     </div>
   </div>
@@ -464,18 +473,18 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet : Export de listes -->
+<!-- Bottom Sheet : Export de listes (et partage texte / import) -->
   <div class="sheet" id="shExport" role="dialog" aria-modal="true" aria-labelledby="shExportTitle">
     <div class="shandle" aria-hidden="true"></div>
-    <h2 class="stit" id="shExportTitle">Exporter des listes</h2>
+    <h2 class="stit" id="shExportTitle" data-i18n="export.title">Exporter des listes</h2>
     <div class="sbody">
-      <p>Sélectionnez les listes à exporter :</p>
+    <p data-i18n="export.select_prompt">Sélectionnez les listes à exporter :</p>
       <div id="exportListCheckboxes" style="margin: 16px 0;">
         <!-- Les checkboxes seront générées dynamiquement -->
       </div>
       <div style="display: flex; gap: 8px;">
-        <button class="sbtn sact-muted" id="btnCancelExport" style="flex:1;">Annuler</button>
-        <button class="sbtn pri" id="btnConfirmExport" style="flex:1;">Exporter</button>
+        <button class="sbtn sact-muted" id="btnCancelExport" data-i18n="common.cancel" style="flex:1;">Annuler</button>
+        <button class="sbtn pri" id="btnConfirmExport" data-i18n="export.confirm_button" style="flex:1;">Exporter</button>
       </div>
     </div>
   </div>

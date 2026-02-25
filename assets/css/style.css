@@ -276,6 +276,8 @@ input, select, textarea { font-family: inherit; }
   z-index: 90;
   transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
 }
+#fab { background-color: color-mix(in srgb, var(--p) 50%, transparent); }
+/* #fab { backdrop-filter: blur(2px); } effet de flou léger */
 #fab:hover   { background: var(--pd); }
 #fab:active  { transform: scale(0.92); }
 #fab.pulse   { animation: pulse 2s infinite; } /* Animation d'impulsion */

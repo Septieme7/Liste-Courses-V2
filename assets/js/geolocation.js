@@ -7,11 +7,11 @@ async function locateStore(listId) {
   if (!list) return;
 
   if (!navigator.geolocation) {
-    showSnack('Geolocation not supported');
+    showSnack(t('home.geolocation_unsupported'));
     return;
   }
 
-  showSnack('Locating...');
+  showSnack(t('home.locating'));
 
   navigator.geolocation.getCurrentPosition(async (position) => {
     const { latitude, longitude } = position.coords;
@@ -20,24 +20,26 @@ async function locateStore(listId) {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
       const data = await response.json();
 
-      let locationName = data.display_name || 'Unknown location';
-      if (confirm(`Associate this location with list "${list.name}"?\n\n${locationName}`)) {
+      let locationName = data.display_name || t('home.unknown_location');
+      if (confirm(t('home.location_confirm', { name: list.name }))) {
         list.location = {
           name: locationName,
           lat: latitude,
           lon: longitude
         };
         saveData();
-        showSnack('Location saved');
+        showSnack(t('home.location_saved'));
+        renderHome(); // pour afficher le nouveau bouton itinéraire
       }
     } catch (error) {
-      console.error('Geocoding error:', error);
-      showSnack('Error finding location');
+      console.error('Erreur géocodage:', error);
+      showSnack(t('home.geocoding_error'));
     }
   }, (error) => {
-    console.error('Geolocation error:', error);
-    showSnack('Could not get your position');
+    console.error('Erreur géolocalisation:', error);
+    showSnack(t('home.location_error'));
   });
 }
 
+// Exposer la fonction
 window.locateStore = locateStore;
