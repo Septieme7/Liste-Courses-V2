@@ -1,6 +1,6 @@
 /* =============================================================
    COURSES MALIN · script.js
-   Version finale avec corrections de traduction
+   Version finale avec toutes les fonctionnalités
 ============================================================= */
 
 /* =============================================================
@@ -27,6 +27,7 @@ const QUICK_ITEMS_KEYS = [
   'quick.fish', 'quick.carrots', 'quick.tomatoes'
 ];
 
+// Couleurs des catégories par défaut
 const CAT_COLORS = {
   '🥦 Fruits & Légumes':   '#10B981',
   '🥩 Viandes & Poissons': '#EF4444',
@@ -43,7 +44,7 @@ const CAT_COLORS = {
   '💕 Love 💕':            '#ec4899',
 };
 
-// Mapping pour la traduction des catégories
+// Mapping pour la traduction des catégories par défaut
 const CATEGORY_MAP = {
   '🥦 Fruits & Légumes': 'fruits',
   '🥩 Viandes & Poissons': 'meat',
@@ -81,6 +82,10 @@ let snkCallback  = null;
 let audioInstance= null;
 let triggeredThresholds = {};
 
+// Catégories personnalisées
+let customCategories = [];
+let editingCategoryIndex = -1; // pour le formulaire de catégorie
+
 // Scan
 let html5QrCode = null;
 let multiScanMode = false;
@@ -96,6 +101,7 @@ let currentListIdForImage = null;
 ============================================================= */
 function init() {
   loadData();
+  loadCategories();
   buildColorGrid('cGrid',  cfg.color || 'blue', onMainColorPick);
   buildColorGrid('lCGrid', null,                onListColorPick);
   buildEmojiChips();
@@ -108,9 +114,11 @@ function init() {
   if (cfg.lang) {
     loadLanguage(cfg.lang).then(() => {
       renderAll();
+      buildCategorySelect(); // pour le formulaire d'ajout
     });
   } else {
     renderAll();
+    buildCategorySelect();
   }
 
   if (!cfg.thresholds) {
@@ -128,7 +136,8 @@ function loadData() {
   budget   = parseFloat(localStorage.getItem(LS_BUDGET)) || 50;
   activeId = localStorage.getItem(LS_ACTIVE) || (lists[0]?.id ?? null);
 
-  document.getElementById('budgetIn').value = budget;
+  const budgetIn = document.getElementById('budgetIn');
+  if (budgetIn) budgetIn.value = budget;
   
   window.cfg = cfg;
 }
@@ -140,12 +149,13 @@ function saveData() {
 }
 
 function saveConfig() {
-  cfg.soundChoice = document.getElementById('soundSel').value;
+  cfg.soundChoice = document.getElementById('soundSel')?.value || 'A';
   cfg.thresholds = {
     50: document.getElementById('threshold50')?.checked || false,
     80: document.getElementById('threshold80')?.checked || false,
     100: document.getElementById('threshold100')?.checked || false
   };
+  cfg.categories = customCategories;
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
 }
 
@@ -156,7 +166,129 @@ function resetAll() {
 }
 
 /* =============================================================
-   5. THÈME & COULEURS
+   5. GESTION DES CATÉGORIES
+============================================================= */
+function loadCategories() {
+  customCategories = cfg.categories || [];
+}
+
+function saveCategories() {
+  saveConfig();
+  buildCategorySelect();
+  renderHome();
+}
+
+function translateCategory(catValue) {
+  if (!catValue) return '';
+  const custom = customCategories.find(c => c.name === catValue);
+  if (custom) return custom.emoji + ' ' + custom.name;
+  const key = CATEGORY_MAP[catValue];
+  return key ? t('category.' + key) : catValue;
+}
+
+function getCategoryColor(catValue) {
+  const custom = customCategories.find(c => c.name === catValue);
+  if (custom) return custom.color;
+  return CAT_COLORS[catValue] || '#64748B';
+}
+
+function buildCategorySelect() {
+  const select = document.getElementById('iCat');
+  if (!select) return;
+  let html = '<option value="" data-i18n="item.no_category">' + t('item.no_category') + '</option>';
+  
+  Object.keys(CAT_COLORS).forEach(cat => {
+    const key = CATEGORY_MAP[cat];
+    const display = key ? t('category.' + key) : cat;
+    html += `<option value="${cat}">${display}</option>`;
+  });
+  
+  customCategories.forEach(cat => {
+    html += `<option value="${cat.name}" style="color:${cat.color};">${cat.emoji} ${cat.name}</option>`;
+  });
+  
+  select.innerHTML = html;
+}
+
+// Fonctions pour la gestion des catégories (appelées depuis le formulaire)
+function openCategoryEditor(index) {
+  editingCategoryIndex = index;
+  const sheet = document.getElementById('shCategoryEdit');
+  if (!sheet) return;
+  
+  if (index === -1) {
+    // Nouvelle catégorie
+    document.getElementById('catName').value = '';
+    document.getElementById('catEmoji').value = '🥦';
+    document.getElementById('catColor').value = '#10B981';
+  } else {
+    const cat = customCategories[index];
+    document.getElementById('catName').value = cat.name;
+    document.getElementById('catEmoji').value = cat.emoji;
+    document.getElementById('catColor').value = cat.color;
+  }
+  buildEmojiChipsForCategory();
+  buildColorGridForCategory(document.getElementById('catColor').value);
+  openSheet('shCategoryEdit');
+}
+
+function buildEmojiChipsForCategory() {
+  const container = document.getElementById('catEmojiChips');
+  if (!container) return;
+  container.innerHTML = EMOJIS.map(e =>
+    `<button class="chip" aria-label="Emoji ${e}">${e}</button>`
+  ).join('');
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.getElementById('catEmoji').value = chip.textContent;
+    });
+  });
+}
+
+function buildColorGridForCategory(activeColor) {
+  const container = document.getElementById('catColorGrid');
+  if (!container) return;
+  container.innerHTML = COLORS.map(c =>
+    `<div class="csw" style="background:${c.h}" data-color="${c.h}" role="radio" aria-label="Couleur ${c.n}" tabindex="0"></div>`
+  ).join('');
+  container.querySelectorAll('.csw').forEach(dot => {
+    dot.addEventListener('click', () => {
+      document.getElementById('catColor').value = dot.dataset.color;
+      container.querySelectorAll('.csw').forEach(d => d.classList.remove('on'));
+      dot.classList.add('on');
+    });
+    if (dot.dataset.color === activeColor) {
+      dot.classList.add('on');
+    }
+  });
+}
+
+function saveCategory() {
+  const name = document.getElementById('catName').value.trim();
+  if (!name) {
+    showSnack('Le nom est requis');
+    return;
+  }
+  const emoji = document.getElementById('catEmoji').value || '🥦';
+  const color = document.getElementById('catColor').value || '#10B981';
+  
+  if (editingCategoryIndex === -1) {
+    customCategories.push({ name, emoji, color });
+  } else {
+    customCategories[editingCategoryIndex] = { name, emoji, color };
+  }
+  saveCategories();
+  buildCategorySelect();
+  renderHome();
+  closeSheet(); // ferme le sheet d'édition
+}
+
+function cancelCategoryEdit() {
+  closeSheet();
+}
+
+/* =============================================================
+   6. THÈME & COULEURS
 ============================================================= */
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', cfg.dark ? 'dark' : 'light');
@@ -166,8 +298,10 @@ function applyTheme() {
 function toggleDark() {
   cfg.dark = !cfg.dark;
   const tog = document.getElementById('darkTog');
-  tog.classList.toggle('on', cfg.dark);
-  tog.setAttribute('aria-checked', cfg.dark);
+  if (tog) {
+    tog.classList.toggle('on', cfg.dark);
+    tog.setAttribute('aria-checked', cfg.dark);
+  }
   saveConfig();
   applyTheme();
 }
@@ -175,8 +309,10 @@ function toggleDark() {
 function toggleSound() {
   cfg.sound = (cfg.sound === false) ? true : false;
   const tog = document.getElementById('soundTog');
-  tog.classList.toggle('on', cfg.sound !== false);
-  tog.setAttribute('aria-checked', cfg.sound !== false);
+  if (tog) {
+    tog.classList.toggle('on', cfg.sound !== false);
+    tog.setAttribute('aria-checked', cfg.sound !== false);
+  }
   saveConfig();
 }
 
@@ -202,20 +338,26 @@ function onMainColorPick(name) {
 }
 
 function onListColorPick(name) {
-  document.getElementById('lColor').value = COLORS.find(c => c.n === name)?.h || '#3B82F6';
+  const lColor = document.getElementById('lColor');
+  if (lColor) lColor.value = COLORS.find(c => c.n === name)?.h || '#3B82F6';
   buildColorGrid('lCGrid', name, onListColorPick);
 }
 
 function syncSettingsUI() {
   const soundOn = cfg.sound !== false;
-  const darkTog  = document.getElementById('darkTog');
+  const darkTog = document.getElementById('darkTog');
   const soundTog = document.getElementById('soundTog');
 
-  darkTog.classList.toggle('on', !!cfg.dark);
-  darkTog.setAttribute('aria-checked', !!cfg.dark);
-  soundTog.classList.toggle('on', soundOn);
-  soundTog.setAttribute('aria-checked', soundOn);
-  document.getElementById('soundSel').value = cfg.soundChoice || 'A';
+  if (darkTog) {
+    darkTog.classList.toggle('on', !!cfg.dark);
+    darkTog.setAttribute('aria-checked', !!cfg.dark);
+  }
+  if (soundTog) {
+    soundTog.classList.toggle('on', soundOn);
+    soundTog.setAttribute('aria-checked', soundOn);
+  }
+  const soundSel = document.getElementById('soundSel');
+  if (soundSel) soundSel.value = cfg.soundChoice || 'A';
   
   const langSel = document.getElementById('langSelector');
   if (langSel) {
@@ -226,13 +368,16 @@ function syncSettingsUI() {
   }
   
   const thres = cfg.thresholds || { 50: true, 80: true, 100: true };
-  document.getElementById('threshold50').checked = thres[50] || false;
-  document.getElementById('threshold80').checked = thres[80] || false;
-  document.getElementById('threshold100').checked = thres[100] || false;
+  const th50 = document.getElementById('threshold50');
+  const th80 = document.getElementById('threshold80');
+  const th100 = document.getElementById('threshold100');
+  if (th50) th50.checked = thres[50] || false;
+  if (th80) th80.checked = thres[80] || false;
+  if (th100) th100.checked = thres[100] || false;
 }
 
 /* =============================================================
-   6. NAVIGATION
+   7. NAVIGATION
 ============================================================= */
 let currentTab = 'home';
 
@@ -240,7 +385,8 @@ function goTo(tab) {
   currentTab = tab;
 
   document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
-  document.getElementById(`v-${tab}`).classList.add('on');
+  const view = document.getElementById(`v-${tab}`);
+  if (view) view.classList.add('on');
 
   document.querySelectorAll('.tab').forEach(t => {
     t.classList.remove('on');
@@ -248,15 +394,15 @@ function goTo(tab) {
   });
   if (tab === 'home' || tab === 'lists' || tab === 'settings') {
     const activeTab = document.getElementById(`t-${tab}`);
-    activeTab.classList.add('on');
-    activeTab.setAttribute('aria-current', 'page');
+    if (activeTab) {
+      activeTab.classList.add('on');
+      activeTab.setAttribute('aria-current', 'page');
+    }
   }
 
   const btnBack = document.getElementById('btnBack');
-  if (tab === 'home') {
-    btnBack.style.display = 'none';
-  } else {
-    btnBack.style.display = 'flex';
+  if (btnBack) {
+    btnBack.style.display = tab === 'home' ? 'none' : 'flex';
   }
 
   const titles = {
@@ -265,11 +411,17 @@ function goTo(tab) {
     settings: t('nav.settings'),
     help: t('nav.help')
   };
-  document.getElementById('htitle').textContent = titles[tab] || t('nav.help');
+  const htitle = document.getElementById('htitle');
+  if (htitle) htitle.textContent = titles[tab] || t('nav.help');
 
   const onHome = tab === 'home';
-  document.getElementById('fab').style.display    = onHome ? 'flex' : 'none';
-  document.getElementById('btnAdd').style.display = onHome ? 'flex' : 'none';
+  const onLists = tab === 'lists';
+  const fab = document.getElementById('fab');
+  const fabList = document.getElementById('fab-list');
+  const btnAdd = document.getElementById('btnAdd');
+  if (fab) fab.style.display = onHome ? 'flex' : 'none';
+  if (fabList) fabList.style.display = onLists ? 'flex' : 'none';
+  if (btnAdd) btnAdd.style.display = onHome ? 'flex' : 'none';
 
   if (tab === 'lists')    renderLists();
   if (tab === 'home')     renderHome();
@@ -281,39 +433,35 @@ function getActiveName() {
 }
 
 /* =============================================================
-   7. RENDU – ACCUEIL
+   8. RENDU – ACCUEIL
 ============================================================= */
 function renderAll() {
   renderHome();
   renderLists();
 }
 
-// Fonction pour traduire une catégorie
-function translateCategory(catValue) {
-  if (!catValue) return '';
-  const key = CATEGORY_MAP[catValue];
-  return key ? t('category.' + key) : catValue;
-}
-
 function renderHome() {
   const list  = lists.find(l => l.id === activeId);
   const items = list?.items || [];
 
-  document.getElementById('htitle').textContent    = list?.name || t('app_name');
-  document.getElementById('aListName').textContent = list?.name || t('home.no_list');
-  document.getElementById('aListIco').textContent  = list?.emoji || '🛒';
+  const htitle = document.getElementById('htitle');
+  if (htitle) htitle.textContent = list?.name || t('app_name');
+  const aListName = document.getElementById('aListName');
+  if (aListName) aListName.textContent = list?.name || t('home.no_list');
+  const aListIco = document.getElementById('aListIco');
+  if (aListIco) aListIco.textContent = list?.emoji || '🛒';
 
   const mapContainer = document.getElementById('listMapContainer');
   const mapThumb = document.getElementById('mapThumb');
-  if (list && list.mapImage) {
+  if (mapContainer && mapThumb && list && list.mapImage) {
     mapContainer.style.display = 'block';
     mapThumb.src = list.mapImage;
     mapThumb.style.display = 'inline';
-  } else {
+  } else if (mapContainer) {
     mapContainer.style.display = 'none';
   }
 
-  const query    = document.getElementById('searchIn').value.toLowerCase().trim();
+  const query    = document.getElementById('searchIn')?.value.toLowerCase().trim() || '';
   const filtered = query ? items.filter(i => i.text.toLowerCase().includes(query)) : items;
 
   const listEl  = document.getElementById('itemsList');
@@ -321,12 +469,12 @@ function renderHome() {
   const fab     = document.getElementById('fab');
 
   if (!filtered.length) {
-    emptyEl.style.display = 'block';
-    listEl.innerHTML      = '';
-    fab.classList.add('pulse');
+    if (emptyEl) emptyEl.style.display = 'block';
+    if (listEl) listEl.innerHTML = '';
+    if (fab) fab.classList.add('pulse');
   } else {
-    emptyEl.style.display = 'none';
-    fab.classList.remove('pulse');
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (fab) fab.classList.remove('pulse');
 
     const groups = {};
     filtered.forEach(item => {
@@ -339,7 +487,7 @@ function renderHome() {
 
     Object.entries(groups).forEach(([cat, groupItems]) => {
       if (cat) {
-        const color = CAT_COLORS[cat] || '#64748B';
+        const color = getCategoryColor(cat);
         const catDisplay = translateCategory(cat);
         html += `<div class="chdr" data-cat="${esc(cat)}" style="background:${color}18; color:${color}"><span>${esc(catDisplay)}</span><span class="chdr-count">${groupItems.length}</span></div>`;
       }
@@ -375,7 +523,7 @@ function renderHome() {
           </li>`;
       });
     });
-    listEl.innerHTML = html;
+    if (listEl) listEl.innerHTML = html;
     
     if (window.reinitDragDrop) {
       setTimeout(reinitDragDrop, 0);
@@ -384,64 +532,68 @@ function renderHome() {
 
   let count = items.length;
   let countText = count + ' ' + (count > 1 ? t('home.article_plural') : t('home.article_singular'));
-  document.getElementById('totCount').textContent = countText;
+  const totCount = document.getElementById('totCount');
+  if (totCount) totCount.textContent = countText;
   
   updateBudget();
 }
 
 /* =============================================================
-   8. RENDU – LISTES
+   9. RENDU – LISTES
 ============================================================= */
 function renderLists() {
   const grid    = document.getElementById('lgrid');
   const emptyEl = document.getElementById('listsEmpty');
 
   if (!lists.length) {
-    grid.innerHTML        = '';
-    emptyEl.style.display = 'block';
+    if (grid) grid.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'block';
     return;
   }
 
-  emptyEl.style.display = 'none';
+  if (emptyEl) emptyEl.style.display = 'none';
 
-  grid.innerHTML = lists.map(list => {
-    const total    = list.items.length;
-    const done     = list.items.filter(i => i.ck).length;
-    const pct      = total > 0 ? (done / total) * 100 : 0;
-    const isActive = list.id === activeId;
-    const totalText = total + ' ' + (total > 1 ? t('home.article_plural') : t('home.article_singular'));
-    const doneText = done + ' ' + (done > 1 ? t('home.checked_plural') : t('home.checked_singular'));
+  if (grid) {
+    grid.innerHTML = lists.map(list => {
+      const total    = list.items.length;
+      const done     = list.items.filter(i => i.ck).length;
+      const pct      = total > 0 ? (done / total) * 100 : 0;
+      const isActive = list.id === activeId;
+      const totalText = total + ' ' + (total > 1 ? t('home.article_plural') : t('home.article_singular'));
+      const doneText = done + ' ' + (done > 1 ? t('home.checked_plural') : t('home.checked_singular'));
 
-    return `
-      <div class="lcard${isActive ? ' sel' : ''}" onclick="pickList('${list.id}')" role="button" tabindex="0" aria-label="${t('lists.select')} ${esc(list.name)}" aria-pressed="${isActive}">
-        <div class="lbanner" style="background:${list.color}22">${list.emoji || '🛒'}</div>
-        <div class="linfo">
-          <div class="lname" title="${esc(list.name)}">${esc(list.name)}</div>
-          <div class="lstats">${totalText} · ${doneText}</div>
-          <div class="lprog" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100">
-            <div class="lprogf" style="width:${pct}%; background:${list.color}"></div>
+      return `
+        <div class="lcard${isActive ? ' sel' : ''}" onclick="pickList('${list.id}')" role="button" tabindex="0" aria-label="${t('lists.select')} ${esc(list.name)}" aria-pressed="${isActive}">
+          <div class="lbanner" style="background:${list.color}22">${list.emoji || '🛒'}</div>
+          <div class="linfo">
+            <div class="lname" title="${esc(list.name)}">${esc(list.name)}</div>
+            <div class="lstats">${totalText} · ${doneText}</div>
+            <div class="lprog" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100">
+              <div class="lprogf" style="width:${pct}%; background:${list.color}"></div>
+            </div>
           </div>
-        </div>
-        <div class="lbtns">
-          <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="${t('lists.add_map')}">📷</button>
-          <button class="lbtn" onclick="event.stopPropagation(); renameList('${list.id}')" aria-label="${t('common.edit')} ${esc(list.name)}">✏️</button>
-          <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="${t('common.delete')} ${esc(list.name)}">🗑</button>
-        </div>
-      </div>`;
-  }).join('');
+          <div class="lbtns">
+            <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="${t('lists.add_map')}">📷</button>
+            <button class="lbtn" onclick="event.stopPropagation(); renameList('${list.id}')" aria-label="${t('common.edit')} ${esc(list.name)}">✏️</button>
+            <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="${t('common.delete')} ${esc(list.name)}">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
 
-  grid.querySelectorAll('.lcard').forEach(card => {
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') card.click();
+    grid.querySelectorAll('.lcard').forEach(card => {
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') card.click();
+      });
     });
-  });
+  }
 }
 
 /* =============================================================
-   9. BUDGET
+   10. BUDGET
 ============================================================= */
 function onBudgetChange() {
-  budget = parseFloat(document.getElementById('budgetIn').value) || 0;
+  const budgetIn = document.getElementById('budgetIn');
+  if (budgetIn) budget = parseFloat(budgetIn.value) || 0;
   saveData();
   updateBudget();
 }
@@ -452,29 +604,38 @@ function updateBudget() {
   const rem   = budget - spent;
   const pct   = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
 
-  document.getElementById('spentV').textContent = spent.toFixed(2) + ' €';
+  const spentV = document.getElementById('spentV');
+  if (spentV) spentV.textContent = spent.toFixed(2) + ' €';
 
   const remEl = document.getElementById('remV');
-  remEl.textContent = Math.abs(rem).toFixed(2) + ' €';
-  remEl.className   = 'bst-val ' + (rem < 0 ? 'err' : 'ok');
+  if (remEl) {
+    remEl.textContent = Math.abs(rem).toFixed(2) + ' €';
+    remEl.className   = 'bst-val ' + (rem < 0 ? 'err' : 'ok');
+  }
 
   const fill = document.getElementById('pfill');
-  fill.style.width = pct + '%';
-  fill.className   = 'pfill' + (pct >= 100 ? ' e' : pct >= 80 ? ' w' : '');
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.className   = 'pfill' + (pct >= 100 ? ' e' : pct >= 80 ? ' w' : '');
+  }
 
-  document.getElementById('pbarWrap')?.setAttribute('aria-valuenow', Math.round(pct));
+  const pbarWrap = document.getElementById('pbarWrap');
+  if (pbarWrap) pbarWrap.setAttribute('aria-valuenow', Math.round(pct));
 
   const alertEl = document.getElementById('balert');
-  if (rem < 0) {
-    alertEl.classList.add('on');
-    document.getElementById('balertTxt').textContent = t('home.overbudget') + ' ' + Math.abs(rem).toFixed(2) + ' €';
-    if (cfg.sound !== false && !alertPlayed) {
-      alertPlayed = true;
-      playSound();
+  if (alertEl) {
+    if (rem < 0) {
+      alertEl.classList.add('on');
+      const balertTxt = document.getElementById('balertTxt');
+      if (balertTxt) balertTxt.textContent = t('home.overbudget') + ' ' + Math.abs(rem).toFixed(2) + ' €';
+      if (cfg.sound !== false && !alertPlayed) {
+        alertPlayed = true;
+        playSound();
+      }
+    } else {
+      alertEl.classList.remove('on');
+      alertPlayed = false;
     }
-  } else {
-    alertEl.classList.remove('on');
-    alertPlayed = false;
   }
 
   const remLbl = document.getElementById('remLbl');
@@ -495,7 +656,7 @@ function updateBudget() {
 }
 
 /* =============================================================
-   10. CRUD ARTICLES
+   11. CRUD ARTICLES
 ============================================================= */
 function toggleCheck(itemId) {
   const item = getItem(itemId);
@@ -559,7 +720,7 @@ function getItem(itemId) {
 }
 
 /* =============================================================
-   11. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
+   12. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
 ============================================================= */
 function openAddItem() {
   if (!activeId) {
@@ -570,19 +731,32 @@ function openAddItem() {
   editItemId = null;
   currentQty = 1;
 
-  document.getElementById('shItemTitle').textContent = t('item.add_title');
-  document.getElementById('iSubmit').textContent     = t('item.add_button');
-  document.getElementById('iSubmit').disabled        = true;
-  document.getElementById('iName').value             = '';
-  document.getElementById('iPrice').value            = '';
-  document.getElementById('iNote').value             = '';
-  document.getElementById('iCat').value              = '';
-  document.getElementById('qDisp').textContent       = '1';
-  document.getElementById('iNameHint').textContent   = '';
+  const shItemTitle = document.getElementById('shItemTitle');
+  if (shItemTitle) shItemTitle.textContent = t('item.add_title');
+  const iSubmit = document.getElementById('iSubmit');
+  if (iSubmit) {
+    iSubmit.textContent = t('item.add_button');
+    iSubmit.disabled = true;
+  }
+  const iName = document.getElementById('iName');
+  if (iName) iName.value = '';
+  const iPrice = document.getElementById('iPrice');
+  if (iPrice) iPrice.value = '';
+  const iNote = document.getElementById('iNote');
+  if (iNote) iNote.value = '';
+  const iCat = document.getElementById('iCat');
+  if (iCat) iCat.value = '';
+  const qDisp = document.getElementById('qDisp');
+  if (qDisp) qDisp.textContent = '1';
+  const iNameHint = document.getElementById('iNameHint');
+  if (iNameHint) iNameHint.textContent = '';
   
-  document.getElementById('iUnit').value = 'pce';
-  document.getElementById('fldPricePerUnit').style.display = 'none';
-  document.getElementById('iPricePerUnit').value = '';
+  const iUnit = document.getElementById('iUnit');
+  if (iUnit) iUnit.value = 'pce';
+  const fldPricePerUnit = document.getElementById('fldPricePerUnit');
+  if (fldPricePerUnit) fldPricePerUnit.style.display = 'none';
+  const iPricePerUnit = document.getElementById('iPricePerUnit');
+  if (iPricePerUnit) iPricePerUnit.value = '';
 
   toggleMultiMode(false);
   stopBarcodeScan();
@@ -590,7 +764,7 @@ function openAddItem() {
   buildQuickChips();
 
   openSheet('shItem');
-  setTimeout(() => document.getElementById('iName').focus(), 320);
+  setTimeout(() => document.getElementById('iName')?.focus(), 320);
 }
 
 function openEditItem(itemId) {
@@ -600,24 +774,37 @@ function openEditItem(itemId) {
   editItemId = itemId;
   currentQty = item.qty || 1;
 
-  document.getElementById('shItemTitle').textContent = t('item.edit_title');
-  document.getElementById('iSubmit').textContent     = t('common.save');
-  document.getElementById('iSubmit').disabled        = false;
-  document.getElementById('iName').value             = item.text;
-  document.getElementById('iPrice').value            = item.price || '';
-  document.getElementById('iNote').value             = item.note  || '';
-  document.getElementById('iCat').value              = item.cat   || '';
-  document.getElementById('qDisp').textContent       = currentQty;
-  document.getElementById('iNameHint').textContent   = '';
+  const shItemTitle = document.getElementById('shItemTitle');
+  if (shItemTitle) shItemTitle.textContent = t('item.edit_title');
+  const iSubmit = document.getElementById('iSubmit');
+  if (iSubmit) {
+    iSubmit.textContent = t('common.save');
+    iSubmit.disabled = false;
+  }
+  const iName = document.getElementById('iName');
+  if (iName) iName.value = item.text;
+  const iPrice = document.getElementById('iPrice');
+  if (iPrice) iPrice.value = item.price || '';
+  const iNote = document.getElementById('iNote');
+  if (iNote) iNote.value = item.note || '';
+  const iCat = document.getElementById('iCat');
+  if (iCat) iCat.value = item.cat || '';
+  const qDisp = document.getElementById('qDisp');
+  if (qDisp) qDisp.textContent = currentQty;
+  const iNameHint = document.getElementById('iNameHint');
+  if (iNameHint) iNameHint.textContent = '';
   
-  document.getElementById('iUnit').value = item.unit || 'pce';
+  const iUnit = document.getElementById('iUnit');
+  if (iUnit) iUnit.value = item.unit || 'pce';
+  const iPricePerUnit = document.getElementById('iPricePerUnit');
+  const fldPricePerUnit = document.getElementById('fldPricePerUnit');
   if (item.pricePerUnit) {
-    document.getElementById('iPricePerUnit').value = item.pricePerUnit;
-    if (item.unit === 'kg' || item.unit === 'l' || item.unit === 'g' || item.unit === 'ml') {
-      document.getElementById('fldPricePerUnit').style.display = 'block';
+    if (iPricePerUnit) iPricePerUnit.value = item.pricePerUnit;
+    if (fldPricePerUnit && (item.unit === 'kg' || item.unit === 'l' || item.unit === 'g' || item.unit === 'ml')) {
+      fldPricePerUnit.style.display = 'block';
     }
   } else {
-    document.getElementById('fldPricePerUnit').style.display = 'none';
+    if (fldPricePerUnit) fldPricePerUnit.style.display = 'none';
   }
 
   toggleMultiMode(false);
@@ -630,22 +817,27 @@ function openEditItem(itemId) {
 
 function adjustSheetQty(delta) {
   currentQty = Math.max(1, currentQty + delta);
-  document.getElementById('qDisp').textContent = currentQty;
+  const qDisp = document.getElementById('qDisp');
+  if (qDisp) qDisp.textContent = currentQty;
 }
 
 function validateItemForm() {
-  const raw     = document.getElementById('iName').value;
+  const iName = document.getElementById('iName');
+  const raw = iName ? iName.value : '';
   const filled  = raw.trim().length > 0;
   const names   = parseNames(raw);
   const isMulti = names.length > 1;
 
-  document.getElementById('iSubmit').disabled = !filled;
+  const iSubmit = document.getElementById('iSubmit');
+  if (iSubmit) iSubmit.disabled = !filled;
 
   const hint = document.getElementById('iNameHint');
-  if (isMulti) {
-    hint.textContent = `${names.length} ${t('item.multi_hint')}`;
-  } else {
-    hint.textContent = '';
+  if (hint) {
+    if (isMulti) {
+      hint.textContent = `${names.length} ${t('item.multi_hint')}`;
+    } else {
+      hint.textContent = '';
+    }
   }
 
   toggleMultiMode(isMulti && !editItemId);
@@ -663,7 +855,8 @@ function parseNames(raw) {
 }
 
 function confirmItem() {
-  const raw   = document.getElementById('iName').value.trim();
+  const iName = document.getElementById('iName');
+  const raw = iName ? iName.value.trim() : '';
   if (!raw) return;
 
   const list  = lists.find(l => l.id === activeId);
@@ -671,7 +864,8 @@ function confirmItem() {
 
   const names   = parseNames(raw);
   const isMulti = names.length > 1 && !editItemId;
-  const cat     = document.getElementById('iCat').value;
+  const iCat = document.getElementById('iCat');
+  const cat = iCat ? iCat.value : '';
 
   if (isMulti) {
     names.forEach((name, idx) => {
@@ -692,15 +886,19 @@ function confirmItem() {
     renderHome();
     showSnack(`${names.length} ${t('item.added_multiple')}`);
   } else {
-    const unit = document.getElementById('iUnit').value;
-    const pricePerUnit = parseFloat(document.getElementById('iPricePerUnit').value) || 0;
+    const iUnit = document.getElementById('iUnit');
+    const unit = iUnit ? iUnit.value : 'pce';
+    const iPricePerUnit = document.getElementById('iPricePerUnit');
+    const pricePerUnit = iPricePerUnit ? parseFloat(iPricePerUnit.value) || 0 : 0;
     let price = 0;
     if (pricePerUnit > 0 && (unit === 'kg' || unit === 'l' || unit === 'g' || unit === 'ml')) {
       price = pricePerUnit * currentQty;
     } else {
-      price = parseFloat(document.getElementById('iPrice').value) || 0;
+      const iPrice = document.getElementById('iPrice');
+      price = iPrice ? parseFloat(iPrice.value) || 0 : 0;
     }
-    const note  = document.getElementById('iNote').value.trim();
+    const iNote = document.getElementById('iNote');
+    const note = iNote ? iNote.value.trim() : '';
 
     if (!editItemId && !isMulti) {
       const existing = list.items.find(i => i.text.toLowerCase() === names[0].toLowerCase());
@@ -758,6 +956,7 @@ function buildQuickChips() {
   container.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const input   = document.getElementById('iName');
+      if (!input) return;
       const current = input.value.trim();
       input.value = current ? current + ', ' + chip.textContent : chip.textContent;
       input.dispatchEvent(new Event('input'));
@@ -766,30 +965,39 @@ function buildQuickChips() {
 }
 
 /* =============================================================
-   12. BOTTOM SHEET CRÉATION DE LISTE
+   13. BOTTOM SHEET CRÉATION DE LISTE
 ============================================================= */
 function openAddList() {
-  document.getElementById('lName').value       = '';
-  document.getElementById('lEmoji').value      = '🛒';
-  document.getElementById('lSubmit').disabled  = true;
+  const lName = document.getElementById('lName');
+  if (lName) lName.value = '';
+  const lEmoji = document.getElementById('lEmoji');
+  if (lEmoji) lEmoji.value = '🛒';
+  const lSubmit = document.getElementById('lSubmit');
+  if (lSubmit) lSubmit.disabled = true;
 
   buildColorGrid('lCGrid', null, onListColorPick);
-  document.getElementById('lColor').value = '#3B82F6';
+  const lColor = document.getElementById('lColor');
+  if (lColor) lColor.value = '#3B82F6';
 
   openSheet('shList');
-  setTimeout(() => document.getElementById('lName').focus(), 320);
+  setTimeout(() => document.getElementById('lName')?.focus(), 320);
 }
 
 function validateListForm() {
-  document.getElementById('lSubmit').disabled = !document.getElementById('lName').value.trim().length;
+  const lName = document.getElementById('lName');
+  const lSubmit = document.getElementById('lSubmit');
+  if (lSubmit) lSubmit.disabled = !(lName && lName.value.trim().length > 0);
 }
 
 function confirmList() {
-  const name  = document.getElementById('lName').value.trim();
+  const lName = document.getElementById('lName');
+  const name = lName ? lName.value.trim() : '';
   if (!name) return;
 
-  const emoji = document.getElementById('lEmoji').value || '🛒';
-  const color = document.getElementById('lColor').value || '#3B82F6';
+  const lEmoji = document.getElementById('lEmoji');
+  const emoji = lEmoji ? lEmoji.value : '🛒';
+  const lColor = document.getElementById('lColor');
+  const color = lColor ? lColor.value : '#3B82F6';
   const id    = Date.now().toString();
 
   lists.push({ id, name, emoji, color, items: [], mapImage: null, location: null });
@@ -804,19 +1012,24 @@ function confirmList() {
 
 function buildEmojiChips() {
   const container = document.getElementById('eChips');
+  if (!container) {
+    console.warn('eChips not found');
+    return;
+  }
   container.innerHTML = EMOJIS.map(e =>
-    `<button class="chip" aria-label="${t('lists.emoji')} ${e}">${e}</button>`
+    `<button class="chip" aria-label="${t('lists.emoji_label')} ${e}">${e}</button>`
   ).join('');
 
   container.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      document.getElementById('lEmoji').value = chip.textContent;
+      const lEmoji = document.getElementById('lEmoji');
+      if (lEmoji) lEmoji.value = chip.textContent;
     });
   });
 }
 
 /* =============================================================
-   13. GESTION DES LISTES + CARTE MAGASIN
+   14. GESTION DES LISTES + CARTE MAGASIN
 ============================================================= */
 function pickList(listId) {
   activeId = listId;
@@ -834,8 +1047,10 @@ function renameList(listId) {
     saveData();
     renderLists();
     if (listId === activeId) {
-      document.getElementById('htitle').textContent    = list.name;
-      document.getElementById('aListName').textContent = list.name;
+      const htitle = document.getElementById('htitle');
+      const aListName = document.getElementById('aListName');
+      if (htitle) htitle.textContent = list.name;
+      if (aListName) aListName.textContent = list.name;
     }
   }
 }
@@ -879,9 +1094,11 @@ function viewMap() {
   const list = lists.find(l => l.id === activeId);
   if (!list || !list.mapImage) return;
   const modal = document.getElementById('logoModal');
-  const img = modal.querySelector('img');
-  img.src = list.mapImage;
-  modal.style.display = 'flex';
+  if (modal) {
+    const img = modal.querySelector('img');
+    if (img) img.src = list.mapImage;
+    modal.style.display = 'flex';
+  }
 }
 
 function deleteMap() {
@@ -895,7 +1112,7 @@ function deleteMap() {
 }
 
 /* =============================================================
-   14. PARTAGE / EXPORT .TXT (partage texte lisible)
+   15. PARTAGE / EXPORT .TXT (partage texte lisible)
 ============================================================= */
 function buildTxtContent(list) {
   const sep  = '─'.repeat(36);
@@ -934,6 +1151,7 @@ function buildTxtContent(list) {
   txt += `✅ ${t('home.checked')} : ${done} / ${list.items.length} ${list.items.length > 1 ? t('home.article_plural') : t('home.article_singular')}\n`;
   if (total > 0) txt += `💰 ${t('home.total')} : ${total.toFixed(2)} €\n`;
   txt += `\n📱 ${t('app_name')}\n`;
+  txt += `\nGénéré par Courses Malin - https://liste-coursesv2.netlify.app\n`;
   return txt;
 }
 
@@ -979,7 +1197,7 @@ function downloadTxt(content, listName) {
 }
 
 /* =============================================================
-   15. EXPORT CSV (pour le bouton Exporter)
+   16. EXPORT CSV (pour le bouton Exporter)
 ============================================================= */
 function downloadCSV(content, listName) {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
@@ -992,11 +1210,11 @@ function downloadCSV(content, listName) {
 }
 
 /* =============================================================
-   16. SON
+   17. SON
 ============================================================= */
 function playSound() {
   stopSound();
-  const choice = document.getElementById('soundSel').value;
+  const choice = document.getElementById('soundSel')?.value || 'A';
   audioInstance = new Audio(`assets/sound/Alarm${choice}.mp3`);
   audioInstance.play().catch(playFallbackBeep);
 }
@@ -1025,32 +1243,41 @@ function playFallbackBeep() {
 }
 
 /* =============================================================
-   17. OVERLAY & SHEETS
+   18. OVERLAY & SHEETS
 ============================================================= */
 function openSheet(sheetId) {
   openSheetId = sheetId;
-  document.getElementById('ovl').classList.add('on');
-  document.getElementById(sheetId).classList.add('on');
-  document.getElementById(sheetId).setAttribute('aria-hidden', 'false');
+  const ovl = document.getElementById('ovl');
+  if (ovl) ovl.classList.add('on');
+  const sheet = document.getElementById(sheetId);
+  if (sheet) {
+    sheet.classList.add('on');
+    sheet.setAttribute('aria-hidden', 'false');
+  }
 }
 
 function closeSheet() {
   stopBarcodeScan();
   if (openSheetId) {
-    document.getElementById(openSheetId).classList.remove('on');
-    document.getElementById(openSheetId).setAttribute('aria-hidden', 'true');
+    const sheet = document.getElementById(openSheetId);
+    if (sheet) {
+      sheet.classList.remove('on');
+      sheet.setAttribute('aria-hidden', 'true');
+    }
   }
-  document.getElementById('ovl').classList.remove('on');
+  const ovl = document.getElementById('ovl');
+  if (ovl) ovl.classList.remove('on');
   openSheetId = null;
 }
 
 /* =============================================================
-   18. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
+   19. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
 function startBarcodeScan() {
   if (html5QrCode) return;
 
   const container = document.getElementById('scannerContainer');
+  if (!container) return;
   container.style.display = 'block';
 
   html5QrCode = new Html5Qrcode("qr-reader");
@@ -1084,8 +1311,10 @@ function stopBarcodeScan() {
       html5QrCode = null;
     }).catch(err => console.warn(err));
   }
-  document.getElementById('scannerContainer').style.display = 'none';
-  document.getElementById('scanResultPanel').style.display = 'none';
+  const scannerContainer = document.getElementById('scannerContainer');
+  if (scannerContainer) scannerContainer.style.display = 'none';
+  const scanResultPanel = document.getElementById('scanResultPanel');
+  if (scanResultPanel) scanResultPanel.style.display = 'none';
 }
 
 function fetchProductFromBarcode(barcode) {
@@ -1095,7 +1324,8 @@ function fetchProductFromBarcode(barcode) {
     .then(data => {
       if (data.status === 1) {
         const product = data.product;
-        document.getElementById('iName').value = product.product_name || '';
+        const iName = document.getElementById('iName');
+        if (iName) iName.value = product.product_name || '';
 
         const categories = product.categories_tags || [];
         let matchedCat = '';
@@ -1113,13 +1343,18 @@ function fetchProductFromBarcode(barcode) {
           else if (catLower.includes('magic')) matchedCat = '🧙‍♂️ Magic List';
           if (matchedCat) break;
         }
-        if (matchedCat) document.getElementById('iCat').value = matchedCat;
-
-        if (product.brands) {
-          document.getElementById('iNote').value = product.brands;
+        if (matchedCat) {
+          const iCat = document.getElementById('iCat');
+          if (iCat) iCat.value = matchedCat;
         }
 
-        document.getElementById('iName').dispatchEvent(new Event('input'));
+        if (product.brands) {
+          const iNote = document.getElementById('iNote');
+          if (iNote) iNote.value = product.brands;
+        }
+
+        const iNameEl = document.getElementById('iName');
+        if (iNameEl) iNameEl.dispatchEvent(new Event('input'));
         showSnack(t('item.found'));
       } else {
         showSnack(t('item.not_found'));
@@ -1152,7 +1387,9 @@ function fetchProductFromBarcodeMultiple(barcode) {
 
 function showScanResult(product) {
   const panel = document.getElementById('scanResultPanel');
-  document.getElementById('scanProductName').textContent = product.product_name || t('item.unknown');
+  if (!panel) return;
+  const scanProductName = document.getElementById('scanProductName');
+  if (scanProductName) scanProductName.textContent = product.product_name || t('item.unknown');
   panel.style.display = 'block';
 }
 
@@ -1209,11 +1446,12 @@ function addProductFromScan(product) {
 }
 
 /* =============================================================
-   19. ÉDITEUR D'IMAGE (recadrage, rotation)
+   20. ÉDITEUR D'IMAGE (recadrage, rotation)
 ============================================================= */
 function openImageEditor(imageDataUrl, listId) {
   currentListIdForImage = listId;
   const img = document.getElementById('imageToEdit');
+  if (!img) return;
   img.src = imageDataUrl;
   
   if (cropper) cropper.destroy();
@@ -1229,21 +1467,24 @@ function openImageEditor(imageDataUrl, listId) {
 }
 
 /* =============================================================
-   20. MODAL LOGO
+   21. MODAL LOGO
 ============================================================= */
 function showLogoModal() {
-  document.getElementById('logoModal').style.display = 'flex';
+  const modal = document.getElementById('logoModal');
+  if (modal) modal.style.display = 'flex';
 }
 
 function closeLogoModal() {
-  document.getElementById('logoModal').style.display = 'none';
+  const modal = document.getElementById('logoModal');
+  if (modal) modal.style.display = 'none';
 }
 
 /* =============================================================
-   21. SNACKBAR
+   22. SNACKBAR
 ============================================================= */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
+  if (!el) return;
   snkCallback = cb || null;
   el.innerHTML = action
     ? `${esc(message)}<button onclick="triggerSnackAction()" style="background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;margin-left:8px">${esc(action)}</button>`
@@ -1255,11 +1496,12 @@ function showSnack(message, action, cb) {
 
 function triggerSnackAction() {
   if (snkCallback) { snkCallback(); snkCallback = null; }
-  document.getElementById('snk').classList.remove('on');
+  const el = document.getElementById('snk');
+  if (el) el.classList.remove('on');
 }
 
 /* =============================================================
-   22. UTILITAIRES
+   23. UTILITAIRES
 ============================================================= */
 function esc(str) {
   return String(str)
@@ -1271,11 +1513,12 @@ function esc(str) {
 }
 
 /* =============================================================
-   23. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
+   24. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
 ============================================================= */
 
 function showListSelector(title, callback, filter = () => true, options = {}) {
   const container = document.getElementById('exportListCheckboxes');
+  if (!container) return;
   const filteredLists = lists.filter(filter);
   if (filteredLists.length === 0) {
     showSnack(t('import.no_lists'));
@@ -1295,22 +1538,29 @@ function showListSelector(title, callback, filter = () => true, options = {}) {
   });
   container.innerHTML = html;
 
-  document.getElementById('shExportTitle').textContent = title;
-  document.getElementById('btnCancelExport').textContent = t('common.cancel');
-  document.getElementById('btnConfirmExport').textContent = t('common.confirm');
+  const shExportTitle = document.getElementById('shExportTitle');
+  if (shExportTitle) shExportTitle.textContent = title;
+  const btnCancelExport = document.getElementById('btnCancelExport');
+  if (btnCancelExport) btnCancelExport.textContent = t('common.cancel');
+  const btnConfirmExport = document.getElementById('btnConfirmExport');
+  if (btnConfirmExport) btnConfirmExport.textContent = t('common.confirm');
   
-  const oldHandler = document.getElementById('btnConfirmExport').onclick;
-  document.getElementById('btnConfirmExport').onclick = () => {
-    callback();
-  };
+  const oldHandler = btnConfirmExport ? btnConfirmExport.onclick : null;
+  if (btnConfirmExport) {
+    btnConfirmExport.onclick = () => {
+      callback();
+    };
+  }
   openSheet('shExport');
 
   const closeHandler = () => {
-    document.getElementById('btnConfirmExport').onclick = oldHandler;
-    document.getElementById('shExportTitle').textContent = t('export.title');
-    document.getElementById('shExport').removeEventListener('sheetclosed', closeHandler);
+    if (btnConfirmExport) btnConfirmExport.onclick = oldHandler;
+    if (shExportTitle) shExportTitle.textContent = t('export.title');
+    const sheet = document.getElementById('shExport');
+    if (sheet) sheet.removeEventListener('sheetclosed', closeHandler);
   };
-  document.getElementById('shExport').addEventListener('sheetclosed', closeHandler, { once: true });
+  const sheet = document.getElementById('shExport');
+  if (sheet) sheet.addEventListener('sheetclosed', closeHandler, { once: true });
 }
 
 function showExportSelector() {
@@ -1346,6 +1596,7 @@ function confirmExport() {
       csvContent += ligne + '\n';
     });
   });
+  csvContent += "\n# Généré par Courses Malin - https://liste-coursesv2.netlify.app\n";
 
   let baseName = 'mes_listes';
   if (selectedLists.length === 1) {
@@ -1369,7 +1620,7 @@ function importListsFromCSV() {
     const reader = new FileReader();
     reader.onload = (readerEvent) => {
       const csv = readerEvent.target.result;
-      const lines = csv.split('\n').filter(line => line.trim() !== '');
+      const lines = csv.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#'));
       if (lines.length < 2) {
         showSnack(t('import.empty_file'));
         return;
@@ -1509,10 +1760,10 @@ function confirmImportToList() {
     });
   });
 
-  processNextItem(itemsToProcess, 0, targetList, addedCount);
+  processNextItem(itemsToProcess, 0, targetList, addedCount, false);
 }
 
-function processNextItem(items, index, targetList, addedCount, applyToAll = false) {
+function processNextItem(items, index, targetList, addedCount, applyToAll) {
   if (index >= items.length) {
     if (addedCount > 0) {
       saveData();
@@ -1536,22 +1787,15 @@ function processNextItem(items, index, targetList, addedCount, applyToAll = fals
     processNextItem(items, index + 1, targetList, addedCount + 1, applyToAll);
   } else {
     if (applyToAll) {
-      // Fusionner sans demander
       existing.qty = (existing.qty || 1) + (item.qty || 1);
       processNextItem(items, index + 1, targetList, addedCount + 1, applyToAll);
     } else {
       const msg = t('import.duplicate_message', { name: item.text });
       if (confirm(msg)) {
-        // L'utilisateur veut fusionner ce doublon
         existing.qty = (existing.qty || 1) + (item.qty || 1);
-        // Demander s'il veut appliquer à tous les suivants
-        if (confirm(t('import.duplicate_apply_all'))) {
-          processNextItem(items, index + 1, targetList, addedCount + 1, true);
-        } else {
-          processNextItem(items, index + 1, targetList, addedCount + 1, false);
-        }
+        const applyAll = confirm(t('import.duplicate_apply_all'));
+        processNextItem(items, index + 1, targetList, addedCount + 1, applyAll);
       } else {
-        // Ignorer ce doublon
         processNextItem(items, index + 1, targetList, addedCount, false);
       }
     }
@@ -1559,41 +1803,45 @@ function processNextItem(items, index, targetList, addedCount, applyToAll = fals
 }
 
 /* =============================================================
-   24. ATTACHEMENT DES ÉCOUTEURS
+   25. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
+  const getEl = (id) => document.getElementById(id);
+
   // Header
-  document.getElementById('btnBack').addEventListener('click', () => goTo('home'));
-  document.getElementById('headerLogo').addEventListener('click', showLogoModal);
-  document.getElementById('btnAdd').addEventListener('click', openAddItem);
+  getEl('btnBack')?.addEventListener('click', () => goTo('home'));
+  getEl('headerLogo')?.addEventListener('click', showLogoModal);
+  getEl('btnAdd')?.addEventListener('click', openAddItem);
 
   // Navigation
-  document.getElementById('t-home').addEventListener('click',     () => goTo('home'));
-  document.getElementById('t-lists').addEventListener('click',    () => goTo('lists'));
-  document.getElementById('t-settings').addEventListener('click', () => goTo('settings'));
+  getEl('t-home')?.addEventListener('click', () => goTo('home'));
+  getEl('t-lists')?.addEventListener('click', () => goTo('lists'));
+  getEl('t-settings')?.addEventListener('click', () => goTo('settings'));
 
-  // FAB
-  document.getElementById('fab').addEventListener('click', openAddItem);
+  // FABs
+  getEl('fab')?.addEventListener('click', openAddItem);
+  getEl('fab-list')?.addEventListener('click', openAddList);
 
   // Overlay
-  document.getElementById('ovl').addEventListener('click', closeSheet);
+  getEl('ovl')?.addEventListener('click', closeSheet);
 
   // Accueil
-  document.getElementById('budgetIn').addEventListener('change', onBudgetChange);
-  document.getElementById('searchIn').addEventListener('input',  renderHome);
-  document.getElementById('btnChangeList').addEventListener('click', () => goTo('lists'));
-  document.getElementById('btnShare').addEventListener('click', shareList);
-  document.getElementById('btnImportToList').addEventListener('click', showImportToListSelector);
-  document.getElementById('viewMapBtn').addEventListener('click', viewMap);
-  document.getElementById('changeMapBtn').addEventListener('click', () => {
+  getEl('budgetIn')?.addEventListener('change', onBudgetChange);
+  getEl('searchIn')?.addEventListener('input', renderHome);
+  getEl('btnChangeList')?.addEventListener('click', () => goTo('lists'));
+  getEl('btnShare')?.addEventListener('click', shareList);
+  getEl('btnImportToList')?.addEventListener('click', showImportToListSelector);
+  getEl('viewMapBtn')?.addEventListener('click', viewMap);
+  getEl('changeMapBtn')?.addEventListener('click', () => {
+    // Ligne supprimée : getEl('btnCancelExport')?.addEventListener('click', closeSheet); était ici par erreur
     if (activeId) captureMap(activeId);
   });
-  document.getElementById('deleteMapBtn').addEventListener('click', deleteMap);
-  document.getElementById('mapThumb').addEventListener('click', viewMap);
-  document.getElementById('locateStoreBtn').addEventListener('click', () => {
+  getEl('deleteMapBtn')?.addEventListener('click', deleteMap);
+  getEl('mapThumb')?.addEventListener('click', viewMap);
+  getEl('locateStoreBtn')?.addEventListener('click', () => {
     if (activeId) locateStore(activeId);
   });
-  document.getElementById('routeStoreBtn').addEventListener('click', () => {
+  getEl('routeStoreBtn')?.addEventListener('click', () => {
     const list = lists.find(l => l.id === activeId);
     if (list && list.location) {
       const { lat, lon } = list.location;
@@ -1605,7 +1853,7 @@ function attachListeners() {
   });
 
   // État vide
-  document.getElementById('emptyState').addEventListener('click', () => {
+  getEl('emptyState')?.addEventListener('click', () => {
     if (lists.length === 0) {
       goTo('lists');
     } else {
@@ -1614,100 +1862,112 @@ function attachListeners() {
   });
 
   // Sheet Article
-  document.getElementById('iName').addEventListener('input', validateItemForm);
-  document.getElementById('qtyMinus').addEventListener('click', () => adjustSheetQty(-1));
-  document.getElementById('qtyPlus').addEventListener('click',  () => adjustSheetQty(+1));
-  document.getElementById('iSubmit').addEventListener('click', confirmItem);
-  document.getElementById('iUnit').addEventListener('change', function() {
+  getEl('iName')?.addEventListener('input', validateItemForm);
+  getEl('qtyMinus')?.addEventListener('click', () => adjustSheetQty(-1));
+  getEl('qtyPlus')?.addEventListener('click', () => adjustSheetQty(+1));
+  getEl('iSubmit')?.addEventListener('click', confirmItem);
+  getEl('iUnit')?.addEventListener('change', function() {
     const unit = this.value;
     const pricePerUnitField = document.getElementById('fldPricePerUnit');
-    if (unit === 'kg' || unit === 'l' || unit === 'g' || unit === 'ml') {
-      pricePerUnitField.style.display = 'block';
-    } else {
-      pricePerUnitField.style.display = 'none';
+    if (pricePerUnitField) {
+      pricePerUnitField.style.display = (unit === 'kg' || unit === 'l' || unit === 'g' || unit === 'ml') ? 'block' : 'none';
     }
   });
+  getEl('btnManageCategories')?.addEventListener('click', () => {
+  // Fermer d'abord le sheet d'ajout s'il est ouvert
+  closeSheet(); // ferme shItem
+  // Puis ouvrir le gestionnaire de catégories
+  openCategoryEditor(-1);
+});
 
   // Toggle scan multiple
-  document.getElementById('multiScanToggle').addEventListener('click', () => {
+  getEl('multiScanToggle')?.addEventListener('click', () => {
     multiScanMode = !multiScanMode;
     const tog = document.getElementById('multiScanToggle');
-    tog.classList.toggle('on', multiScanMode);
-    tog.setAttribute('aria-checked', multiScanMode);
+    if (tog) {
+      tog.classList.toggle('on', multiScanMode);
+      tog.setAttribute('aria-checked', multiScanMode);
+    }
   });
 
   // Scan
-  document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScan);
-  document.getElementById('btnStopScan').addEventListener('click', stopBarcodeScan);
+  getEl('btnScanBarcode')?.addEventListener('click', startBarcodeScan);
+  getEl('btnStopScan')?.addEventListener('click', stopBarcodeScan);
 
   // Boutons du panneau de résultat de scan
-  document.getElementById('scanAddBtn').addEventListener('click', () => {
+  getEl('scanAddBtn')?.addEventListener('click', () => {
     if (lastScannedProductData) {
       addProductFromScan(lastScannedProductData);
     }
-    document.getElementById('scanResultPanel').style.display = 'none';
+    const panel = document.getElementById('scanResultPanel');
+    if (panel) panel.style.display = 'none';
   });
-  document.getElementById('scanIgnoreBtn').addEventListener('click', () => {
-    document.getElementById('scanResultPanel').style.display = 'none';
+  getEl('scanIgnoreBtn')?.addEventListener('click', () => {
+    const panel = document.getElementById('scanResultPanel');
+    if (panel) panel.style.display = 'none';
   });
-  document.getElementById('scanStopBtn').addEventListener('click', () => {
+  getEl('scanStopBtn')?.addEventListener('click', () => {
     stopBarcodeScan();
-    document.getElementById('scanResultPanel').style.display = 'none';
+    const panel = document.getElementById('scanResultPanel');
+    if (panel) panel.style.display = 'none';
   });
 
   // Speech
-  document.getElementById('btnSpeech').addEventListener('click', startListening);
+  getEl('btnSpeech')?.addEventListener('click', startListening);
 
   // Sheet Liste
-  document.getElementById('lName').addEventListener('input', validateListForm);
-  document.getElementById('lSubmit').addEventListener('click', confirmList);
+  getEl('lName')?.addEventListener('input', validateListForm);
+  getEl('lSubmit')?.addEventListener('click', confirmList);
 
   // Mes Listes
-  document.getElementById('btnNewList').addEventListener('click', openAddList);
+  getEl('btnNewList')?.addEventListener('click', openAddList);
 
   // Export/Import
-  document.getElementById('btnExportLists').addEventListener('click', showExportSelector);
-  document.getElementById('btnImportLists').addEventListener('click', importListsFromCSV);
-  document.getElementById('btnShareListsText').addEventListener('click', showTextExportSelector);
+  getEl('btnExportLists')?.addEventListener('click', showExportSelector);
+  getEl('btnImportLists')?.addEventListener('click', importListsFromCSV);
+  getEl('btnShareListsText')?.addEventListener('click', showTextExportSelector);
 
-  // Boutons du sheet d'export
-  document.getElementById('btnCancelExport').addEventListener('click', closeSheet);
-  // btnConfirmExport sera défini dynamiquement
+  // Bouton Annuler du sheet Export (placé ici, hors de tout autre écouteur)
+  getEl('btnCancelExport')?.addEventListener('click', closeSheet);
 
   // Réglages
-  document.getElementById('darkTog').addEventListener('click',    toggleDark);
-  document.getElementById('soundTog').addEventListener('click',   toggleSound);
-  document.getElementById('soundSel').addEventListener('change',  saveConfig);
-  document.getElementById('btnPlaySound').addEventListener('click', playSound);
-  document.getElementById('btnStopSound').addEventListener('click', stopSound);
-  document.getElementById('btnReset').addEventListener('click',   resetAll);
-  document.getElementById('btnHelp').addEventListener('click', () => goTo('help'));
+  getEl('darkTog')?.addEventListener('click', toggleDark);
+  getEl('soundTog')?.addEventListener('click', toggleSound);
+  getEl('soundSel')?.addEventListener('change', saveConfig);
+  getEl('btnPlaySound')?.addEventListener('click', playSound);
+  getEl('btnStopSound')?.addEventListener('click', stopSound);
+  getEl('btnReset')?.addEventListener('click', resetAll);
+  getEl('btnHelp')?.addEventListener('click', () => goTo('help'));
+
+  // Gestion des catégories (nouveau sheet)
+  getEl('btnCancelCategoryEdit')?.addEventListener('click', cancelCategoryEdit);
+  getEl('btnSaveCategory')?.addEventListener('click', saveCategory);
 
   // Éditeur d'image
-  document.getElementById('btnRotateLeft').addEventListener('click', () => {
+  getEl('btnRotateLeft')?.addEventListener('click', () => {
     if (cropper) cropper.rotate(-90);
   });
-  document.getElementById('btnRotateRight').addEventListener('click', () => {
+  getEl('btnRotateRight')?.addEventListener('click', () => {
     if (cropper) cropper.rotate(90);
   });
-  document.getElementById('btnFlipHorizontal').addEventListener('click', () => {
+  getEl('btnFlipHorizontal')?.addEventListener('click', () => {
     if (cropper) {
       const scaleX = cropper.getData().scaleX || 1;
       cropper.scaleX(-scaleX);
     }
   });
-  document.getElementById('btnFlipVertical').addEventListener('click', () => {
+  getEl('btnFlipVertical')?.addEventListener('click', () => {
     if (cropper) {
       const scaleY = cropper.getData().scaleY || 1;
       cropper.scaleY(-scaleY);
     }
   });
-  document.getElementById('btnCancelImageEdit').addEventListener('click', () => {
+  getEl('btnCancelImageEdit')?.addEventListener('click', () => {
     closeSheet();
     if (cropper) cropper.destroy();
     cropper = null;
   });
-  document.getElementById('btnSaveImageEdit').addEventListener('click', () => {
+  getEl('btnSaveImageEdit')?.addEventListener('click', () => {
     if (!cropper) return;
     const canvas = cropper.getCroppedCanvas();
     const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
@@ -1741,7 +2001,7 @@ function attachListeners() {
   });
 
   // Modal logo
-  document.getElementById('logoModal').addEventListener('click', closeLogoModal);
+  getEl('logoModal')?.addEventListener('click', closeLogoModal);
 }
 
 /* =============================================================

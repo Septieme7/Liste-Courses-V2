@@ -282,6 +282,29 @@ input, select, textarea { font-family: inherit; }
 #fab:active  { transform: scale(0.92); }
 #fab.pulse   { animation: pulse 2s infinite; } /* Animation d'impulsion */
 
+/* FAB secondaire pour Mes Listes */
+#fab-list {
+  position: fixed;
+  bottom: calc(var(--th) + 16px);
+  right: 18px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--p); /* ou une couleur différente ? */
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 55%, transparent);
+  z-index: 90;
+  transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
+}
+#fab-list:hover { background: var(--pd); }
+#fab-list:active { transform: scale(0.92); }
+/* On peut lui donner une animation différente si on veut */
+#fab-list.pulse { animation: pulse 2s infinite; }
+
 
 /* =============================================================
    6. VUES
@@ -424,6 +447,12 @@ input, select, textarea { font-family: inherit; }
    8. INDICATEUR LISTE ACTIVE
    Affiche la liste courante avec son emoji, son nom, et les boutons partager/changer.
 ============================================================= */
+
+/* Bouton Changer de liste active sous forme d'icône */
+#btnChangeList {
+  font-size: 18px; /* taille de l'icône */
+  padding: 7px 13px; /* à ajuster si nécessaire */
+}
 .alist {
   display: flex;
   align-items: center;
@@ -496,6 +525,12 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+/* Ajustement des boutons de la carte */
+#listMapContainer .sact-btn {
+  padding: 5px 8px;
+  font-size: 16px; /* pour que les icônes aient une taille correcte */
+  line-height: 1;
 }
 #mapThumb {
   max-width: 100%;

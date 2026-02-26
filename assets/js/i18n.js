@@ -19,6 +19,10 @@ async function loadLanguage(lang) {
     // Re-render all views
     if (typeof renderHome === 'function') renderHome();
     if (typeof renderLists === 'function') renderLists();
+    // Rebuild quick chips for the add form (in case it's open)
+    if (typeof buildQuickChips === 'function') buildQuickChips();
+    // Rebuild category select
+    if (typeof buildCategorySelect === 'function') buildCategorySelect();
     // Update header title if not home
     if (typeof currentTab !== 'undefined' && currentTab !== 'home') {
       document.getElementById('htitle').textContent = t(`nav.${currentTab}`);

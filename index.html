@@ -67,6 +67,7 @@
         </div>
       </div>
 
+      <!-- Indicateur de liste active -->
       <div class="alist" aria-label="Liste active sélectionnée">
         <span id="aListIco" aria-hidden="true">🛒</span>
         <div class="alist-info">
@@ -82,32 +83,34 @@
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
         </button>
-        <!-- Nouveau bouton : importer une autre liste -->
-        <button class="alist-share" id="btnImportToList" aria-label="Importer une autre liste">
+        <!-- Importer une autre liste -->
+        <button class="alist-share" id="btnImportToList" data-i18n-aria="home.import_list_aria" aria-label="Importer une autre liste">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
         </button>
-        <button class="alist-chg" id="btnChangeList" data-i18n="home.change_list" aria-label="Changer de liste active">Changer</button>
+        <!-- Changer de liste active (icône) -->
+        <button class="alist-chg" id="btnChangeList" data-i18n-aria="home.change_list_aria" aria-label="Changer de liste active">🔄</button>
       </div>
 
+      <!-- Carte du magasin -->
       <div id="listMapContainer" style="margin-bottom: 12px; display: none;">
         <div class="card" style="padding: 12px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-weight: 600;" data-i18n="home.map_title">🗺️ Carte du magasin</span>
-            <button class="sact-btn" id="viewMapBtn" data-i18n="home.view_map" style="padding: 5px 12px;">Voir</button>
-            <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n="home.change_map" style="padding: 5px 12px;">Changer</button>
-            <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n="home.delete_map" style="padding: 5px 12px;">Supprimer</button>
-            <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n="home.locate_store" style="padding: 5px 12px;">📍 Localiser</button>
-            <!-- Nouveau bouton itinéraire -->
-            <button class="sact-btn sact-muted" id="routeStoreBtn" data-i18n="home.route_store" style="padding: 5px 12px;">🧭 Itinéraire</button>
+            <button class="sact-btn" id="viewMapBtn" data-i18n-aria="home.view_map_aria" aria-label="Voir la carte" style="padding: 5px 8px;">👁️</button>
+            <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n-aria="home.change_map_aria" aria-label="Changer la carte" style="padding: 5px 8px;">🖊️</button>
+            <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n-aria="home.delete_map_aria" aria-label="Supprimer la carte" style="padding: 5px 8px;">🗑️</button>
+            <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n-aria="home.locate_store_aria" aria-label="Localiser le magasin" style="padding: 5px 8px;">📍</button>
+            <button class="sact-btn sact-muted" id="routeStoreBtn" data-i18n-aria="home.route_store_aria" aria-label="Itinéraire" style="padding: 5px 8px;">🧭</button>
           </div>
           <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 150px; margin-top: 8px; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
       </div>
 
+      <!-- Barre de recherche -->
       <div class="sbar" role="search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/>
@@ -116,6 +119,7 @@
         <input type="search" id="searchIn" data-i18n="home.search_placeholder" placeholder="Rechercher un article…" aria-label="Rechercher dans la liste" autocomplete="off">
       </div>
 
+      <!-- Liste des articles -->
       <div class="card" id="itemsCont" aria-label="Articles de la liste">
         <div class="empty" id="emptyState" style="cursor: pointer;" role="button" tabindex="0" aria-label="Ajouter un article ou créer une liste">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -129,6 +133,7 @@
         <ul id="itemsList" aria-label="Articles"></ul>
       </div>
 
+      <!-- Barre de total -->
       <div class="tbar" aria-label="Résumé">
         <span class="tbar-lbl" data-i18n="home.total_articles">Total articles</span>
         <span class="tbar-val" id="totCount" aria-live="polite">0 article</span>
@@ -139,19 +144,13 @@
     <section class="view" id="v-lists" aria-label="Mes listes de courses">
       <div class="vhdr">
         <h2 data-i18n="lists.title">Mes Listes</h2>
-        <button class="addbtn" id="btnNewList" aria-label="Créer une nouvelle liste">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          <span data-i18n="lists.new_list">Nouvelle</span>
-        </button>
+        <!-- Bouton "Nouvelle" réduit à + (plus d'icône) -->
+        <button class="addbtn" id="btnNewList" data-i18n-aria="lists.new_list_aria" aria-label="Créer une nouvelle liste">+</button>
       </div>
       <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-        <button class="sact-btn" id="btnExportLists" data-i18n="lists.export">📤 Exporter les listes</button>
-        <button class="sact-btn" id="btnImportLists" data-i18n="lists.import">📥 Importer un fichier</button>
-        <!-- Nouveau bouton : partage texte -->
-        <button class="sact-btn" id="btnShareListsText" data-i18n="lists.share_text">📤 Partager en texte</button>
+        <button class="sact-btn" id="btnExportLists" data-i18n-aria="lists.export_csv_aria" aria-label="Exporter en CSV">📤 CSV</button>
+        <button class="sact-btn" id="btnImportLists" data-i18n-aria="lists.import_file_aria" aria-label="Importer un fichier">📥</button>
+        <button class="sact-btn" id="btnShareListsText" data-i18n-aria="lists.share_text_aria" aria-label="Partager en texte">📤 TXT</button>
       </div>
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
@@ -190,6 +189,7 @@
               <option value="ru">Русский</option>
             </select>
           </div>
+          <!-- Le bouton Gérer les catégories a été supprimé des réglages -->
         </div>
       </div>
       <div class="ssec">
@@ -246,7 +246,7 @@
           </div>
         </div>
       </div>
-      <p class="app-version">Courses Malin · v2.3</p>
+      <p class="app-version">Courses Malin · v2.7</p>
     </section>
 
     <!-- AIDE -->
@@ -316,7 +316,16 @@
     </button>
   </nav>
 
+  <!-- FAB pour l'accueil -->
   <button id="fab" class="pulse" aria-label="Ajouter un article">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  </button>
+
+  <!-- Nouveau FAB pour Mes Listes -->
+  <button id="fab-list" class="fab-secondary" aria-label="Créer une nouvelle liste" style="display: none;">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
       <line x1="12" y1="5" x2="12" y2="19"/>
       <line x1="5" y1="12" x2="19" y2="12"/>
@@ -404,23 +413,27 @@
 
       <div class="fld">
         <label for="iCat" data-i18n="item.category_label">Catégorie</label>
-        <select id="iCat">
-          <option value="" data-i18n="item.no_category">Sans catégorie</option>
-          <option value="🥦 Fruits &amp; Légumes" data-i18n="category.fruits">🥦 Fruits & Légumes</option>
-          <option value="🥩 Viandes &amp; Poissons" data-i18n="category.meat">🥩 Viandes & Poissons</option>
-          <option value="🥛 Produits Laitiers" data-i18n="category.dairy">🥛 Produits Laitiers</option>
-          <option value="🥖 Boulangerie" data-i18n="category.bakery">🥖 Boulangerie</option>
-          <option value="🥫 Épicerie" data-i18n="category.grocery">🥫 Épicerie</option>
-          <option value="🧴 Hygiène" data-i18n="category.hygiene">🧴 Hygiène</option>
-          <option value="🧹 Entretien" data-i18n="category.cleaning">🧹 Entretien</option>
-          <option value="🧃 Boissons" data-i18n="category.drinks">🧃 Boissons</option>
-          <option value="🍦 Surgelés" data-i18n="category.frozen">🍦 Surgelés</option>
-          <option value="💕 Love" data-i18n="category.love">💕 Love</option>
-          <option value="🤬 SaMéreList" data-i18n="category.mother">🤬 SaMéreList</option>
-          <option value="🖕 Sheet List" data-i18n="category.sheet">🖕 Sheet List</option>
-          <option value="🧙‍♂️ Magic List" data-i18n="category.magic">🧙‍♂️ Magic List</option>
-        </select>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <select id="iCat" style="flex: 1;">
+            <option value="" data-i18n="item.no_category">Sans catégorie</option>
+            <option value="🥦 Fruits &amp; Légumes" data-i18n="category.fruits">🥦 Fruits & Légumes</option>
+            <option value="🥩 Viandes &amp; Poissons" data-i18n="category.meat">🥩 Viandes & Poissons</option>
+            <option value="🥛 Produits Laitiers" data-i18n="category.dairy">🥛 Produits Laitiers</option>
+            <option value="🥖 Boulangerie" data-i18n="category.bakery">🥖 Boulangerie</option>
+            <option value="🥫 Épicerie" data-i18n="category.grocery">🥫 Épicerie</option>
+            <option value="🧴 Hygiène" data-i18n="category.hygiene">🧴 Hygiène</option>
+            <option value="🧹 Entretien" data-i18n="category.cleaning">🧹 Entretien</option>
+            <option value="🧃 Boissons" data-i18n="category.drinks">🧃 Boissons</option>
+            <option value="🍦 Surgelés" data-i18n="category.frozen">🍦 Surgelés</option>
+            <option value="💕 Love" data-i18n="category.love">💕 Love</option>
+            <option value="🤬 SaMéreList" data-i18n="category.mother">🤬 SaMéreList</option>
+            <option value="🖕 Sheet List" data-i18n="category.sheet">🖕 Sheet List</option>
+            <option value="🧙‍♂️ Magic List" data-i18n="category.magic">🧙‍♂️ Magic List</option>
+          </select>
+          <button type="button" id="btnManageCategories" class="sact-btn" style="padding: 0 8px;" aria-label="Gérer les catégories">⚙️</button>
+        </div>
       </div>
+
       <div class="fld" id="fldNote">
         <label for="iNote" data-i18n="item.note_label">Note / Marque</label>
         <textarea id="iNote" data-i18n="item.note_placeholder" placeholder="Précisions, marque préférée…"></textarea>
@@ -473,18 +486,46 @@
     </div>
   </div>
 
-<!-- Bottom Sheet : Export de listes (et partage texte / import) -->
+  <!-- Bottom Sheet : Export de listes (et partage texte / import) -->
   <div class="sheet" id="shExport" role="dialog" aria-modal="true" aria-labelledby="shExportTitle">
     <div class="shandle" aria-hidden="true"></div>
-    <h2 class="stit" id="shExportTitle" data-i18n="export.title">Exporter des listes</h2>
+    <h2 class="stit" id="shExportTitle">Exporter des listes</h2>
     <div class="sbody">
-    <p data-i18n="export.select_prompt">Sélectionnez les listes à exporter :</p>
+      <p data-i18n="export.select_prompt">Sélectionnez les listes à exporter :</p>
       <div id="exportListCheckboxes" style="margin: 16px 0;">
         <!-- Les checkboxes seront générées dynamiquement -->
       </div>
       <div style="display: flex; gap: 8px;">
         <button class="sbtn sact-muted" id="btnCancelExport" data-i18n="common.cancel" style="flex:1;">Annuler</button>
-        <button class="sbtn pri" id="btnConfirmExport" data-i18n="export.confirm_button" style="flex:1;">Exporter</button>
+        <button class="sbtn pri" id="btnConfirmExport" data-i18n="common.confirm" style="flex:1;">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet : Gestion des catégories (nouveau, accessible depuis le formulaire d'ajout) -->
+  <div class="sheet" id="shCategoryEdit" role="dialog" aria-modal="true" aria-labelledby="shCategoryEditTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shCategoryEditTitle" data-i18n="categories.edit_title">Modifier la catégorie</h2>
+    <div class="sbody">
+      <div id="categoryForm" style="display: block; margin-top: 16px;">
+        <div class="fld">
+          <label for="catName" data-i18n="categories.name">Nom</label>
+          <input type="text" id="catName" placeholder="Ex: Fruits">
+        </div>
+        <div class="fld">
+          <label for="catEmoji" data-i18n="categories.emoji">Emoji</label>
+          <div class="chips" id="catEmojiChips" role="group" aria-label="Choisir un emoji"></div>
+          <input type="text" id="catEmoji" value="🥦" maxlength="4" class="emoji-input">
+        </div>
+        <div class="fld">
+          <label for="catColor" data-i18n="categories.color">Couleur</label>
+          <div class="cgrid" id="catColorGrid" role="group" aria-label="Choisir une couleur"></div>
+          <input type="hidden" id="catColor" value="#10B981">
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="sbtn sact-muted" id="btnCancelCategoryEdit" style="flex:1;" data-i18n="common.cancel">Annuler</button>
+          <button class="sbtn pri" id="btnSaveCategory" style="flex:1;" data-i18n="common.save">Enregistrer</button>
+        </div>
       </div>
     </div>
   </div>

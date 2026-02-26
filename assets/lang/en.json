@@ -42,7 +42,18 @@
     "location_confirm": "Associate this location with list \"{name}\"?",
     "location_saved": "Location saved",
     "geocoding_error": "Error finding location",
-    "location_error": "Unable to get your position"
+    "location_error": "Unable to get your position",
+    "view_map_aria": "View map",
+    "change_map_aria": "Change map",
+    "delete_map_aria": "Delete map",
+    "locate_store_aria": "Locate store",
+    "route_store_aria": "Directions",
+    "change_list_aria": "Change active list",
+    "import_list_aria": "Import another list",
+    "uncheck": "Uncheck",
+    "check": "Check",
+    "decrease": "Decrease",
+    "increase": "Increase"
   },
   "lists": {
     "title": "My Lists",
@@ -61,7 +72,14 @@
     "created": "created",
     "deleted": "List deleted",
     "delete_confirm": "Delete list \"{name}\" and all its items?",
-    "rename_prompt": "Rename list:"
+    "rename_prompt": "Rename list:",
+    "export_csv_aria": "Export as CSV",
+    "import_file_aria": "Import file",
+    "share_text_aria": "Share as text",
+    "new_list_aria": "Create a new list",
+    "select": "Select",
+    "add_map": "Add store map",
+    "emoji": "Emoji"
   },
   "settings": {
     "title": "Settings",
@@ -81,7 +99,10 @@
     "help_button": "Open",
     "language": "Language",
     "thresholds": "Alert thresholds",
-    "confirm_reset": "Delete ALL data?"
+    "confirm_reset": "Delete ALL data?",
+    "manage_categories": "Manage categories",
+    "manage_button": "Open",
+    "color": "Color"
   },
   "help": {
     "title": "Help",
@@ -193,7 +214,9 @@
     "unknown": "Unknown product",
     "product": "Product",
     "camera_error": "Camera error",
-    "misc": "Misc"
+    "misc": "Misc",
+    "decrease": "Decrease",
+    "increase": "Increase"
   },
   "quick": {
     "bread": "Bread",
@@ -237,5 +260,11 @@
     "mother": "🤬 Mother List",
     "sheet": "🖕 Sheet List",
     "magic": "🧙‍♂️ Magic List"
+  },
+  "categories": {
+    "edit_title": "Edit category",
+    "name": "Name",
+    "emoji": "Emoji",
+    "color": "Color"
   }
 }

@@ -42,7 +42,18 @@
     "location_confirm": "Associer ce lieu à la liste \"{name}\" ?",
     "location_saved": "Lieu enregistré",
     "geocoding_error": "Erreur lors de la recherche du lieu",
-    "location_error": "Impossible d'obtenir votre position"
+    "location_error": "Impossible d'obtenir votre position",
+    "view_map_aria": "Voir la carte",
+    "change_map_aria": "Changer la carte",
+    "delete_map_aria": "Supprimer la carte",
+    "locate_store_aria": "Localiser le magasin",
+    "route_store_aria": "Itinéraire",
+    "change_list_aria": "Changer de liste active",
+    "import_list_aria": "Importer une autre liste",
+    "uncheck": "Décocher",
+    "check": "Cocher",
+    "decrease": "Diminuer",
+    "increase": "Augmenter"
   },
   "lists": {
     "title": "Mes Listes",
@@ -61,7 +72,14 @@
     "created": "créée",
     "deleted": "Liste supprimée",
     "delete_confirm": "Supprimer la liste \"{name}\" et tous ses articles ?",
-    "rename_prompt": "Renommer la liste :"
+    "rename_prompt": "Renommer la liste :",
+    "export_csv_aria": "Exporter en CSV",
+    "import_file_aria": "Importer un fichier",
+    "share_text_aria": "Partager en texte",
+    "new_list_aria": "Créer une nouvelle liste",
+    "select": "Sélectionner",
+    "add_map": "Ajouter une photo du magasin",
+    "emoji": "Emoji"
   },
   "settings": {
     "title": "Réglages",
@@ -81,7 +99,10 @@
     "help_button": "Ouvrir",
     "language": "Langue",
     "thresholds": "Seuils d'alerte",
-    "confirm_reset": "Supprimer TOUTES les données ?"
+    "confirm_reset": "Supprimer TOUTES les données ?",
+    "manage_categories": "Gérer les catégories",
+    "manage_button": "Ouvrir",
+    "color": "Couleur"
   },
   "help": {
     "title": "Aide",
@@ -117,27 +138,27 @@
     "downloaded": "Fichier texte généré"
   },
   "export": {
-  "title": "Exporter des listes",
-  "none_selected": "Aucune liste sélectionnée",
-  "confirm_button": "Exporter",
-  "select_prompt": "Sélectionnez les listes à exporter :"
-},
-"import": {
-  "title": "Importer dans la liste active",
-  "no_lists": "Aucune liste disponible",
-  "no_active_list": "Aucune liste active",
-  "none_selected": "Aucune liste sélectionnée",
-  "duplicate_message": "L'article \"{name}\" existe déjà. Fusionner ?",
-  "duplicate_merge": "Fusionner",
-  "duplicate_skip": "Ignorer",
-  "duplicate_apply_all": "Appliquer à tous",
-  "complete": "{count} articles importés",
-  "nothing_added": "Aucun article importé",
-  "empty_file": "Fichier CSV vide",
-  "invalid_format": "Format CSV invalide",
-  "no_lists_found": "Aucune liste trouvée dans le fichier",
-  "replace_confirm": "Remplacer les {old} liste(s) par {new} nouvelle(s) liste(s) ?"
-},
+    "title": "Exporter des listes",
+    "none_selected": "Aucune liste sélectionnée",
+    "confirm_button": "Exporter",
+    "select_prompt": "Sélectionnez les listes à exporter :"
+  },
+  "import": {
+    "title": "Importer dans la liste active",
+    "no_lists": "Aucune liste disponible",
+    "no_active_list": "Aucune liste active",
+    "none_selected": "Aucune liste sélectionnée",
+    "duplicate_message": "L'article \"{name}\" existe déjà. Fusionner ?",
+    "duplicate_merge": "Fusionner",
+    "duplicate_skip": "Ignorer",
+    "duplicate_apply_all": "Appliquer à tous",
+    "complete": "{count} articles importés",
+    "nothing_added": "Aucun article importé",
+    "empty_file": "Fichier CSV vide",
+    "invalid_format": "Format CSV invalide",
+    "no_lists_found": "Aucune liste trouvée dans le fichier",
+    "replace_confirm": "Remplacer les {old} liste(s) par {new} nouvelle(s) liste(s) ?"
+  },
   "common": {
     "cancel": "Annuler",
     "confirm": "Confirmer",
@@ -193,7 +214,9 @@
     "unknown": "Produit inconnu",
     "product": "Produit",
     "camera_error": "Erreur accès caméra",
-    "misc": "Divers"
+    "misc": "Divers",
+    "decrease": "Diminuer",
+    "increase": "Augmenter"
   },
   "quick": {
     "bread": "Pain",
@@ -237,5 +260,11 @@
     "mother": "🤬 SaMéreList",
     "sheet": "🖕 Sheet List",
     "magic": "🧙‍♂️ Magic List"
+  },
+  "categories": {
+    "edit_title": "Modifier la catégorie",
+    "name": "Nom",
+    "emoji": "Emoji",
+    "color": "Couleur"
   }
 }

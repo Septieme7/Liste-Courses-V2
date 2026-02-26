@@ -42,7 +42,18 @@
     "location_confirm": "¿Asociar esta ubicación a la lista \"{name}\"?",
     "location_saved": "Ubicación guardada",
     "geocoding_error": "Error al buscar la ubicación",
-    "location_error": "No se pudo obtener tu posición"
+    "location_error": "No se pudo obtener tu posición",
+    "view_map_aria": "Ver plano",
+    "change_map_aria": "Cambiar plano",
+    "delete_map_aria": "Eliminar plano",
+    "locate_store_aria": "Localizar tienda",
+    "route_store_aria": "Cómo llegar",
+    "change_list_aria": "Cambiar lista activa",
+    "import_list_aria": "Importar otra lista",
+    "uncheck": "Desmarcar",
+    "check": "Marcar",
+    "decrease": "Disminuir",
+    "increase": "Aumentar"
   },
   "lists": {
     "title": "Mis Listas",
@@ -61,7 +72,14 @@
     "created": "creada",
     "deleted": "Lista eliminada",
     "delete_confirm": "¿Eliminar la lista \"{name}\" y todos sus artículos?",
-    "rename_prompt": "Renombrar la lista:"
+    "rename_prompt": "Renombrar la lista:",
+    "export_csv_aria": "Exportar como CSV",
+    "import_file_aria": "Importar archivo",
+    "share_text_aria": "Compartir como texto",
+    "new_list_aria": "Crear una nueva lista",
+    "select": "Seleccionar",
+    "add_map": "Añadir foto de la tienda",
+    "emoji": "Emoji"
   },
   "settings": {
     "title": "Ajustes",
@@ -81,7 +99,10 @@
     "help_button": "Abrir",
     "language": "Idioma",
     "thresholds": "Umbrales de alerta",
-    "confirm_reset": "¿Borrar TODOS los datos?"
+    "confirm_reset": "¿Borrar TODOS los datos?",
+    "manage_categories": "Gestionar categorías",
+    "manage_button": "Abrir",
+    "color": "Color"
   },
   "help": {
     "title": "Ayuda",
@@ -193,7 +214,9 @@
     "unknown": "Producto desconocido",
     "product": "Producto",
     "camera_error": "Error de cámara",
-    "misc": "Varios"
+    "misc": "Varios",
+    "decrease": "Disminuir",
+    "increase": "Aumentar"
   },
   "quick": {
     "bread": "Pan",
@@ -236,6 +259,10 @@
     "love": "💕 Amor",
     "mother": "🤬 Lista de la madre",
     "sheet": "🖕 Lista Sheet",
-    "magic": "🧙‍♂️ Lista Mágica"
+    "magic": "🧙‍♂️ Lista Mágica",
+    "edit_title": "Editar categoría",
+    "name": "Nombre",
+    "emoji": "Emoji",
+    "color": "Color"
   }
 }

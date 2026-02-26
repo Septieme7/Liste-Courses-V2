@@ -42,7 +42,18 @@
     "location_confirm": "将此位置关联到清单“{name}”？",
     "location_saved": "位置已保存",
     "geocoding_error": "查找位置时出错",
-    "location_error": "无法获取您的位置"
+    "location_error": "无法获取您的位置",
+    "view_map_aria": "查看地图",
+    "change_map_aria": "更换地图",
+    "delete_map_aria": "删除地图",
+    "locate_store_aria": "定位商店",
+    "route_store_aria": "路线",
+    "change_list_aria": "更换当前清单",
+    "import_list_aria": "导入其他清单",
+    "uncheck": "取消勾选",
+    "check": "勾选",
+    "decrease": "减少",
+    "increase": "增加"
   },
   "lists": {
     "title": "我的清单",
@@ -61,7 +72,14 @@
     "created": "已创建",
     "deleted": "清单已删除",
     "delete_confirm": "删除清单“{name}”及其所有商品？",
-    "rename_prompt": "重命名清单："
+    "rename_prompt": "重命名清单：",
+    "export_csv_aria": "导出为CSV",
+    "import_file_aria": "导入文件",
+    "share_text_aria": "分享为文本",
+    "new_list_aria": "创建新清单",
+    "select": "选择",
+    "add_map": "添加商店照片",
+    "emoji": "表情符号"
   },
   "settings": {
     "title": "设置",
@@ -81,7 +99,10 @@
     "help_button": "打开",
     "language": "语言",
     "thresholds": "提醒阈值",
-    "confirm_reset": "删除所有数据？"
+    "confirm_reset": "删除所有数据？",
+    "manage_categories": "管理分类",
+    "manage_button": "打开",
+    "color": "颜色"
   },
   "help": {
     "title": "帮助",
@@ -193,7 +214,9 @@
     "unknown": "未知商品",
     "product": "商品",
     "camera_error": "摄像头错误",
-    "misc": "其他"
+    "misc": "其他",
+    "decrease": "减少",
+    "increase": "增加"
   },
   "quick": {
     "bread": "面包",
@@ -236,6 +259,10 @@
     "love": "💕 爱情",
     "mother": "🤬 母亲列表",
     "sheet": "🖕 表格列表",
-    "magic": "🧙‍♂️ 魔法列表"
+    "magic": "🧙‍♂️ 魔法列表",
+    "edit_title": "编辑分类",
+    "name": "名称",
+    "emoji": "表情符号",
+    "color": "颜色"
   }
 }
