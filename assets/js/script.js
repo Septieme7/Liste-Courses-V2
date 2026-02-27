@@ -114,11 +114,14 @@ function init() {
   if (cfg.lang) {
     loadLanguage(cfg.lang).then(() => {
       renderAll();
-      buildCategorySelect(); // pour le formulaire d'ajout
+      buildCategorySelect();
     });
   } else {
-    renderAll();
-    buildCategorySelect();
+    // Langue par défaut : français
+    loadLanguage('fr').then(() => {
+      renderAll();
+      buildCategorySelect();
+    });
   }
 
   if (!cfg.thresholds) {
@@ -764,7 +767,13 @@ function openAddItem() {
   buildQuickChips();
 
   openSheet('shItem');
-  setTimeout(() => document.getElementById('iName')?.focus(), 320);
+  setTimeout(() => {
+    const input = document.getElementById('iName');
+    if (input) {
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 320);
 }
 
 function openEditItem(itemId) {
@@ -980,7 +989,13 @@ function openAddList() {
   if (lColor) lColor.value = '#3B82F6';
 
   openSheet('shList');
-  setTimeout(() => document.getElementById('lName')?.focus(), 320);
+  setTimeout(() => {
+    const input = document.getElementById('lName');
+    if (input) {
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 320);
 }
 
 function validateListForm() {
@@ -1833,7 +1848,6 @@ function attachListeners() {
   getEl('btnImportToList')?.addEventListener('click', showImportToListSelector);
   getEl('viewMapBtn')?.addEventListener('click', viewMap);
   getEl('changeMapBtn')?.addEventListener('click', () => {
-    // Ligne supprimée : getEl('btnCancelExport')?.addEventListener('click', closeSheet); était ici par erreur
     if (activeId) captureMap(activeId);
   });
   getEl('deleteMapBtn')?.addEventListener('click', deleteMap);
@@ -1874,11 +1888,11 @@ function attachListeners() {
     }
   });
   getEl('btnManageCategories')?.addEventListener('click', () => {
-  // Fermer d'abord le sheet d'ajout s'il est ouvert
-  closeSheet(); // ferme shItem
-  // Puis ouvrir le gestionnaire de catégories
-  openCategoryEditor(-1);
-});
+    // Fermer d'abord le sheet d'ajout s'il est ouvert
+    closeSheet(); // ferme shItem
+    // Puis ouvrir le gestionnaire de catégories
+    openCategoryEditor(-1);
+  });
 
   // Toggle scan multiple
   getEl('multiScanToggle')?.addEventListener('click', () => {
@@ -1927,7 +1941,7 @@ function attachListeners() {
   getEl('btnImportLists')?.addEventListener('click', importListsFromCSV);
   getEl('btnShareListsText')?.addEventListener('click', showTextExportSelector);
 
-  // Bouton Annuler du sheet Export (placé ici, hors de tout autre écouteur)
+  // Bouton Annuler du sheet Export
   getEl('btnCancelExport')?.addEventListener('click', closeSheet);
 
   // Réglages

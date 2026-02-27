@@ -837,6 +837,13 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   transition: background var(--tr);
 }
+
+.sact-btn img {  /* images SVG des boutons soient alignées */
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 .sact-btn:hover { background: var(--pd); }
 .sact-btn.sact-muted { background: var(--sur2); color: var(--tx2); }
 .sact-btn.sact-muted:hover { background: var(--bd); }

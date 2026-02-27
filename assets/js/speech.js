@@ -23,7 +23,9 @@ function initSpeech() {
   };
 
   recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
+    let transcript = event.results[0][0].transcript;
+    // Remplacer " et " par ", " pour permettre l'ajout multiple
+    transcript = transcript.replace(/\s+et\s+/g, ', ');
     const input = document.getElementById('iName');
     if (input) {
       input.value = transcript;
