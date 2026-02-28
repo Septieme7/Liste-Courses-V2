@@ -26,6 +26,26 @@
     .alist-share {
       padding: 0 8px;
     }
+    /* QR code modal */
+    #qrModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #qrModal img {
+      max-width: 80%;
+      max-height: 80%;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+    }
   </style>
 </head>
 <body>
@@ -78,10 +98,10 @@
         </div>
       </div>
 
-      <!-- Indicateur de liste active -->
-      <div class="alist" aria-label="Liste active sélectionnée">
+      <!-- Indicateur de liste active avec swipe -->
+      <div class="alist" id="activeListContainer" aria-label="Liste active sélectionnée">
         <span id="aListIco" aria-hidden="true">🛒</span>
-        <div class="alist-info">
+        <div class="alist-info" id="activeListInfo">
           <div class="alist-sub" data-i18n="home.active_list">Liste active</div>
           <div class="alist-name" id="aListName">Aucune liste</div>
         </div>
@@ -102,26 +122,14 @@
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
         </button>
-        <!-- Changer de liste active (SVG) -->
-        <button class="alist-share" id="btnChangeList" data-i18n-aria="home.change_list_aria" aria-label="Changer de liste active">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-    <line x1="8" y1="6" x2="21" y2="6"></line>
-    <line x1="8" y1="12" x2="21" y2="12"></line>
-    <line x1="8" y1="18" x2="21" y2="18"></line>
-    <line x1="3" y1="6" x2="3" y2="6"></line>
-    <line x1="3" y1="12" x2="3" y2="12"></line>
-    <line x1="3" y1="18" x2="3" y2="18"></line>
-    <path d="M17 16l4-4-4-4" stroke-width="2.5"></path>
-          </svg>
-        </button>
-        </div>
+        <!-- Le bouton "Changer" a été supprimé, on utilisera le swipe -->
+      </div>
 
-      <!-- Carte du magasin -->
+      <!-- Carte du magasin (bouton Voir supprimé) -->
       <div id="listMapContainer" style="margin-bottom: 12px; display: none;">
         <div class="card" style="padding: 12px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-weight: 600;" data-i18n="home.map_title">🗺️ Carte du magasin</span>
-            <button class="sact-btn" id="viewMapBtn" data-i18n-aria="home.view_map_aria" aria-label="Voir la carte" style="padding: 5px 8px;">👁️</button>
             <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n-aria="home.change_map_aria" aria-label="Changer la carte" style="padding: 5px 8px;">🖊️</button>
             <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n-aria="home.delete_map_aria" aria-label="Supprimer la carte" style="padding: 5px 8px;">🗑️</button>
             <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n-aria="home.locate_store_aria" aria-label="Localiser le magasin" style="padding: 5px 8px;">📍</button>
@@ -163,20 +171,19 @@
 
     <!-- MES LISTES -->
     <section class="view" id="v-lists" aria-label="Mes listes de courses">
-      <div class="vhdr">
+      <div class="vhdr" style="display: flex; justify-content: space-between; align-items: center;">
         <h2 data-i18n="lists.title">Mes Listes</h2>
-        <!-- Bouton "Nouvelle" supprimé -->
-      </div>
-      <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center;">
-        <button class="sact-btn" id="btnExportLists" aria-label="Exporter en CSV">
-          <img src="assets/images/iconeCSV.svg" width="24" height="24" alt="CSV">
-        </button>
-        <button class="sact-btn" id="btnImportLists" aria-label="Importer un fichier">
-          <img src="assets/images/iconeIMPORT.svg" width="24" height="24" alt="Importer">
-        </button>
-        <button class="sact-btn" id="btnShareListsText" aria-label="Partager en texte">
-          <img src="assets/images/iconeTXT.svg" width="24" height="24" alt="TXT">
-        </button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="sact-btn" id="btnExportLists" aria-label="Exporter en CSV" style="background: none; padding: 0;">
+            <img src="assets/images/iconeCSV.svg" width="28" height="28" alt="CSV">
+          </button>
+          <button class="sact-btn" id="btnImportLists" aria-label="Importer un fichier" style="background: none; padding: 0;">
+            <img src="assets/images/iconeIMPORT.svg" width="28" height="28" alt="Importer">
+          </button>
+          <button class="sact-btn" id="btnShareListsText" aria-label="Partager en texte" style="background: none; padding: 0;">
+            <img src="assets/images/iconeTXT.svg" width="28" height="28" alt="TXT">
+          </button>
+        </div>
       </div>
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
@@ -215,6 +222,16 @@
               <option value="ru">Русский</option>
             </select>
           </div>
+          <div class="srow">
+            <span class="slbl" data-i18n="settings.currency">Monnaie</span>
+            <select id="currencySelector" class="ssel" aria-label="Monnaie">
+              <option value="€">Euro (€)</option>
+              <option value="$">Dollar ($)</option>
+              <option value="£">Livre (£)</option>
+              <option value="¥">Yen (¥)</option>
+              <option value="CHF">Franc suisse (CHF)</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="ssec">
@@ -238,11 +255,10 @@
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.test_sound">Tester le son</span>
-            <button class="sact-btn" id="btnPlaySound" aria-label="Tester le son d'alerte">▶</button>
-          </div>
-          <div class="srow">
-            <span class="slbl" data-i18n="settings.stop_sound">Arrêter le son</span>
-            <button class="sact-btn sact-muted" id="btnStopSound" aria-label="Arrêter le son d'alerte">⏹</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="sact-btn" id="btnPlaySound" aria-label="Tester le son d'alerte">▶</button>
+              <button class="sact-btn sact-muted" id="btnStopSound" aria-label="Arrêter le son d'alerte">⏹</button>
+            </div>
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.thresholds">Seuils d'alerte</span>
@@ -271,14 +287,51 @@
           </div>
         </div>
       </div>
-      <p class="app-version">Courses Malin · v2.7</p>
+      <p class="app-version">Courses Malin · v2.8</p>
     </section>
 
     <!-- AIDE -->
     <section class="view" id="v-help" aria-label="Aide">
       <h2 class="vtitle" data-i18n="help.title">Aide</h2>
       <div class="card" style="padding: 16px;">
-        <!-- ... contenu inchangé ... -->
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.overview">Vue d'ensemble</p>
+          <p data-i18n="help.overview_text">Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.features">Fonctionnalités principales</p>
+          <ul style="list-style: disc; padding-left: 20px;">
+            <li data-i18n="help.feature_lists">📋 Création et gestion de plusieurs listes</li>
+            <li data-i18n="help.feature_scan">📷 Scan de codes-barres (via Open Food Facts)</li>
+            <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
+            <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
+            <li data-i18n="help.feature_export">📤 Export/Import CSV</li>
+            <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes et de la langue</li>
+            <li data-i18n="help.feature_location">📍 Localisation du magasin : enregistrez l'adresse et visualisez-la</li>
+            <li data-i18n="help.feature_units">⚖️ Unités de mesure (kg, L, pièce) et prix au kilo</li>
+            <li data-i18n="help.feature_dragdrop">🖱️ Glisser-déposer pour réorganiser les articles</li>
+            <li data-i18n="help.feature_voice">🎤 Saisie vocale des articles</li>
+          </ul>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.tips">Astuces</p>
+          <p data-i18n="help.tip_units">• Pour les articles au poids, choisissez l'unité 'kg' et saisissez le prix au kilo pour un calcul automatique.</p>
+          <p data-i18n="help.tip_drag">• Pour déplacer un article, appuyez sur son nom et glissez-le.</p>
+          <p data-i18n="help.tip_voice">• Utilisez le microphone dans le formulaire d'ajout pour dicter le nom de l'article.</p>
+          <p data-i18n="help.tip_location">• La localisation du magasin vous aide à retrouver son adresse (pas de notification automatique).</p>
+          <p data-i18n="help.tip_thresholds">• Dans les réglages, vous pouvez choisir à quels seuils de budget déclencher une alerte.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.support">Support</p>
+          <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle">Partager l'application</p>
+          <div style="text-align: center;">
+            <div id="helpQrCode" style="margin: 10px auto; width: 200px; height: 200px; background: #fff;"></div>
+            <p>Scannez ce QR code pour accéder à l'application</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -328,6 +381,11 @@
   </button>
 
   <div id="ovl" aria-hidden="true"></div>
+
+  <!-- Modal QR code -->
+  <div id="qrModal" onclick="this.style.display='none'">
+    <img id="qrImage" src="" alt="QR Code">
+  </div>
 
   <!-- Bottom Sheet : Ajouter / Modifier un article -->
   <div class="sheet" id="shItem" role="dialog" aria-modal="true" aria-labelledby="shItemTitle">
@@ -394,8 +452,11 @@
         </div>
       </div>
       <div class="fld" id="fldPrice">
-        <label for="iPrice" data-i18n="item.price_label">Prix unitaire (€)</label>
-        <input type="number" id="iPrice" data-i18n="item.price_placeholder" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
+        <label for="iPrice" data-i18n="item.price_label">Prix unitaire</label>
+        <div style="display: flex; gap: 4px;">
+          <input type="number" id="iPrice" data-i18n="item.price_placeholder" placeholder="0.00" step="0.01" min="0" inputmode="decimal" style="flex:1;">
+          <span id="currencySymbol" class="currency-symbol">€</span>
+        </div>
       </div>
 
       <!-- Unité et prix au kilo -->
@@ -411,8 +472,11 @@
         </select>
       </div>
       <div class="fld" id="fldPricePerUnit" style="display: none;">
-        <label for="iPricePerUnit" data-i18n="item.price_per_unit_label">Prix au kg/L (€)</label>
-        <input type="number" id="iPricePerUnit" step="0.01" min="0" placeholder="0.00">
+        <label for="iPricePerUnit" data-i18n="item.price_per_unit_label">Prix au kg/L</label>
+        <div style="display: flex; gap: 4px;">
+          <input type="number" id="iPricePerUnit" step="0.01" min="0" placeholder="0.00" style="flex:1;">
+          <span id="currencySymbolPerUnit" class="currency-symbol">€</span>
+        </div>
       </div>
 
       <div class="fld">
@@ -506,11 +570,14 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet : Gestion des catégories (nouveau, accessible depuis le formulaire d'ajout) -->
+  <!-- Bottom Sheet : Gestion des catégories (accessible depuis le formulaire d'ajout) -->
   <div class="sheet" id="shCategoryEdit" role="dialog" aria-modal="true" aria-labelledby="shCategoryEditTitle">
     <div class="shandle" aria-hidden="true"></div>
     <h2 class="stit" id="shCategoryEditTitle" data-i18n="categories.edit_title">Modifier la catégorie</h2>
     <div class="sbody">
+      <div id="categoryList" style="margin-bottom: 16px;">
+        <!-- Les catégories personnalisées seront listées ici avec bouton supprimer -->
+      </div>
       <div id="categoryForm" style="display: block; margin-top: 16px;">
         <div class="fld">
           <label for="catName" data-i18n="categories.name">Nom</label>
@@ -545,6 +612,7 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 
   <!-- Nouveaux scripts -->
   <script src="assets/js/i18n.js"></script>

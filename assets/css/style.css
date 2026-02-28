@@ -743,11 +743,12 @@ input, select, textarea { font-family: inherit; }
 ============================================================= */
 .lgrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur mobile */
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr); /* 3 colonnes sur mobile */
+  gap: 8px; /* réduction de l'écart */
 }
+
 .lcard {
-  border-radius: var(--r);
+  border-radius: var(--r-sm); /* rayons plus petits */
   overflow: hidden;
   background: var(--sur);
   box-shadow: var(--sh);

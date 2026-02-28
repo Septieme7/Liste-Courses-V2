@@ -102,7 +102,8 @@
     "confirm_reset": "删除所有数据？",
     "manage_categories": "管理分类",
     "manage_button": "打开",
-    "color": "颜色"
+    "color": "颜色",
+    "currency": "货币"
   },
   "help": {
     "title": "帮助",
@@ -157,7 +158,7 @@
     "empty_file": "CSV 文件为空",
     "invalid_format": "CSV 格式无效",
     "no_lists_found": "文件中未找到清单",
-    "replace_confirm": "用 {{{new}} 个新清单替换现有的 {{old}} 个清单？"
+    "replace_confirm": "用 {{new}} 个新清单替换现有的 {{old}} 个清单？"
   },
   "common": {
     "cancel": "取消",
@@ -191,10 +192,10 @@
     "scan_add": "添加",
     "scan_stop": "停止",
     "quantity": "数量",
-    "price_label": "单价 (€)",
+    "price_label": "单价",
     "price_placeholder": "0.00",
     "unit_label": "单位",
-    "price_per_unit_label": "每公斤/升价格 (€)",
+    "price_per_unit_label": "每公斤/升价格",
     "category_label": "分类",
     "no_category": "无分类",
     "note_label": "备注/品牌",
@@ -259,7 +260,9 @@
     "love": "💕 爱情",
     "mother": "🤬 母亲列表",
     "sheet": "🖕 表格列表",
-    "magic": "🧙‍♂️ 魔法列表",
+    "magic": "🧙‍♂️ 魔法列表"
+  },
+  "categories": {
     "edit_title": "编辑分类",
     "name": "名称",
     "emoji": "表情符号",

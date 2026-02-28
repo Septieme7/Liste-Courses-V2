@@ -102,7 +102,8 @@
     "confirm_reset": "¿Borrar TODOS los datos?",
     "manage_categories": "Gestionar categorías",
     "manage_button": "Abrir",
-    "color": "Color"
+    "color": "Color",
+    "currency": "Moneda"
   },
   "help": {
     "title": "Ayuda",
@@ -121,7 +122,7 @@
     "feature_voice": "🎤 Entrada por voz para artículos",
     "tips": "Consejos",
     "tip_units": "• Para artículos por peso, elige la unidad 'kg' y escribe el precio por kilo para cálculo automático.",
-    "tip_drag": "• Para mover un artículo, pulsado su nombre y arrastra.",
+    "tip_drag": "• Para mover un artículo, mantén pulsado su nombre y arrastra.",
     "tip_voice": "• Usa el micrófono en el formulario de añadir para dictar el nombre del artículo.",
     "tip_location": "• La ubicación de la tienda te ayuda a encontrar la dirección (sin notificaciones automáticas).",
     "tip_thresholds": "• En ajustes, puedes elegir en qué umbrales de presupuesto activar una alerta.",
@@ -191,10 +192,10 @@
     "scan_add": "Añadir",
     "scan_stop": "Parar",
     "quantity": "Cantidad",
-    "price_label": "Precio unitario (€)",
+    "price_label": "Precio unitario",
     "price_placeholder": "0.00",
     "unit_label": "Unidad",
-    "price_per_unit_label": "Precio por kg/L (€)",
+    "price_per_unit_label": "Precio por kg/L",
     "category_label": "Categoría",
     "no_category": "Sin categoría",
     "note_label": "Nota / Marca",
@@ -259,7 +260,9 @@
     "love": "💕 Amor",
     "mother": "🤬 Lista de la madre",
     "sheet": "🖕 Lista Sheet",
-    "magic": "🧙‍♂️ Lista Mágica",
+    "magic": "🧙‍♂️ Lista Mágica"
+  },
+  "categories": {
     "edit_title": "Editar categoría",
     "name": "Nombre",
     "emoji": "Emoji",

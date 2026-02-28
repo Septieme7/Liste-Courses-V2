@@ -102,7 +102,8 @@
     "confirm_reset": "Supprimer TOUTES les données ?",
     "manage_categories": "Gérer les catégories",
     "manage_button": "Ouvrir",
-    "color": "Couleur"
+    "color": "Couleur",
+    "currency": "Monnaie"
   },
   "help": {
     "title": "Aide",
@@ -191,10 +192,10 @@
     "scan_add": "Ajouter",
     "scan_stop": "Arrêter",
     "quantity": "Quantité",
-    "price_label": "Prix unitaire (€)",
+    "price_label": "Prix unitaire",
     "price_placeholder": "0.00",
     "unit_label": "Unité",
-    "price_per_unit_label": "Prix au kg/L (€)",
+    "price_per_unit_label": "Prix au kg/L",
     "category_label": "Catégorie",
     "no_category": "Sans catégorie",
     "note_label": "Note / Marque",

@@ -96,6 +96,9 @@ let lastScannedProductData = null;
 let cropper = null;
 let currentListIdForImage = null;
 
+// Monnaie
+let currency = '€';
+
 /* =============================================================
    3. INITIALISATION
 ============================================================= */
@@ -109,6 +112,7 @@ function init() {
   applyTheme();
   syncSettingsUI();
   attachListeners();
+  initSwipe();
 
   // Charger la langue avant le premier rendu
   if (cfg.lang) {
@@ -138,6 +142,8 @@ function loadData() {
 
   budget   = parseFloat(localStorage.getItem(LS_BUDGET)) || 50;
   activeId = localStorage.getItem(LS_ACTIVE) || (lists[0]?.id ?? null);
+  
+  if (cfg.currency) currency = cfg.currency;
 
   const budgetIn = document.getElementById('budgetIn');
   if (budgetIn) budgetIn.value = budget;
@@ -159,7 +165,11 @@ function saveConfig() {
     100: document.getElementById('threshold100')?.checked || false
   };
   cfg.categories = customCategories;
+  cfg.currency = document.getElementById('currencySelector')?.value || '€';
+  currency = cfg.currency;
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  // Mettre à jour l'affichage des prix
+  renderHome();
 }
 
 function resetAll() {
@@ -219,6 +229,8 @@ function openCategoryEditor(index) {
   const sheet = document.getElementById('shCategoryEdit');
   if (!sheet) return;
   
+  renderCategoriesList(); // Affiche la liste avec boutons supprimer
+  
   if (index === -1) {
     // Nouvelle catégorie
     document.getElementById('catName').value = '';
@@ -234,6 +246,61 @@ function openCategoryEditor(index) {
   buildColorGridForCategory(document.getElementById('catColor').value);
   openSheet('shCategoryEdit');
 }
+
+function renderCategoriesList() {
+  const container = document.getElementById('categoryList');
+  if (!container) return;
+  let html = '';
+  // Catégories par défaut (non supprimables)
+  Object.keys(CAT_COLORS).forEach(cat => {
+    const key = CATEGORY_MAP[cat];
+    const display = key ? t('category.' + key) : cat;
+    const emoji = cat.split(' ')[0];
+    html += `
+      <div class="srow" style="margin-bottom: 8px;">
+        <span style="background:${CAT_COLORS[cat]}22; padding:4px 8px; border-radius:12px;">
+          ${emoji} ${display}
+        </span>
+        <div>
+          <span style="color:var(--tx3); font-size:0.8em;">(défaut)</span>
+        </div>
+      </div>`;
+  });
+  // Catégories personnalisées
+  customCategories.forEach((cat, index) => {
+    html += `
+      <div class="srow" style="margin-bottom: 8px;">
+        <span style="background:${cat.color}22; padding:4px 8px; border-radius:12px;">
+          ${cat.emoji} ${cat.name}
+        </span>
+        <div>
+          <button class="lbtn" onclick="editCategory(${index})">✏️</button>
+          <button class="lbtn danger" onclick="deleteCategory(${index})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14H6L5 6"/>
+              <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+window.editCategory = function(index) {
+  openCategoryEditor(index);
+};
+
+window.deleteCategory = function(index) {
+  if (confirm('Supprimer cette catégorie ?')) {
+    customCategories.splice(index, 1);
+    saveCategories();
+    renderCategoriesList();
+    buildCategorySelect();
+    renderHome();
+  }
+};
 
 function buildEmojiChipsForCategory() {
   const container = document.getElementById('catEmojiChips');
@@ -281,6 +348,7 @@ function saveCategory() {
     customCategories[editingCategoryIndex] = { name, emoji, color };
   }
   saveCategories();
+  renderCategoriesList();
   buildCategorySelect();
   renderHome();
   closeSheet(); // ferme le sheet d'édition
@@ -367,6 +435,15 @@ function syncSettingsUI() {
     langSel.value = cfg.lang || 'fr';
     langSel.addEventListener('change', (e) => {
       loadLanguage(e.target.value);
+    });
+  }
+  
+  const currencySel = document.getElementById('currencySelector');
+  if (currencySel) {
+    currencySel.value = cfg.currency || '€';
+    currencySel.addEventListener('change', () => {
+      saveConfig();
+      renderHome();
     });
   }
   
@@ -496,8 +573,8 @@ function renderHome() {
       }
       groupItems.forEach(item => {
         const qtyDisplay = item.unit ? formatQuantity(item.qty, item.unit) : item.qty;
-        const priceDisplay = item.price ? item.price.toFixed(2) + '€' : '<span style="color:var(--tx3)">€</span>';
-        const pricePerUnitDisplay = item.pricePerUnit ? ` <span class="price-per-unit">(${item.pricePerUnit.toFixed(2)}€/${getUnitSymbol(item.unit)})</span>` : '';
+        const priceDisplay = item.price ? item.price.toFixed(2) + currency : '<span style="color:var(--tx3)">' + currency + '</span>';
+        const pricePerUnitDisplay = item.pricePerUnit ? ` <span class="price-per-unit">(${item.pricePerUnit.toFixed(2)}${currency}/${getUnitSymbol(item.unit)})</span>` : '';
 
         html += `
           <li class="irow${item.ck ? ' ckd' : ''}" id="ir-${item.id}">
@@ -608,11 +685,11 @@ function updateBudget() {
   const pct   = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
 
   const spentV = document.getElementById('spentV');
-  if (spentV) spentV.textContent = spent.toFixed(2) + ' €';
+  if (spentV) spentV.textContent = spent.toFixed(2) + currency;
 
   const remEl = document.getElementById('remV');
   if (remEl) {
-    remEl.textContent = Math.abs(rem).toFixed(2) + ' €';
+    remEl.textContent = Math.abs(rem).toFixed(2) + currency;
     remEl.className   = 'bst-val ' + (rem < 0 ? 'err' : 'ok');
   }
 
@@ -630,7 +707,7 @@ function updateBudget() {
     if (rem < 0) {
       alertEl.classList.add('on');
       const balertTxt = document.getElementById('balertTxt');
-      if (balertTxt) balertTxt.textContent = t('home.overbudget') + ' ' + Math.abs(rem).toFixed(2) + ' €';
+      if (balertTxt) balertTxt.textContent = t('home.overbudget') + ' ' + Math.abs(rem).toFixed(2) + currency;
       if (cfg.sound !== false && !alertPlayed) {
         alertPlayed = true;
         playSound();
@@ -1818,7 +1895,64 @@ function processNextItem(items, index, targetList, addedCount, applyToAll) {
 }
 
 /* =============================================================
-   25. ATTACHEMENT DES ÉCOUTEURS
+   25. SWIPE POUR CHANGER DE LISTE
+============================================================= */
+function initSwipe() {
+  const container = document.getElementById('activeListInfo');
+  if (!container) return;
+  let touchstartX = 0;
+  let touchendX = 0;
+  
+  container.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  
+  container.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+  
+  function handleSwipe() {
+    const threshold = 50;
+    if (touchendX < touchstartX - threshold) {
+      // swipe gauche -> liste suivante
+      changeList(1);
+    } else if (touchendX > touchstartX + threshold) {
+      // swipe droite -> liste précédente
+      changeList(-1);
+    }
+  }
+}
+
+function changeList(direction) {
+  if (lists.length === 0) return;
+  const currentIndex = lists.findIndex(l => l.id === activeId);
+  if (currentIndex === -1) return;
+  let newIndex = currentIndex + direction;
+  if (newIndex < 0) newIndex = lists.length - 1;
+  if (newIndex >= lists.length) newIndex = 0;
+  pickList(lists[newIndex].id);
+}
+
+/* =============================================================
+   26. QR CODE SUR LE TITRE
+============================================================= */
+function showQRCode() {
+  const url = window.location.href; // ou une URL fixe
+  QRCode.toDataURL(url, { width: 300 }, (err, url) => {
+    if (err) {
+      showSnack('Erreur génération QR');
+      return;
+    }
+    const modal = document.getElementById('qrModal');
+    const img = document.getElementById('qrImage');
+    img.src = url;
+    modal.style.display = 'flex';
+  });
+}
+
+/* =============================================================
+   27. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
   const getEl = (id) => document.getElementById(id);
@@ -1827,6 +1961,7 @@ function attachListeners() {
   getEl('btnBack')?.addEventListener('click', () => goTo('home'));
   getEl('headerLogo')?.addEventListener('click', showLogoModal);
   getEl('btnAdd')?.addEventListener('click', openAddItem);
+  getEl('htitle')?.addEventListener('click', showQRCode);
 
   // Navigation
   getEl('t-home')?.addEventListener('click', () => goTo('home'));
@@ -1843,10 +1978,8 @@ function attachListeners() {
   // Accueil
   getEl('budgetIn')?.addEventListener('change', onBudgetChange);
   getEl('searchIn')?.addEventListener('input', renderHome);
-  getEl('btnChangeList')?.addEventListener('click', () => goTo('lists'));
   getEl('btnShare')?.addEventListener('click', shareList);
   getEl('btnImportToList')?.addEventListener('click', showImportToListSelector);
-  getEl('viewMapBtn')?.addEventListener('click', viewMap);
   getEl('changeMapBtn')?.addEventListener('click', () => {
     if (activeId) captureMap(activeId);
   });
@@ -1888,9 +2021,7 @@ function attachListeners() {
     }
   });
   getEl('btnManageCategories')?.addEventListener('click', () => {
-    // Fermer d'abord le sheet d'ajout s'il est ouvert
     closeSheet(); // ferme shItem
-    // Puis ouvrir le gestionnaire de catégories
     openCategoryEditor(-1);
   });
 
@@ -1953,7 +2084,7 @@ function attachListeners() {
   getEl('btnReset')?.addEventListener('click', resetAll);
   getEl('btnHelp')?.addEventListener('click', () => goTo('help'));
 
-  // Gestion des catégories (nouveau sheet)
+  // Gestion des catégories
   getEl('btnCancelCategoryEdit')?.addEventListener('click', cancelCategoryEdit);
   getEl('btnSaveCategory')?.addEventListener('click', saveCategory);
 
