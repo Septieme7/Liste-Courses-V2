@@ -103,7 +103,13 @@
     "manage_categories": "Manage categories",
     "manage_button": "Open",
     "color": "Color",
-    "currency": "Currency"
+    "currency": "Currency",
+    "ui_size": "UI size",
+    "size_xs": "Microscopic",
+    "size_sm": "Small",
+    "size_md": "Medium",
+    "size_lg": "Large",
+    "size_xl": "BigStrong"
   },
   "help": {
     "title": "Help",
@@ -150,15 +156,15 @@
     "no_active_list": "No active list",
     "none_selected": "No list selected",
     "duplicate_message": "Item \"{{name}}\" already exists. Merge?",
-    "duplicate_merge": "Merge",
-    "duplicate_skip": "Skip",
     "duplicate_apply_all": "Apply to all",
     "complete": "{{count}} items imported",
     "nothing_added": "No items imported",
     "empty_file": "Empty CSV file",
     "invalid_format": "Invalid CSV format",
     "no_lists_found": "No lists found in file",
-    "replace_confirm": "Replace {{old}} existing list(s) with {{new}} new list(s)?"
+    "replace_confirm": "Replace?",
+    "merge_confirm": "Merge?",
+    "list_exists": "List \"{{name}}\" already exists."
   },
   "common": {
     "cancel": "Cancel",

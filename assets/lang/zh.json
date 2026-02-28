@@ -103,7 +103,13 @@
     "manage_categories": "管理分类",
     "manage_button": "打开",
     "color": "颜色",
-    "currency": "货币"
+    "currency": "货币",
+    "ui_size": "界面尺寸",
+    "size_xs": "极小",
+    "size_sm": "小",
+    "size_md": "中",
+    "size_lg": "大",
+    "size_xl": "超大"
   },
   "help": {
     "title": "帮助",
@@ -150,15 +156,15 @@
     "no_active_list": "没有当前清单",
     "none_selected": "未选择清单",
     "duplicate_message": "商品“{{name}}”已存在。是否合并？",
-    "duplicate_merge": "合并",
-    "duplicate_skip": "跳过",
     "duplicate_apply_all": "应用到所有",
     "complete": "已导入 {{count}} 个商品",
     "nothing_added": "未导入任何商品",
     "empty_file": "CSV 文件为空",
     "invalid_format": "CSV 格式无效",
     "no_lists_found": "文件中未找到清单",
-    "replace_confirm": "用 {{new}} 个新清单替换现有的 {{old}} 个清单？"
+    "replace_confirm": "替换？",
+    "merge_confirm": "合并？",
+    "list_exists": "清单“{{name}}”已存在。"
   },
   "common": {
     "cancel": "取消",

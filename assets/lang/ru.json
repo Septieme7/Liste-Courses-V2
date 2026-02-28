@@ -103,7 +103,13 @@
     "manage_categories": "Управление категориями",
     "manage_button": "Открыть",
     "color": "Цвет",
-    "currency": "Валюта"
+    "currency": "Валюта",
+    "ui_size": "Размер интерфейса",
+    "size_xs": "Микроскопический",
+    "size_sm": "Маленький",
+    "size_md": "Средний",
+    "size_lg": "Большой",
+    "size_xl": "Огромный"
   },
   "help": {
     "title": "Помощь",
@@ -150,15 +156,15 @@
     "no_active_list": "Нет активного списка",
     "none_selected": "Не выбрано ни одного списка",
     "duplicate_message": "Товар \"{{name}}\" уже существует. Объединить?",
-    "duplicate_merge": "Объединить",
-    "duplicate_skip": "Пропустить",
     "duplicate_apply_all": "Применить ко всем",
     "complete": "Импортировано {{count}} товаров",
     "nothing_added": "Ничего не импортировано",
     "empty_file": "Пустой CSV файл",
     "invalid_format": "Неверный формат CSV",
     "no_lists_found": "В файле не найдено списков",
-    "replace_confirm": "Заменить {{old}} существующий(е) список(и) на {{new}} новый(е) список(и)?"
+    "replace_confirm": "Заменить?",
+    "merge_confirm": "Объединить?",
+    "list_exists": "Список \"{{name}}\" уже существует."
   },
   "common": {
     "cancel": "Отмена",

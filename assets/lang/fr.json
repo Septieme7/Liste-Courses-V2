@@ -103,7 +103,13 @@
     "manage_categories": "Gérer les catégories",
     "manage_button": "Ouvrir",
     "color": "Couleur",
-    "currency": "Monnaie"
+    "currency": "Monnaie",
+    "ui_size": "Taille d'affichage",
+    "size_xs": "Microscopique",
+    "size_sm": "Petit",
+    "size_md": "Moyen",
+    "size_lg": "Grand",
+    "size_xl": "BigStrong"
   },
   "help": {
     "title": "Aide",
@@ -150,15 +156,15 @@
     "no_active_list": "Aucune liste active",
     "none_selected": "Aucune liste sélectionnée",
     "duplicate_message": "L'article \"{{name}}\" existe déjà. Fusionner ?",
-    "duplicate_merge": "Fusionner",
-    "duplicate_skip": "Ignorer",
     "duplicate_apply_all": "Appliquer à tous",
     "complete": "{{count}} articles importés",
     "nothing_added": "Aucun article importé",
     "empty_file": "Fichier CSV vide",
     "invalid_format": "Format CSV invalide",
     "no_lists_found": "Aucune liste trouvée dans le fichier",
-    "replace_confirm": "Remplacer les {{old}} liste(s) par {{new}} nouvelle(s) liste(s) ?"
+    "replace_confirm": "Remplacer ?",
+    "merge_confirm": "Fusionner ?",
+    "list_exists": "La liste \"{{name}}\" existe déjà."
   },
   "common": {
     "cancel": "Annuler",

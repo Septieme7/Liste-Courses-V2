@@ -114,6 +114,13 @@ function init() {
   attachListeners();
   initSwipe();
 
+  // Appliquer la taille d'affichage
+  if (cfg.uiSize) {
+    document.body.classList.add('size-' + cfg.uiSize);
+  } else {
+    document.body.classList.add('size-md');
+  }
+
   // Charger la langue avant le premier rendu
   if (cfg.lang) {
     loadLanguage(cfg.lang).then(() => {
@@ -167,6 +174,7 @@ function saveConfig() {
   cfg.categories = customCategories;
   cfg.currency = document.getElementById('currencySelector')?.value || '€';
   currency = cfg.currency;
+  cfg.uiSize = document.getElementById('sizeSelector')?.value || 'md';
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
   // Mettre à jour l'affichage des prix
   renderHome();
@@ -251,15 +259,14 @@ function renderCategoriesList() {
   const container = document.getElementById('categoryList');
   if (!container) return;
   let html = '';
-  // Catégories par défaut (non supprimables)
+  // Catégories par défaut (non supprimables) - CORRECTION : afficher display sans emoji en double
   Object.keys(CAT_COLORS).forEach(cat => {
     const key = CATEGORY_MAP[cat];
-    const display = key ? t('category.' + key) : cat;
-    const emoji = cat.split(' ')[0];
+    const display = key ? t('category.' + key) : cat; // display contient déjà l'emoji
     html += `
       <div class="srow" style="margin-bottom: 8px;">
         <span style="background:${CAT_COLORS[cat]}22; padding:4px 8px; border-radius:12px;">
-          ${emoji} ${display}
+          ${display}
         </span>
         <div>
           <span style="color:var(--tx3); font-size:0.8em;">(défaut)</span>
@@ -444,6 +451,16 @@ function syncSettingsUI() {
     currencySel.addEventListener('change', () => {
       saveConfig();
       renderHome();
+    });
+  }
+  
+  const sizeSel = document.getElementById('sizeSelector');
+  if (sizeSel) {
+    sizeSel.value = cfg.uiSize || 'md';
+    sizeSel.addEventListener('change', () => {
+      document.body.classList.remove('size-xs', 'size-sm', 'size-md', 'size-lg', 'size-xl');
+      document.body.classList.add('size-' + sizeSel.value);
+      saveConfig();
     });
   }
   
@@ -814,9 +831,9 @@ function openAddItem() {
   const shItemTitle = document.getElementById('shItemTitle');
   if (shItemTitle) shItemTitle.textContent = t('item.add_title');
   const iSubmit = document.getElementById('iSubmit');
+  // Le bouton iSubmit est maintenant une icône, on n'affiche plus de texte
   if (iSubmit) {
-    iSubmit.textContent = t('item.add_button');
-    iSubmit.disabled = true;
+    iSubmit.setAttribute('aria-label', t('item.add_button'));
   }
   const iName = document.getElementById('iName');
   if (iName) iName.value = '';
@@ -864,8 +881,7 @@ function openEditItem(itemId) {
   if (shItemTitle) shItemTitle.textContent = t('item.edit_title');
   const iSubmit = document.getElementById('iSubmit');
   if (iSubmit) {
-    iSubmit.textContent = t('common.save');
-    iSubmit.disabled = false;
+    iSubmit.setAttribute('aria-label', t('common.save'));
   }
   const iName = document.getElementById('iName');
   if (iName) iName.value = item.text;
@@ -915,6 +931,7 @@ function validateItemForm() {
   const isMulti = names.length > 1;
 
   const iSubmit = document.getElementById('iSubmit');
+  // Le bouton est maintenant une icône, on le désactive/active en changeant l'attribut disabled
   if (iSubmit) iSubmit.disabled = !filled;
 
   const hint = document.getElementById('iNameHint');
@@ -1229,7 +1246,7 @@ function buildTxtContent(list) {
     items.forEach(item => {
       const check    = item.ck ? '✓' : '☐';
       const qty      = (item.qty || 1) > 1 ? `  x${item.qty}` : '    ';
-      const price    = item.price ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} €` : '';
+      const price    = item.price ? `  —  ${(item.price * (item.qty || 1)).toFixed(2)} ${currency}` : '';
       const note     = item.note ? `  (${item.note})` : '';
       const name     = item.text.padEnd(22, ' ');
       txt += `  ${check}  ${name}${qty}${price}${note}\n`;
@@ -1241,7 +1258,7 @@ function buildTxtContent(list) {
 
   txt += `\n${sep}\n`;
   txt += `✅ ${t('home.checked')} : ${done} / ${list.items.length} ${list.items.length > 1 ? t('home.article_plural') : t('home.article_singular')}\n`;
-  if (total > 0) txt += `💰 ${t('home.total')} : ${total.toFixed(2)} €\n`;
+  if (total > 0) txt += `💰 ${t('home.total')} : ${total.toFixed(2)} ${currency}\n`;
   txt += `\n📱 ${t('app_name')}\n`;
   txt += `\nGénéré par Courses Malin - https://liste-coursesv2.netlify.app\n`;
   return txt;
@@ -1701,6 +1718,7 @@ function confirmExport() {
   closeSheet();
 }
 
+// NOUVELLE VERSION DE importListsFromCSV AVEC GESTION DES DOUBLONS ET FUSION
 function importListsFromCSV() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -1724,32 +1742,17 @@ function importListsFromCSV() {
         return;
       }
 
-      const newLists = [];
-      const listMap = {};
-
+      // Organiser les données importées par nom de liste
+      const importedListsMap = new Map(); // clé = nom de liste, valeur = tableau d'items
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(';').map(s => s.replace(/^"|"$/g, '').trim());
         if (cols.length < 7) continue;
-
         const listName = cols[0];
         if (!listName) continue;
-
-        if (!listMap[listName]) {
-          const newList = {
-            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-            name: listName,
-            emoji: '🛒',
-            color: '#3B82F6',
-            items: [],
-            mapImage: null,
-            location: null
-          };
-          listMap[listName] = newList;
-          newLists.push(newList);
+        if (!importedListsMap.has(listName)) {
+          importedListsMap.set(listName, []);
         }
-
         const item = {
-          id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
           text: cols[1],
           qty: parseInt(cols[2]) || 1,
           price: parseFloat(cols[3]) || 0,
@@ -1759,22 +1762,133 @@ function importListsFromCSV() {
           unit: 'pce',
           pricePerUnit: 0
         };
-        listMap[listName].items.push(item);
+        importedListsMap.get(listName).push(item);
       }
 
-      if (newLists.length === 0) {
+      if (importedListsMap.size === 0) {
         showSnack(t('import.no_lists_found'));
         return;
       }
 
-      if (confirm(t('import.replace_confirm', { old: lists.length, new: newLists.length }))) {
-        lists = newLists;
-        activeId = lists[0]?.id || null;
-        saveData();
-        renderAll();
-        goTo('home');
-        showSnack(t('import.complete', { count: newLists.reduce((acc, l) => acc + l.items.length, 0) }));
-      }
+      // Pour chaque liste importée, vérifier si elle existe déjà
+      const processNextList = (index, listsToProcess, applyToAllReplace) => {
+        if (index >= listsToProcess.length) {
+          saveData();
+          renderAll();
+          goTo('home');
+          showSnack(t('import.complete', { count: listsToProcess.reduce((acc, [_, items]) => acc + items.length, 0) }));
+          return;
+        }
+
+        const [listName, items] = listsToProcess[index];
+        const existingList = lists.find(l => l.name === listName);
+
+        if (!existingList) {
+          // Créer une nouvelle liste
+          const newList = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+            name: listName,
+            emoji: '🛒',
+            color: '#3B82F6',
+            items: items.map(item => ({
+              ...item,
+              id: Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+            })),
+            mapImage: null,
+            location: null
+          };
+          lists.push(newList);
+          processNextList(index + 1, listsToProcess, applyToAllReplace);
+        } else {
+          // Liste existante : demander quoi faire
+          if (applyToAllReplace === true) {
+            // Remplacer
+            existingList.items = items.map(item => ({
+              ...item,
+              id: Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+            }));
+            processNextList(index + 1, listsToProcess, true);
+          } else if (applyToAllReplace === false) {
+            // Fusionner (ignorer les doublons en demandant)
+            mergeItems(existingList, items, index, listsToProcess, false, () => {
+              processNextList(index + 1, listsToProcess, false);
+            });
+          } else {
+            // Première fois pour cette liste : demander
+            const msg = t('import.list_exists', { name: listName });
+            if (confirm(msg + ' ' + t('import.replace_confirm'))) {
+              // Remplacer
+              existingList.items = items.map(item => ({
+                ...item,
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+              }));
+              processNextList(index + 1, listsToProcess, null);
+            } else if (confirm(t('import.merge_confirm'))) {
+              // Fusionner
+              mergeItems(existingList, items, index, listsToProcess, false, () => {
+                processNextList(index + 1, listsToProcess, null);
+              });
+            } else {
+              // Ignorer cette liste
+              processNextList(index + 1, listsToProcess, null);
+            }
+          }
+        }
+      };
+
+      const mergeItems = (targetList, importedItems, listIndex, listsToProcess, applyAllMerge, callback) => {
+        // Pour chaque article importé, vérifier s'il existe déjà
+        let i = 0;
+        const processNextItem = () => {
+          if (i >= importedItems.length) {
+            callback();
+            return;
+          }
+          const importedItem = importedItems[i];
+          const existingItem = targetList.items.find(it => it.text.toLowerCase() === importedItem.text.toLowerCase());
+
+          if (!existingItem) {
+            // Ajouter
+            targetList.items.push({
+              ...importedItem,
+              id: Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+            });
+            i++;
+            processNextItem();
+          } else {
+            // Doublon
+            if (applyAllMerge) {
+              // Fusionner (augmenter quantité)
+              existingItem.qty = (existingItem.qty || 1) + (importedItem.qty || 1);
+              i++;
+              processNextItem();
+            } else {
+              const msg = t('import.duplicate_message', { name: importedItem.text });
+              if (confirm(msg)) {
+                // Demander si on applique à tous
+                const applyAll = confirm(t('import.duplicate_apply_all'));
+                existingItem.qty = (existingItem.qty || 1) + (importedItem.qty || 1);
+                i++;
+                if (applyAll) {
+                  // Appliquer à tous les suivants sans demander
+                  mergeItems(targetList, importedItems.slice(i), listIndex, listsToProcess, true, callback);
+                  return;
+                } else {
+                  processNextItem();
+                }
+              } else {
+                // Ignorer
+                i++;
+                processNextItem();
+              }
+            }
+          }
+        };
+        processNextItem();
+      };
+
+      const listsToProcess = Array.from(importedListsMap.entries());
+      processNextList(0, listsToProcess, null);
     };
     reader.readAsText(file, 'UTF-8');
   };
@@ -2012,7 +2126,7 @@ function attachListeners() {
   getEl('iName')?.addEventListener('input', validateItemForm);
   getEl('qtyMinus')?.addEventListener('click', () => adjustSheetQty(-1));
   getEl('qtyPlus')?.addEventListener('click', () => adjustSheetQty(+1));
-  getEl('iSubmit')?.addEventListener('click', confirmItem);
+  getEl('iSubmit')?.addEventListener('click', confirmItem); // le bouton icône
   getEl('iUnit')?.addEventListener('change', function() {
     const unit = this.value;
     const pricePerUnitField = document.getElementById('fldPricePerUnit');
@@ -2150,6 +2264,6 @@ function attachListeners() {
 }
 
 /* =============================================================
-   DÉMARRAGE
+  DÉMARRAGE
 ============================================================= */
 document.addEventListener('DOMContentLoaded', init);

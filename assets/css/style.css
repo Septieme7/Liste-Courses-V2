@@ -26,12 +26,8 @@
     22.  Responsive (≥ 640px)
 ============================================================= */
 
-
 /* =============================================================
    1. VARIABLES CSS
-   Définition des couleurs, ombres, rayons, hauteurs et transitions.
-   La variable --p est la couleur primaire qui change selon le thème.
-   Les autres variables sont fixes.
 ============================================================= */
 :root {
   /* --- Couleur primaire (thème "blue" par défaut) --- */
@@ -71,6 +67,9 @@
 
   /* --- Transition globale --- */
   --tr: 0.2s ease;  /* Transition rapide pour les changements d'état */
+
+  /* --- Échelle de taille --- */
+  --scale: 1;
 }
 
 /* --- Thèmes de couleur (data-color sur <html>) --- */
@@ -95,36 +94,34 @@
   --sh-lg: 0 8px 24px rgba(0, 0, 0, 0.50);
 }
 
-
 /* =============================================================
    2. RESET & BASE
-   Réinitialisation des marges et paddings, box-sizing général,
-   et styles de base pour le body.
 ============================================================= */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;   /* Inclut les bordures et paddings dans les dimensions */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  -webkit-tap-highlight-color: transparent; /* Supprime le flash sur mobile */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
-  background-color: var(--bg);   /* Fond global */
-  -webkit-text-size-adjust: 100%; /* Empêche le redimensionnement du texte sur mobile */
+  background-color: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px; /* base, mais sera modulée par --scale sur body */
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
-               'Segoe UI', system-ui, sans-serif; /* Police système pour un rendu natif */
-  font-size: 16px;
+               'Segoe UI', system-ui, sans-serif;
+  font-size: calc(1rem * var(--scale)); /* 1rem = 16px de base */
   line-height: 1.4;
   background: var(--bg);
   color: var(--tx);
-  height: 100dvh;                /* Hauteur totale de la fenêtre */
-  overflow: hidden;              /* Empêche le scroll sur le body (le contenu scroll interne) */
-  transition: background var(--tr), color var(--tr); /* Transition douce entre thèmes */
+  height: 100dvh;
+  overflow: hidden;
+  transition: background var(--tr), color var(--tr);
 }
 
 a   { color: var(--p); text-decoration: none; }
@@ -132,50 +129,46 @@ ul  { list-style: none; }
 button { font-family: inherit; cursor: pointer; background: none; border: none; }
 input, select, textarea { font-family: inherit; }
 
-
 /* =============================================================
    3. LAYOUT PRINCIPAL
-   Header fixe, contenu scrollable, navigation fixe en bas.
 ============================================================= */
 #hdr {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: var(--hh);
+  height: calc(3.5rem * var(--scale)); /* 56px */
   background: var(--sur);
   border-bottom: 1px solid var(--bd);
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  gap: 8px;
+  padding: 0 calc(0.75rem * var(--scale)); /* 12px */
+  gap: calc(0.5rem * var(--scale)); /* 8px */
   z-index: 100;
   box-shadow: var(--sh);
   transition: background var(--tr), border-color var(--tr);
 }
 
-/* Conteneur logo + titre (centre du header) */
 .htitle-wrap {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: calc(0.4375rem * var(--scale)); /* 7px */
   min-width: 0;
-  cursor: pointer;  /* Indique que le logo est cliquable */
+  cursor: pointer;
 }
 
-/* Logo dans le header */
 .hlogo {
-  width: 26px;
-  height: 26px;
+  width: calc(1.625rem * var(--scale)); /* 26px */
+  height: calc(1.625rem * var(--scale));
   object-fit: contain;
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 calc(0.0625rem * var(--scale)) calc(0.125rem * var(--scale)) rgba(0,0,0,0.15));
   transition: transform 0.1s;
 }
-.hlogo:active { transform: scale(0.9); } /* Effet de clic */
+.hlogo:active { transform: scale(0.9); }
 
 #hdr h1 {
-  font-size: 17px;
+  font-size: calc(1.0625rem * var(--scale)); /* 17px */
   font-weight: 600;
   color: var(--tx);
   white-space: nowrap;
@@ -183,10 +176,9 @@ input, select, textarea { font-family: inherit; }
   text-overflow: ellipsis;
 }
 
-/* Boutons icône header */
 .hbtn {
-  width: 36px;
-  height: 36px;
+  width: calc(2.25rem * var(--scale)); /* 36px */
+  height: calc(2.25rem * var(--scale));
   border-radius: 50%;
   background: transparent;
   color: var(--tx2);
@@ -199,7 +191,6 @@ input, select, textarea { font-family: inherit; }
 .hbtn:hover,
 .hbtn:focus-visible { background: var(--sur2); }
 
-/* Bouton + primaire */
 .hbtn.pri {
   background: var(--p);
   color: #fff;
@@ -207,32 +198,29 @@ input, select, textarea { font-family: inherit; }
 .hbtn.pri:hover,
 .hbtn.pri:focus-visible { background: var(--pd); }
 
-/* Zone de contenu scrollable */
 #content {
   position: fixed;
-  top: var(--hh);
-  bottom: var(--th);
+  top: calc(3.5rem * var(--scale)); /* = hauteur header */
+  bottom: calc(3.75rem * var(--scale)); /* = hauteur nav */
   left: 0; right: 0;
-  overflow-y: auto;               /* Permet le défilement vertical */
-  -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
-  overscroll-behavior: contain;   /* Empêche le rebond du scroll au-delà */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
-
 
 /* =============================================================
    4. NAVIGATION BOTTOM TAB BAR
-   Barre de navigation en bas, avec trois onglets.
 ============================================================= */
 #nav {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: var(--th);
+  height: calc(3.75rem * var(--scale)); /* 60px */
   background: var(--sur);
   border-top: 1px solid var(--bd);
   display: flex;
   z-index: 100;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-  padding-bottom: env(safe-area-inset-bottom); /* Gestion des encoches */
+  box-shadow: 0 calc(-0.125rem * var(--scale)) calc(0.5rem * var(--scale)) rgba(0, 0, 0, 0.05);
+  padding-bottom: env(safe-area-inset-bottom);
   transition: background var(--tr), border-color var(--tr);
 }
 
@@ -242,82 +230,78 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: calc(0.1875rem * var(--scale)); /* 3px */
   border: none;
   background: transparent;
   color: var(--tx3);
-  font-size: 10px;
+  font-size: calc(0.625rem * var(--scale)); /* 10px */
   font-weight: 500;
   transition: color var(--tr);
 }
-.tab svg { width: 22px; height: 22px; stroke-width: 1.75; }
-.tab.on  { color: var(--p); }            /* Onglet actif avec la couleur primaire */
-.tab:active { transform: scale(0.9); }   /* Effet de clic */
-
+.tab svg {
+  width: calc(1.375rem * var(--scale)); /* 22px */
+  height: calc(1.375rem * var(--scale));
+  stroke-width: 1.75;
+}
+.tab.on  { color: var(--p); }
+.tab:active { transform: scale(0.9); }
 
 /* =============================================================
    5. BOUTON FLOTTANT (FAB)
-   Bouton d'ajout rapide en bas à droite.
 ============================================================= */
 #fab {
   position: fixed;
-  bottom: calc(var(--th) + 16px);
-  right: 18px;
-  width: 54px;
-  height: 54px;
+  bottom: calc(3.75rem * var(--scale) + 1rem * var(--scale)); /* 60px + 16px */
+  right: calc(1.125rem * var(--scale)); /* 18px */
+  width: calc(3.375rem * var(--scale)); /* 54px */
+  height: calc(3.375rem * var(--scale));
   border-radius: 50%;
-  background: var(--p);               /* Couleur primaire */
+  background: var(--p);
   color: #fff;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 55%, transparent);
+  box-shadow: 0 calc(0.25rem * var(--scale)) calc(1.125rem * var(--scale)) color-mix(in srgb, var(--p) 55%, transparent);
   z-index: 90;
   transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
 }
 #fab { background-color: color-mix(in srgb, var(--p) 50%, transparent); }
-/* #fab { backdrop-filter: blur(2px); } effet de flou léger */
 #fab:hover   { background: var(--pd); }
 #fab:active  { transform: scale(0.92); }
-#fab.pulse   { animation: pulse 2s infinite; } /* Animation d'impulsion */
+#fab.pulse   { animation: pulse 2s infinite; }
 
-/* FAB secondaire pour Mes Listes */
 #fab-list {
   position: fixed;
-  bottom: calc(var(--th) + 16px);
-  right: 18px;
-  width: 54px;
-  height: 54px;
+  bottom: calc(3.75rem * var(--scale) + 1rem * var(--scale));
+  right: calc(1.125rem * var(--scale));
+  width: calc(3.375rem * var(--scale));
+  height: calc(3.375rem * var(--scale));
   border-radius: 50%;
-  background: var(--p); /* ou une couleur différente ? */
+  background: var(--p);
   color: #fff;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 55%, transparent);
+  box-shadow: 0 calc(0.25rem * var(--scale)) calc(1.125rem * var(--scale)) color-mix(in srgb, var(--p) 55%, transparent);
   z-index: 90;
   transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
 }
 #fab-list:hover { background: var(--pd); }
 #fab-list:active { transform: scale(0.92); }
-/* On peut lui donner une animation différente si on veut */
 #fab-list.pulse { animation: pulse 2s infinite; }
-
 
 /* =============================================================
    6. VUES
-   Chaque vue (accueil, listes, réglages) est cachée par défaut,
-   seule celle avec la classe .on est affichée.
 ============================================================= */
-.view { display: none; padding: 12px 16px 16px; }
+.view { display: none; padding: calc(0.75rem * var(--scale)) calc(1rem * var(--scale)) calc(1rem * var(--scale)); }
 .view.on { display: block; }
 
 .vtitle {
-  font-size: 22px;
+  font-size: calc(1.375rem * var(--scale)); /* 22px */
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: calc(1rem * var(--scale));
   color: var(--tx);
 }
 
@@ -325,61 +309,59 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: calc(0.875rem * var(--scale)); /* 14px */
   flex-direction: column;
 }
-.vhdr h2 { font-size: 22px; font-weight: 700; color: var(--tx); }
+.vhdr h2 { font-size: calc(1.375rem * var(--scale)); font-weight: 700; color: var(--tx); }
 
 .addbtn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 14px;
+  gap: calc(0.3125rem * var(--scale)); /* 5px */
+  padding: calc(0.5rem * var(--scale)) calc(0.875rem * var(--scale)); /* 8px 14px */
   background: var(--p);
   color: #fff;
-  border-radius: 20px;
+  border-radius: calc(1.25rem * var(--scale)); /* 20px */
   border: none;
-  font-size: 13px;
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 600;
   transition: background var(--tr);
 }
 .addbtn:hover { background: var(--pd); }
 
-
 /* =============================================================
    7. BLOC BUDGET
-   Affichage du budget total, dépensé, restant et barre de progression.
 ============================================================= */
 .card {
   background: var(--sur);
-  border-radius: var(--r);
+  border-radius: calc(1rem * var(--scale)); /* 16px */
   box-shadow: var(--sh);
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: calc(0.75rem * var(--scale)); /* 12px */
   transition: background var(--tr);
 }
-.bcard { padding: 16px; }
+.bcard { padding: calc(1rem * var(--scale)); } /* 16px */
 
 .brow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: calc(0.75rem * var(--scale)); /* 12px */
 }
 .btag {
-  font-size: 12px;
+  font-size: calc(0.75rem * var(--scale)); /* 12px */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--tx2);
 }
 
-.btotal { display: flex; align-items: baseline; gap: 3px; }
+.btotal { display: flex; align-items: baseline; gap: calc(0.1875rem * var(--scale)); /* 3px */ }
 .btotal input {
-  width: 76px;
-  font-size: 20px;
+  width: calc(4.75rem * var(--scale)); /* 76px */
+  font-size: calc(1.25rem * var(--scale)); /* 20px */
   font-weight: 700;
-  color: var(--p);                    /* Couleur primaire */
+  color: var(--p);
   border: none;
   background: transparent;
   text-align: right;
@@ -388,94 +370,82 @@ input, select, textarea { font-family: inherit; }
 .btotal input::-webkit-outer-spin-button,
 .btotal input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .btotal input:focus { outline: none; border-bottom: 2px solid var(--p); }
-.btotal span { font-size: 16px; font-weight: 600; color: var(--tx2); }
+.btotal span { font-size: calc(1rem * var(--scale)); font-weight: 600; color: var(--tx2); }
 
-.bstats { display: flex; gap: 12px; margin-bottom: 10px; }
+.bstats { display: flex; gap: calc(0.75rem * var(--scale)); margin-bottom: calc(0.625rem * var(--scale)); } /* 12px 10px */
 .bst {
   flex: 1;
   background: var(--sur2);
-  border-radius: var(--r-sm);
-  padding: 10px 12px;
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
+  padding: calc(0.625rem * var(--scale)) calc(0.75rem * var(--scale)); /* 10px 12px */
 }
 .bst-lbl {
-  font-size: 11px;
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
   color: var(--tx2);
-  margin-bottom: 3px;
+  margin-bottom: calc(0.1875rem * var(--scale)); /* 3px */
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
-.bst-val { font-size: 16px; font-weight: 700; transition: color var(--tr); }
+.bst-val { font-size: calc(1rem * var(--scale)); font-weight: 700; transition: color var(--tr); }
 
-/* Texte "Restant" quand positif : couleur primaire */
 .bst-val.ok  { color: var(--p); }
-/* Texte "Restant" négatif : rouge */
 .bst-val.err { color: var(--err); }
 
-/* Barre de progression */
 .pbar {
-  height: 6px;
+  height: calc(0.375rem * var(--scale)); /* 6px */
   background: var(--sur2);
-  border-radius: 3px;
+  border-radius: calc(0.1875rem * var(--scale)); /* 3px */
   overflow: hidden;
 }
 .pfill {
   height: 100%;
-  background: var(--p);               /* Couleur primaire */
-  border-radius: 3px;
+  background: var(--p);
+  border-radius: calc(0.1875rem * var(--scale));
   transition: width 0.4s ease, background 0.3s;
 }
-.pfill.w { background: var(--warn); } /* ≥ 80% → orange */
-.pfill.e { background: var(--err);  } /* 100% → rouge */
+.pfill.w { background: var(--warn); }
+.pfill.e { background: var(--err);  }
 
-/* Alerte dépassement (cachée par défaut) */
 .balert {
   display: none;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
+  gap: calc(0.375rem * var(--scale)); /* 6px */
+  margin-top: calc(0.625rem * var(--scale)); /* 10px */
   background: #FEE2E2;
   color: var(--err);
-  border-radius: var(--r-sm);
-  padding: 9px 12px;
-  font-size: 13px;
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
+  padding: calc(0.5625rem * var(--scale)) calc(0.75rem * var(--scale)); /* 9px 12px */
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 600;
 }
 .balert.on { display: flex; }
-[data-theme="dark"] .balert { background: #450a0a; } /* Fond plus foncé en mode sombre */
-
+[data-theme="dark"] .balert { background: #450a0a; }
 
 /* =============================================================
    8. INDICATEUR LISTE ACTIVE
-   Affiche la liste courante avec son emoji, son nom, et les boutons partager/changer.
 ============================================================= */
-
-/* Bouton Changer de liste active sous forme d'icône */
-#btnChangeList {
-  font-size: 18px; /* taille de l'icône */
-  padding: 7px 13px; /* à ajuster si nécessaire */
-}
 .alist {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(0.5rem * var(--scale)); /* 8px */
   background: var(--sur);
-  border-radius: var(--r);
-  padding: 12px 14px;
+  border-radius: calc(1rem * var(--scale)); /* 16px */
+  padding: calc(0.75rem * var(--scale)) calc(0.875rem * var(--scale)); /* 12px 14px */
   box-shadow: var(--sh);
-  margin-bottom: 12px;
+  margin-bottom: calc(0.75rem * var(--scale)); /* 12px */
   transition: background var(--tr);
 }
-#aListIco { font-size: 26px; line-height: 1; flex-shrink: 0; }
+#aListIco { font-size: calc(1.625rem * var(--scale)); line-height: 1; flex-shrink: 0; }
 .alist-info { flex: 1; min-width: 0; }
 .alist-sub {
-  font-size: 11px;
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
   color: var(--tx3);
   margin-bottom: 1px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 .alist-name {
-  font-size: 15px;
+  font-size: calc(0.9375rem * var(--scale)); /* 15px */
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -483,14 +453,13 @@ input, select, textarea { font-family: inherit; }
   color: var(--tx);
 }
 
-/* Bouton Partager */
 .alist-share {
-  width: 34px;
-  height: 34px;
+  width: calc(2.125rem * var(--scale)); /* 34px */
+  height: calc(2.125rem * var(--scale));
   border-radius: 50%;
   border: 1.5px solid var(--bd);
   background: transparent;
-  color: var(--p);                    /* Couleur primaire */
+  color: var(--p);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -502,13 +471,12 @@ input, select, textarea { font-family: inherit; }
   border-color: var(--p);
 }
 
-/* Bouton Changer */
 .alist-chg {
-  padding: 7px 13px;
+  padding: calc(0.4375rem * var(--scale)) calc(0.8125rem * var(--scale)); /* 7px 13px */
   background: var(--sur2);
   border: none;
-  border-radius: 20px;
-  font-size: 13px;
+  border-radius: calc(1.25rem * var(--scale)); /* 20px */
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   color: var(--tx2);
   white-space: nowrap;
   flex-shrink: 0;
@@ -516,101 +484,93 @@ input, select, textarea { font-family: inherit; }
 }
 .alist-chg:hover { background: var(--bd); }
 
-
 /* =============================================================
    9. CARTE DU MAGASIN
-   Affichage de la photo du plan du magasin associée à la liste active.
 ============================================================= */
 #listMapContainer .card {
-  padding: 12px;
+  padding: calc(0.75rem * var(--scale)); /* 12px */
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: calc(0.5rem * var(--scale)); /* 8px */
 }
-/* Ajustement des boutons de la carte */
 #listMapContainer .sact-btn {
-  padding: 5px 8px;
-  font-size: 16px; /* pour que les icônes aient une taille correcte */
+  padding: calc(0.3125rem * var(--scale)) calc(0.5rem * var(--scale)); /* 5px 8px */
+  font-size: calc(1rem * var(--scale)); /* 16px */
   line-height: 1;
 }
 #mapThumb {
   max-width: 100%;
-  max-height: 150px;
-  border-radius: var(--r-xs);
+  max-height: calc(9.375rem * var(--scale)); /* 150px */
+  border-radius: calc(0.5rem * var(--scale)); /* 8px */
   object-fit: contain;
   background: var(--sur2);
-  cursor: pointer; /* Indique que la miniature est cliquable */
+  cursor: pointer;
 }
-
 
 /* =============================================================
    10. BARRE DE RECHERCHE
-   Champ de recherche avec une loupe en icône.
 ============================================================= */
-.sbar { position: relative; margin-bottom: 12px; }
+.sbar { position: relative; margin-bottom: calc(0.75rem * var(--scale)); } /* 12px */
 .sbar svg {
   position: absolute;
-  left: 12px;
+  left: calc(0.75rem * var(--scale)); /* 12px */
   top: 50%;
   transform: translateY(-50%);
   color: var(--tx3);
-  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
+  pointer-events: none;
+  width: calc(1.125rem * var(--scale)); /* 18px */
+  height: calc(1.125rem * var(--scale));
 }
 .sbar input {
   width: 100%;
-  height: 40px;
-  border-radius: 20px;
+  height: calc(2.5rem * var(--scale)); /* 40px */
+  border-radius: calc(1.25rem * var(--scale)); /* 20px */
   border: none;
   background: var(--sur2);
-  padding: 0 16px 0 40px;
-  font-size: 15px;
+  padding: 0 calc(1rem * var(--scale)) 0 calc(2.5rem * var(--scale)); /* 16px 40px */
+  font-size: calc(0.9375rem * var(--scale)); /* 15px */
   color: var(--tx);
   transition: background var(--tr);
 }
 .sbar input::placeholder { color: var(--tx3); }
 .sbar input:focus { outline: 2px solid var(--p); background: var(--sur); }
 
-
 /* =============================================================
    11. EN-TÊTES DE CATÉGORIES
-   Titres de catégorie avec fond coloré et nombre d'articles.
 ============================================================= */
 .chdr {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 14px;
-  border-radius: var(--r-xs);
-  font-size: 12px;
+  padding: calc(0.4375rem * var(--scale)) calc(0.875rem * var(--scale)); /* 7px 14px */
+  border-radius: calc(0.5rem * var(--scale)); /* 8px */
+  font-size: calc(0.75rem * var(--scale)); /* 12px */
   font-weight: 700;
   letter-spacing: 0.5px;
-  margin: 10px 0 4px;
+  margin: calc(0.625rem * var(--scale)) 0 calc(0.25rem * var(--scale)); /* 10px 0 4px */
 }
-.chdr-count { font-size: 10px; opacity: 0.7; font-weight: 600; }
-
+.chdr-count { font-size: calc(0.625rem * var(--scale)); opacity: 0.7; font-weight: 600; } /* 10px */
 
 /* =============================================================
    12. LIGNES D'ARTICLES
-   Chaque ligne représente un article avec checkbox, nom, quantité, prix, suppression.
 ============================================================= */
 .irow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
+  gap: calc(0.625rem * var(--scale)); /* 10px */
+  padding: calc(0.6875rem * var(--scale)) calc(0.875rem * var(--scale)); /* 11px 14px */
   border-bottom: 1px solid var(--bd);
-  min-height: 54px;
+  min-height: calc(3.375rem * var(--scale)); /* 54px */
   background: var(--sur);
   transition: background var(--tr);
-  animation: slideIn 0.15s ease-out; /* Animation d'apparition */
+  animation: slideIn 0.15s ease-out;
 }
 .irow:last-child { border-bottom: none; }
-.irow.ckd .itxt { text-decoration: line-through; color: var(--tx3); } /* Article coché */
+.irow.ckd .itxt { text-decoration: line-through; color: var(--tx3); }
 
-/* Checkbox circulaire */
 .icheck {
-  width: 24px;
-  height: 24px;
+  width: calc(1.5rem * var(--scale)); /* 24px */
+  height: calc(1.5rem * var(--scale));
   border-radius: 50%;
   border: 2px solid var(--bd);
   background: transparent;
@@ -622,16 +582,16 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr), border-color var(--tr);
 }
 .icheck.on {
-  background: var(--p);              /* Couleur primaire quand coché */
+  background: var(--p);
   border-color: var(--p);
 }
 .icheck svg { display: none; }
-.icheck.on svg { display: block; }   /* Affiche la coche quand coché */
+.icheck.on svg { display: block; }
 
-.ibody { flex: 1; min-width: 0; cursor: pointer; } /* Zone cliquable pour modifier */
-.itxt  { font-size: 15px; font-weight: 400; color: var(--tx); transition: color var(--tr); }
+.ibody { flex: 1; min-width: 0; cursor: pointer; }
+.itxt  { font-size: calc(0.9375rem * var(--scale)); font-weight: 400; color: var(--tx); transition: color var(--tr); }
 .imeta {
-  font-size: 12px;
+  font-size: calc(0.75rem * var(--scale)); /* 12px */
   color: var(--tx2);
   font-style: italic;
   margin-top: 1px;
@@ -640,18 +600,16 @@ input, select, textarea { font-family: inherit; }
   text-overflow: ellipsis;
 }
 
-/* Actions droite (quantité, prix, suppression) */
-.iact { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.iact { display: flex; align-items: center; gap: calc(0.25rem * var(--scale)); flex-shrink: 0; } /* 4px */
 
-/* Boutons + et - pour la quantité */
 .qbtn {
-  width: 26px;
-  height: 26px;
+  width: calc(1.625rem * var(--scale)); /* 26px */
+  height: calc(1.625rem * var(--scale));
   border-radius: 50%;
   border: 1.5px solid var(--bd);
   background: transparent;
   color: var(--tx2);
-  font-size: 16px;
+  font-size: calc(1rem * var(--scale)); /* 16px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -663,29 +621,28 @@ input, select, textarea { font-family: inherit; }
   color: var(--p);
 }
 .qnum {
-  font-size: 13px;
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 700;
-  min-width: 18px;
+  min-width: calc(1.125rem * var(--scale)); /* 18px */
   text-align: center;
-  color: var(--p);                   /* Couleur primaire */
+  color: var(--p);
 }
 
-/* Prix unitaire (cliquable pour édition inline) */
 .iprice {
-  font-size: 13px;
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 500;
   color: var(--tx2);
   cursor: pointer;
-  min-width: 44px;
+  min-width: calc(2.75rem * var(--scale)); /* 44px */
   text-align: right;
 }
 .iprice input {
-  width: 60px;
+  width: calc(3.75rem * var(--scale)); /* 60px */
   border: none;
   border-bottom: 1.5px solid var(--p);
   background: transparent;
   text-align: right;
-  font-size: 13px;
+  font-size: calc(0.8125rem * var(--scale));
   color: var(--tx);
   -moz-appearance: textfield;
 }
@@ -693,10 +650,9 @@ input, select, textarea { font-family: inherit; }
 .iprice input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .iprice input:focus { outline: none; }
 
-/* Bouton de suppression */
 .idel {
-  width: 28px;
-  height: 28px;
+  width: calc(1.75rem * var(--scale)); /* 28px */
+  height: calc(1.75rem * var(--scale));
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -707,49 +663,48 @@ input, select, textarea { font-family: inherit; }
   transition: background var(--tr), color var(--tr);
 }
 .idel:hover,
-.idel:active { background: #FEE2E2; color: var(--err); } /* Rouge au survol */
-
+.idel:active { background: #FEE2E2; color: var(--err); }
 
 /* =============================================================
    13. ÉTAT VIDE
-   Affiché quand la liste est vide ou qu'aucune liste n'existe.
 ============================================================= */
-.empty { text-align: center; padding: 48px 24px; color: var(--tx3); }
-.empty svg { width: 68px; height: 68px; margin-bottom: 14px; opacity: 0.3; }
-.empty h2  { font-size: 17px; font-weight: 600; margin-bottom: 6px; color: var(--tx2); }
-.empty p   { font-size: 14px; line-height: 1.5; }
-
+.empty { text-align: center; padding: calc(3rem * var(--scale)) calc(1.5rem * var(--scale)); color: var(--tx3); } /* 48px 24px */
+.empty svg {
+  width: calc(4.25rem * var(--scale)); /* 68px */
+  height: calc(4.25rem * var(--scale));
+  margin-bottom: calc(0.875rem * var(--scale)); /* 14px */
+  opacity: 0.3;
+}
+.empty h2  { font-size: calc(1.0625rem * var(--scale)); font-weight: 600; margin-bottom: calc(0.375rem * var(--scale)); color: var(--tx2); } /* 17px 6px */
+.empty p   { font-size: calc(0.875rem * var(--scale)); line-height: 1.5; } /* 14px */
 
 /* =============================================================
    14. BARRE DE TOTAL
-   Affiche le nombre total d'articles dans la liste.
 ============================================================= */
 .tbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: var(--sur);
-  border-radius: var(--r);
-  padding: 11px 16px;
+  border-radius: calc(1rem * var(--scale)); /* 16px */
+  padding: calc(0.6875rem * var(--scale)) calc(1rem * var(--scale)); /* 11px 16px */
   box-shadow: var(--sh);
-  margin-bottom: 12px;
+  margin-bottom: calc(0.75rem * var(--scale)); /* 12px */
 }
-.tbar-lbl { font-size: 13px; color: var(--tx2); }
-.tbar-val { font-size: 15px; font-weight: 700; color: var(--p); } /* Couleur primaire */
-
+.tbar-lbl { font-size: calc(0.8125rem * var(--scale)); color: var(--tx2); } /* 13px */
+.tbar-val { font-size: calc(0.9375rem * var(--scale)); font-weight: 700; color: var(--p); } /* 15px */
 
 /* =============================================================
    15. GRILLE DE LISTES (Cards)
-   Affichage des listes sous forme de cartes avec progression.
 ============================================================= */
 .lgrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colonnes sur mobile */
-  gap: 8px; /* réduction de l'écart */
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(0.5rem * var(--scale)); /* 8px */
 }
 
 .lcard {
-  border-radius: var(--r-sm); /* rayons plus petits */
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
   overflow: hidden;
   background: var(--sur);
   box-shadow: var(--sh);
@@ -759,57 +714,53 @@ input, select, textarea { font-family: inherit; }
 }
 .lcard:hover   { box-shadow: var(--sh-lg); }
 .lcard:active  { transform: scale(0.97); }
-.lcard.sel     { outline: 2.5px solid var(--p); } /* Liste active */
+.lcard.sel     { outline: 2.5px solid var(--p); }
 
 .lbanner {
-  height: 64px;
+  height: calc(4rem * var(--scale)); /* 64px */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px; /* Taille de l'emoji */
+  font-size: calc(1.75rem * var(--scale)); /* 28px */
 }
-.linfo    { padding: 10px 12px 4px; }
-.lname    { font-size: 14px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); }
-.lstats   { font-size: 11px; color: var(--tx2); }
+.linfo    { padding: calc(0.625rem * var(--scale)) calc(0.75rem * var(--scale)) calc(0.25rem * var(--scale)); } /* 10px 12px 4px */
+.lname    { font-size: calc(0.875rem * var(--scale)); font-weight: 600; margin-bottom: calc(0.1875rem * var(--scale)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); } /* 14px 3px */
+.lstats   { font-size: calc(0.6875rem * var(--scale)); color: var(--tx2); } /* 11px */
 
-/* Barre de progression de la liste (articles cochés) */
-.lprog  { height: 3px; background: var(--sur2); margin: 7px 0 6px; border-radius: 2px; overflow: hidden; }
+.lprog  { height: calc(0.1875rem * var(--scale)); background: var(--sur2); margin: calc(0.4375rem * var(--scale)) 0 calc(0.375rem * var(--scale)); border-radius: 2px; overflow: hidden; } /* 3px 7px 6px */
 .lprogf { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 
-/* Boutons d'action sur la carte (caméra, renommer, supprimer) */
-.lbtns { display: flex; gap: 5px; padding: 0 10px 10px; justify-content: flex-end; }
+.lbtns { display: flex; gap: calc(0.3125rem * var(--scale)); padding: 0 calc(0.625rem * var(--scale)) calc(0.625rem * var(--scale)); justify-content: flex-end; } /* 5px 10px 10px */
 .lbtn  {
-  padding: 4px 5px;
+  padding: calc(0.25rem * var(--scale)) calc(0.3125rem * var(--scale)); /* 4px 5px */
   border: none;
-  border-radius: var(--r-xs);
-  font-size: 11px;
+  border-radius: calc(0.5rem * var(--scale)); /* 8px */
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
   background: var(--sur2);
   color: var(--tx2);
   transition: background var(--tr);
 }
 .lbtn:hover { background: var(--bd); }
-.lbtn.danger { background: #FEE2E2; color: var(--err); } /* Bouton suppression */
-.lbtn.map { background: var(--sur2); font-size: 14px; } /* Bouton caméra */
+.lbtn.danger { background: #FEE2E2; color: var(--err); }
+.lbtn.map { background: var(--sur2); font-size: calc(0.875rem * var(--scale)); } /* 14px */
 [data-theme="dark"] .lbtn.danger { background: #450a0a; }
-
 
 /* =============================================================
    16. PAGE RÉGLAGES
-   Organisation des réglages en sections avec groupes.
 ============================================================= */
-.ssec { margin-bottom: 20px; }
+.ssec { margin-bottom: calc(1.25rem * var(--scale)); } /* 20px */
 .stitle {
-  font-size: 11px;
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.7px;
   color: var(--tx2);
-  padding: 0 4px;
-  margin-bottom: 8px;
+  padding: 0 calc(0.25rem * var(--scale)); /* 4px */
+  margin-bottom: calc(0.5rem * var(--scale)); /* 8px */
 }
 .sgroup {
   background: var(--sur);
-  border-radius: var(--r);
+  border-radius: calc(1rem * var(--scale)); /* 16px */
   overflow: hidden;
   box-shadow: var(--sh);
 }
@@ -817,60 +768,33 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 16px;
+  padding: calc(0.8125rem * var(--scale)) calc(1rem * var(--scale)); /* 13px 16px */
   border-bottom: 1px solid var(--bd);
 }
 .srow:last-child { border-bottom: none; }
-.srow-col { flex-direction: column; align-items: flex-start; gap: 10px; }
+.srow-col { flex-direction: column; align-items: flex-start; gap: calc(0.625rem * var(--scale)); } /* 10px */
 
-.slbl { font-size: 15px; color: var(--tx); }
+.slbl { font-size: calc(0.9375rem * var(--scale)); color: var(--tx); } /* 15px */
 .sbl-danger { color: var(--err); }
 
 .sact-btn {
-  padding: 7px 14px;
+  padding: calc(0.4375rem * var(--scale)) calc(0.875rem * var(--scale)); /* 7px 14px */
   background: var(--p);
   color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 13px;
+  border-radius: calc(1.25rem * var(--scale)); /* 20px */
+  font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 500;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   transition: background var(--tr);
 }
-
-
-/* Ajustements pour les icônes SVG */
-    .sact-btn img {
-      display: block;
-      width: 95px;
-      height: 40px;
-    }
-    .alist-share {
-      padding: 0 8px;
-    }
-    /* QR code modal */
-    #qrModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #qrModal img {
-      max-width: 80%;
-      max-height: 80%;
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-    }
-
+.sact-btn img {
+  display: block;
+  width: calc(5.9375rem * var(--scale)); /* 95px */
+  height: calc(2.5rem * var(--scale)); /* 40px */
+}
 .sact-btn:hover { background: var(--pd); }
 .sact-btn.sact-muted { background: var(--sur2); color: var(--tx2); }
 .sact-btn.sact-muted:hover { background: var(--bd); }
@@ -879,22 +803,20 @@ input, select, textarea { font-family: inherit; }
 [data-theme="dark"] .sact-btn.sact-danger { background: #450a0a; }
 
 .ssel {
-  padding: 7px 10px;
-  border-radius: var(--r-xs);
+  padding: calc(0.4375rem * var(--scale)) calc(0.625rem * var(--scale)); /* 7px 10px */
+  border-radius: calc(0.5rem * var(--scale)); /* 8px */
   border: 1.5px solid var(--bd);
   background: var(--sur2);
   color: var(--tx);
-  font-size: 14px;
+  font-size: calc(0.875rem * var(--scale)); /* 14px */
   transition: border-color var(--tr);
 }
 .ssel:focus { outline: none; border-color: var(--p); }
 
-.app-version { font-size: 12px; color: var(--tx3); text-align: center; padding: 4px 0 8px; }
-
+.app-version { font-size: calc(0.75rem * var(--scale)); color: var(--tx3); text-align: center; padding: calc(0.25rem * var(--scale)) 0 calc(0.5rem * var(--scale)); } /* 12px 4px 8px */
 
 /* =============================================================
    17. OVERLAY & BOTTOM SHEETS
-   Overlay semi-transparent et panneaux coulissants depuis le bas.
 ============================================================= */
 #ovl {
   position: fixed;
@@ -905,79 +827,75 @@ input, select, textarea { font-family: inherit; }
   pointer-events: none;
   transition: opacity 0.25s;
 }
-#ovl.on { opacity: 1; pointer-events: all; } /* Affiché quand un sheet est ouvert */
+#ovl.on { opacity: 1; pointer-events: all; }
 
 .sheet {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: var(--sur);
-  border-radius: 20px 20px 0 0;
+  border-radius: calc(1.25rem * var(--scale)) calc(1.25rem * var(--scale)) 0 0; /* 20px */
   z-index: 210;
-  transform: translateY(100%); /* Caché en bas */
+  transform: translateY(100%);
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   max-height: 90dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--sh-lg);
 }
-.sheet.on { transform: translateY(0); } /* Visible */
+.sheet.on { transform: translateY(0); }
 
-/* Poignée de tirage */
 .shandle {
-  width: 38px;
-  height: 4px;
+  width: calc(2.375rem * var(--scale)); /* 38px */
+  height: calc(0.25rem * var(--scale)); /* 4px */
   background: var(--bd);
   border-radius: 2px;
-  margin: 12px auto 0;
+  margin: calc(0.75rem * var(--scale)) auto 0; /* 12px */
 }
 .stit {
-  font-size: 17px;
+  font-size: calc(1.0625rem * var(--scale)); /* 17px */
   font-weight: 600;
   text-align: center;
-  padding: 10px 16px 16px;
+  padding: calc(0.625rem * var(--scale)) calc(1rem * var(--scale)) calc(1rem * var(--scale)); /* 10px 16px 16px */
   color: var(--tx);
 }
-.sbody { padding: 0 16px 40px; }
+.sbody { padding: 0 calc(1rem * var(--scale)) calc(2.5rem * var(--scale)); } /* 16px 40px */
 
-.fld { margin-bottom: 16px; }
+.fld { margin-bottom: calc(1rem * var(--scale)); } /* 16px */
 .fld label {
   display: block;
-  font-size: 11px;
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
   font-weight: 700;
   color: var(--tx2);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 6px;
+  margin-bottom: calc(0.375rem * var(--scale)); /* 6px */
 }
 
-/* Texte d'aide en gris dans les labels */
 .hint {
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
   color: var(--tx3);
-  font-size: 10px;
+  font-size: calc(0.625rem * var(--scale)); /* 10px */
 }
 
-/* Indice multi-ajout sous le champ nom */
 .multi-hint {
-  font-size: 12px;
+  font-size: calc(0.75rem * var(--scale)); /* 12px */
   color: var(--p);
-  margin-top: 5px;
+  margin-top: calc(0.3125rem * var(--scale)); /* 5px */
   font-weight: 500;
-  min-height: 16px;
+  min-height: calc(1rem * var(--scale)); /* 16px */
 }
 
-/* Inputs, selects, textareas */
 .fld input[type="text"],
 .fld input[type="number"],
 .fld select,
 .fld textarea {
   width: 100%;
-  padding: 11px 14px;
+  padding: calc(0.6875rem * var(--scale)) calc(0.875rem * var(--scale)); /* 11px 14px */
   border: 1.5px solid var(--bd);
-  border-radius: var(--r-sm);
-  font-size: 16px;
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
+  font-size: calc(1rem * var(--scale)); /* 16px */
   background: var(--sur);
   color: var(--tx);
   transition: border-color var(--tr);
@@ -987,28 +905,27 @@ input, select, textarea { font-family: inherit; }
 .fld input:focus,
 .fld select:focus,
 .fld textarea:focus { outline: none; border-color: var(--p); }
-.fld textarea { height: 72px; resize: none; line-height: 1.5; }
+.fld textarea { height: calc(4.5rem * var(--scale)); resize: none; line-height: 1.5; } /* 72px */
 
 .fld input[type="number"]::-webkit-outer-spin-button,
 .fld input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 .fld input[type="number"] { -moz-appearance: textfield; }
 
 .emoji-input {
-  width: 64px !important;
+  width: calc(4rem * var(--scale)) !important; /* 64px */
   text-align: center !important;
-  font-size: 22px !important;
-  padding: 8px !important;
-  margin-top: 6px;
-  border-radius: var(--r-sm) !important;
+  font-size: calc(1.375rem * var(--scale)) !important; /* 22px */
+  padding: calc(0.5rem * var(--scale)) !important; /* 8px */
+  margin-top: calc(0.375rem * var(--scale)); /* 6px */
+  border-radius: calc(0.625rem * var(--scale)) !important; /* 10px */
 }
 
-/* Bouton de validation pleine largeur */
 .sbtn {
   width: 100%;
-  padding: 13px;
-  border-radius: var(--r-sm);
+  padding: calc(0.8125rem * var(--scale)); /* 13px */
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
   border: none;
-  font-size: 16px;
+  font-size: calc(1rem * var(--scale)); /* 16px */
   font-weight: 600;
   transition: background var(--tr), opacity var(--tr);
 }
@@ -1016,21 +933,18 @@ input, select, textarea { font-family: inherit; }
 .sbtn.pri:hover { background: var(--pd); }
 .sbtn.pri:disabled { opacity: 0.4; cursor: not-allowed; }
 
-
 /* =============================================================
    18. COMPOSANTS PARTAGÉS
-   Stepper, chips, toggle, grille de couleurs.
 ============================================================= */
 
-/* --- Stepper (quantité) --- */
-.stepper { display: flex; align-items: center; gap: 20px; justify-content: center; padding: 4px 0; }
+.stepper { display: flex; align-items: center; gap: calc(1.25rem * var(--scale)); justify-content: center; padding: calc(0.25rem * var(--scale)) 0; } /* 20px 4px */
 .stbtn {
-  width: 44px;
-  height: 44px;
+  width: calc(2.75rem * var(--scale)); /* 44px */
+  height: calc(2.75rem * var(--scale));
   border-radius: 50%;
   border: 2px solid var(--bd);
   background: transparent;
-  font-size: 22px;
+  font-size: calc(1.375rem * var(--scale)); /* 22px */
   font-weight: 700;
   color: var(--p);
   display: flex;
@@ -1040,40 +954,36 @@ input, select, textarea { font-family: inherit; }
 }
 .stbtn:hover { background: var(--sur2); border-color: var(--p); }
 .stbtn:active { transform: scale(0.92); }
-.stval { font-size: 24px; font-weight: 700; min-width: 40px; text-align: center; color: var(--tx); }
+.stval { font-size: calc(1.5rem * var(--scale)); font-weight: 700; min-width: calc(2.5rem * var(--scale)); text-align: center; color: var(--tx); } /* 24px 40px */
 
-/* --- Chips (suggestions, emojis) --- */
 .chips {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;           /* Défilement horizontal */
-  padding: 4px 0 8px;
-  margin-bottom: 4px;
-  scrollbar-width: none;      /* Cache la barre de défilement (Firefox) */
-  -ms-overflow-style: none;   /* (Internet Explorer) */
+  gap: calc(0.5rem * var(--scale)); /* 8px */
+  overflow-x: auto;
+  padding: calc(0.25rem * var(--scale)) 0 calc(0.5rem * var(--scale)); /* 4px 8px */
+  margin-bottom: calc(0.25rem * var(--scale)); /* 4px */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.chips::-webkit-scrollbar { display: none; } /* Cache la barre (WebKit) */
+.chips::-webkit-scrollbar { display: none; }
 .chip {
-  padding: 7px 14px;
+  padding: calc(0.4375rem * var(--scale)) calc(0.875rem * var(--scale)); /* 7px 14px */
   background: var(--sur2);
-  border-radius: 20px;
+  border-radius: calc(1.25rem * var(--scale)); /* 20px */
   border: none;
-  font-size: 14px;
+  font-size: calc(0.875rem * var(--scale)); /* 14px */
   color: var(--tx);
   white-space: nowrap;
   flex-shrink: 0;
   transition: background var(--tr), color var(--tr);
 }
 .chip:hover  { background: var(--bd); }
-.chip:active { background: var(--p); color: #fff; } /* Appui rapide */
+.chip:active { background: var(--p); color: #fff; }
 
-/*
- * Toggle switch (mode sombre, alerte sonore)
- */
 .tog {
-  width: 48px;
-  height: 28px;
-  border-radius: 14px;
+  width: calc(3rem * var(--scale)); /* 48px */
+  height: calc(1.75rem * var(--scale)); /* 28px */
+  border-radius: calc(0.875rem * var(--scale)); /* 14px */
   background: var(--tx3);
   border: none;
   cursor: pointer;
@@ -1081,36 +991,34 @@ input, select, textarea { font-family: inherit; }
   flex-shrink: 0;
   transition: background 0.2s;
 }
-.tog.on { background: var(--p); }    /* État activé */
+.tog.on { background: var(--p); }
 .tog::after {
   content: '';
   position: absolute;
-  top: 3px; left: 3px;
-  width: 22px; height: 22px;
+  top: calc(0.1875rem * var(--scale)); left: calc(0.1875rem * var(--scale)); /* 3px */
+  width: calc(1.375rem * var(--scale)); /* 22px */
+  height: calc(1.375rem * var(--scale));
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 calc(0.0625rem * var(--scale)) calc(0.25rem * var(--scale)) rgba(0, 0, 0, 0.25); /* 1px 4px */
   transition: transform 0.2s;
 }
-.tog.on::after { transform: translateX(20px); } /* Curseur à droite */
+.tog.on::after { transform: translateX(calc(1.25rem * var(--scale))); } /* 20px */
 
-/* --- Pastilles couleur --- */
-.cgrid { display: flex; gap: 8px; flex-wrap: wrap; }
+.cgrid { display: flex; gap: calc(0.5rem * var(--scale)); flex-wrap: wrap; } /* 8px */
 .csw {
-  width: 32px;
-  height: 32px;
+  width: calc(2rem * var(--scale)); /* 32px */
+  height: calc(2rem * var(--scale));
   border-radius: 50%;
   cursor: pointer;
   border: 3px solid transparent;
   transition: transform var(--tr), border-color var(--tr);
 }
 .csw:hover { transform: scale(1.15); }
-.csw.on    { border-color: var(--tx); transform: scale(1.1); } /* Sélectionnée */
-
+.csw.on    { border-color: var(--tx); transform: scale(1.1); }
 
 /* =============================================================
    19. MODAL LOGO
-   Fenêtre modale pour afficher le logo en grand.
 ============================================================= */
 .modal {
   position: fixed;
@@ -1125,30 +1033,28 @@ input, select, textarea { font-family: inherit; }
 .modal img {
   max-width: 80%;
   max-height: 80%;
-  border-radius: var(--r);
+  border-radius: calc(1rem * var(--scale)); /* 16px */
   box-shadow: var(--sh-lg);
-  animation: fadeIn 0.2s; /* Apparition en fondu */
+  animation: fadeIn 0.2s;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
 
-
 /* =============================================================
    20. SNACKBAR
-   Notification temporaire en bas de l'écran.
 ============================================================= */
 #snk {
   position: fixed;
-  bottom: calc(var(--th) + 78px);
+  bottom: calc(3.75rem * var(--scale) + 4.875rem * var(--scale)); /* 60px + 78px */
   left: 50%;
-  transform: translateX(-50%) translateY(10px);
+  transform: translateX(-50%) translateY(calc(0.625rem * var(--scale))); /* 10px */
   background: var(--tx);
   color: var(--bg);
-  padding: 10px 18px;
-  border-radius: var(--r-sm);
-  font-size: 14px;
+  padding: calc(0.625rem * var(--scale)) calc(1.125rem * var(--scale)); /* 10px 18px */
+  border-radius: calc(0.625rem * var(--scale)); /* 10px */
+  font-size: calc(0.875rem * var(--scale)); /* 14px */
   font-weight: 500;
   z-index: 300;
   opacity: 0;
@@ -1158,23 +1064,19 @@ input, select, textarea { font-family: inherit; }
 }
 #snk.on { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
 
-
 /* =============================================================
    21. ANIMATIONS
-   Animations diverses (apparition, pulsation, check bounce).
 ============================================================= */
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(calc(0.375rem * var(--scale))); } /* 6px */
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Pulse du FAB — couleur dynamique via --p */
 @keyframes pulse {
-  0%,100% { box-shadow: 0 4px 18px color-mix(in srgb, var(--p) 45%, transparent); }
-  50%     { box-shadow: 0 4px 28px color-mix(in srgb, var(--p) 80%, transparent); }
+  0%,100% { box-shadow: 0 calc(0.25rem * var(--scale)) calc(1.125rem * var(--scale)) color-mix(in srgb, var(--p) 45%, transparent); } /* 4px 18px */
+  50%     { box-shadow: 0 calc(0.25rem * var(--scale)) calc(1.75rem * var(--scale)) color-mix(in srgb, var(--p) 80%, transparent); } /* 28px */
 }
 
-/* Effet de rebond quand on coche un article */
 @keyframes checkBounce {
   0%   { transform: scale(1); }
   40%  { transform: scale(1.18); }
@@ -1183,20 +1085,18 @@ input, select, textarea { font-family: inherit; }
 }
 .icheck.on { animation: checkBounce 0.25s ease-out; }
 
-
 /* =============================================================
    22. RESPONSIVE (≥ 640px)
-   Ajustements pour les écrans plus larges (tablettes).
 ============================================================= */
 @media (min-width: 640px) {
-  .lgrid { grid-template-columns: repeat(3, 1fr); } /* 3 colonnes pour les listes */
+  .lgrid { grid-template-columns: repeat(3, 1fr); }
 
-  #fab { right: 24px; bottom: calc(var(--th) + 20px); }
+  #fab { right: calc(1.5rem * var(--scale)); bottom: calc(3.75rem * var(--scale) + 1.25rem * var(--scale)); } /* 24px 20px */
 
   .sheet {
     max-width: 480px;
     left: 50%;
-    transform: translateX(-50%) translateY(100%); /* Centré horizontalement */
+    transform: translateX(-50%) translateY(100%);
   }
   .sheet.on { transform: translateX(-50%) translateY(0); }
 
@@ -1215,4 +1115,60 @@ input, select, textarea { font-family: inherit; }
     right: auto;
     width: 100%;
   }
+}
+
+/* =============================================================
+   Classes de taille d'affichage
+============================================================= */
+.size-xs { --scale: 0.8; }
+.size-sm { --scale: 0.9; }
+.size-md { --scale: 1; }
+.size-lg { --scale: 1.2; }
+.size-xl { --scale: 1.5; }
+
+/* Ajustements spécifiques pour les icônes dans les boutons (pour être sûr qu'elles suivent) */
+button svg,
+button img {
+  width: 1.25em;
+  height: 1.25em;
+}
+/* Mais pour les très petites tailles, on peut les réduire un peu plus */
+.size-xs button svg,
+.size-xs button img {
+  width: 1em;
+  height: 1em;
+}
+/* Pour les très grandes tailles, on peut les augmenter */
+.size-xl button svg,
+.size-xl button img {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+/* =============================================================
+   QR code modal
+============================================================= */
+#qrModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000; /* valeur plus élevée pour être sûr */
+}
+
+#qrModal img {
+  max-width: 80%;
+  max-height: 80%;
+  min-width: 200px;   /* garantit une taille minimale */
+  min-height: 200px;
+  background: white;
+  padding: 1.25rem;   /* 20px */
+  border-radius: 1.25rem; /* 20px */
+  box-sizing: border-box;
+  object-fit: contain;
 }
