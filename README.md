@@ -164,7 +164,7 @@ C'est tout. Aucune installation, aucun npm install.
 
 💡 Pour bénéficier des sons d'alerte, placez vos fichiers AlarmA.mp3 à AlarmG.mp3 dans assets/sound/.
 
-🛠 Technologies utilisées
+### 🛠 Technologies utilisées
 Technologie	Rôle
 HTML5 sémantique	Structure (sections, nav, dialog, aria-*)
 CSS3	Variables CSS, Flexbox, Grid, animations, media queries, échelle de zoom utilisateur
@@ -180,8 +180,10 @@ Nominatim (OpenStreetMap)	Géocodage inverse pour localiser le magasin
 i18n	Système maison de traduction (JSON)
 PWA (manifest)	Installable sur l'écran d'accueil
 Netlify	Hébergement et déploiement continu
-🎯 Guide d'utilisation rapide
+
+### 🎯 Guide d'utilisation rapide
 Créer une liste
+
 Onglet Mes Listes → bouton Nouvelle
 
 Saisissez un nom, choisissez un emoji et une couleur
@@ -263,8 +265,7 @@ Contrastes conformes aux recommandations WCAG
 Ajustement de la taille du texte par l'utilisateur
 
 📄 Licence
-Ce projet est libre d'utilisation.
-
+Copyright
 👤 Auteur : Seven7.
 
 💬 Des suggestions ? Ouvrez une issue ou proposez une Pull Request !
