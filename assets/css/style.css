@@ -326,6 +326,7 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
+  flex-direction: column;
 }
 .vhdr h2 { font-size: 22px; font-weight: 700; color: var(--tx); }
 
@@ -778,7 +779,7 @@ input, select, textarea { font-family: inherit; }
 /* Boutons d'action sur la carte (caméra, renommer, supprimer) */
 .lbtns { display: flex; gap: 5px; padding: 0 10px 10px; justify-content: flex-end; }
 .lbtn  {
-  padding: 4px 9px;
+  padding: 4px 5px;
   border: none;
   border-radius: var(--r-xs);
   font-size: 11px;
@@ -843,7 +844,7 @@ input, select, textarea { font-family: inherit; }
 /* Ajustements pour les icônes SVG */
     .sact-btn img {
       display: block;
-      width: 150px;
+      width: 95px;
       height: 40px;
     }
     .alist-share {
