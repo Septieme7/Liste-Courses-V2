@@ -288,12 +288,13 @@ input, select, textarea { font-family: inherit; }
   z-index: 90;
   transition: background var(--tr), transform var(--tr), box-shadow var(--tr);
 }
+#fab-list { background-color: color-mix(in srgb, var(--p) 50%, transparent); }
 #fab-list:hover { background: var(--pd); }
 #fab-list:active { transform: scale(0.92); }
 #fab-list.pulse { animation: pulse 2s infinite; }
 
 /* =============================================================
-   6. VUES
+6. VUES
 ============================================================= */
 .view { display: none; padding: calc(0.75rem * var(--scale)) calc(1rem * var(--scale)) calc(1rem * var(--scale)); }
 .view.on { display: block; }
@@ -330,7 +331,7 @@ input, select, textarea { font-family: inherit; }
 .addbtn:hover { background: var(--pd); }
 
 /* =============================================================
-   7. BLOC BUDGET
+7. BLOC BUDGET
 ============================================================= */
 .card {
   background: var(--sur);
@@ -422,7 +423,7 @@ input, select, textarea { font-family: inherit; }
 [data-theme="dark"] .balert { background: #450a0a; }
 
 /* =============================================================
-   8. INDICATEUR LISTE ACTIVE
+8. INDICATEUR LISTE ACTIVE
 ============================================================= */
 .alist {
   display: flex;
@@ -485,7 +486,7 @@ input, select, textarea { font-family: inherit; }
 .alist-chg:hover { background: var(--bd); }
 
 /* =============================================================
-   9. CARTE DU MAGASIN
+  9. CARTE DU MAGASIN
 ============================================================= */
 #listMapContainer .card {
   padding: calc(0.75rem * var(--scale)); /* 12px */
@@ -508,7 +509,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-   10. BARRE DE RECHERCHE
+  10. BARRE DE RECHERCHE
 ============================================================= */
 .sbar { position: relative; margin-bottom: calc(0.75rem * var(--scale)); } /* 12px */
 .sbar svg {
@@ -536,7 +537,7 @@ input, select, textarea { font-family: inherit; }
 .sbar input:focus { outline: 2px solid var(--p); background: var(--sur); }
 
 /* =============================================================
-   11. EN-TÊTES DE CATÉGORIES
+  11. EN-TÊTES DE CATÉGORIES
 ============================================================= */
 .chdr {
   display: flex;
@@ -552,7 +553,7 @@ input, select, textarea { font-family: inherit; }
 .chdr-count { font-size: calc(0.625rem * var(--scale)); opacity: 0.7; font-weight: 600; } /* 10px */
 
 /* =============================================================
-   12. LIGNES D'ARTICLES
+  12. LIGNES D'ARTICLES
 ============================================================= */
 .irow {
   display: flex;
@@ -666,7 +667,7 @@ input, select, textarea { font-family: inherit; }
 .idel:active { background: #FEE2E2; color: var(--err); }
 
 /* =============================================================
-   13. ÉTAT VIDE
+  13. ÉTAT VIDE
 ============================================================= */
 .empty { text-align: center; padding: calc(3rem * var(--scale)) calc(1.5rem * var(--scale)); color: var(--tx3); } /* 48px 24px */
 .empty svg {
@@ -679,7 +680,7 @@ input, select, textarea { font-family: inherit; }
 .empty p   { font-size: calc(0.875rem * var(--scale)); line-height: 1.5; } /* 14px */
 
 /* =============================================================
-   14. BARRE DE TOTAL
+  14. BARRE DE TOTAL
 ============================================================= */
 .tbar {
   display: flex;
@@ -695,7 +696,7 @@ input, select, textarea { font-family: inherit; }
 .tbar-val { font-size: calc(0.9375rem * var(--scale)); font-weight: 700; color: var(--p); } /* 15px */
 
 /* =============================================================
-   15. GRILLE DE LISTES (Cards)
+  15. GRILLE DE LISTES (Cards)
 ============================================================= */
 .lgrid {
   display: grid;
@@ -746,7 +747,7 @@ input, select, textarea { font-family: inherit; }
 [data-theme="dark"] .lbtn.danger { background: #450a0a; }
 
 /* =============================================================
-   16. PAGE RÉGLAGES
+  16. PAGE RÉGLAGES
 ============================================================= */
 .ssec { margin-bottom: calc(1.25rem * var(--scale)); } /* 20px */
 .stitle {
@@ -782,20 +783,20 @@ input, select, textarea { font-family: inherit; }
   background: var(--p);
   color: #fff;
   border: none;
-  border-radius: calc(1.25rem * var(--scale)); /* 20px */
+  border-radius: calc(1.25rem * var(--scale));  /* 20px */
   font-size: calc(0.8125rem * var(--scale)); /* 13px */
   font-weight: 500;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  transition: background var(--tr);
+  /* transition: background var(--tr); */
 }
 .sact-btn img {
   display: block;
   width: calc(5.9375rem * var(--scale)); /* 95px */
   height: calc(2.5rem * var(--scale)); /* 40px */
 }
-.sact-btn:hover { background: var(--pd); }
+/* .sact-btn:hover { background: var(--pd); } */
 .sact-btn.sact-muted { background: var(--sur2); color: var(--tx2); }
 .sact-btn.sact-muted:hover { background: var(--bd); }
 .sact-btn.sact-danger { background: #FEE2E2; color: var(--err); }
@@ -816,7 +817,7 @@ input, select, textarea { font-family: inherit; }
 .app-version { font-size: calc(0.75rem * var(--scale)); color: var(--tx3); text-align: center; padding: calc(0.25rem * var(--scale)) 0 calc(0.5rem * var(--scale)); } /* 12px 4px 8px */
 
 /* =============================================================
-   17. OVERLAY & BOTTOM SHEETS
+  17. OVERLAY & BOTTOM SHEETS
 ============================================================= */
 #ovl {
   position: fixed;
@@ -934,7 +935,7 @@ input, select, textarea { font-family: inherit; }
 .sbtn.pri:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* =============================================================
-   18. COMPOSANTS PARTAGÉS
+  18. COMPOSANTS PARTAGÉS
 ============================================================= */
 
 .stepper { display: flex; align-items: center; gap: calc(1.25rem * var(--scale)); justify-content: center; padding: calc(0.25rem * var(--scale)) 0; } /* 20px 4px */
@@ -1018,7 +1019,7 @@ input, select, textarea { font-family: inherit; }
 .csw.on    { border-color: var(--tx); transform: scale(1.1); }
 
 /* =============================================================
-   19. MODAL LOGO
+  19. MODAL LOGO
 ============================================================= */
 .modal {
   position: fixed;
@@ -1043,7 +1044,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-   20. SNACKBAR
+  20. SNACKBAR
 ============================================================= */
 #snk {
   position: fixed;
@@ -1065,7 +1066,7 @@ input, select, textarea { font-family: inherit; }
 #snk.on { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
 
 /* =============================================================
-   21. ANIMATIONS
+  21. ANIMATIONS
 ============================================================= */
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(calc(0.375rem * var(--scale))); } /* 6px */
@@ -1100,7 +1101,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-   22. RESPONSIVE (≥ 640px)
+  22. RESPONSIVE (≥ 640px)
 ============================================================= */
 @media (min-width: 640px) {
   .lgrid { grid-template-columns: repeat(3, 1fr); }
@@ -1132,7 +1133,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-   Classes de taille d'affichage
+  Classes de taille d'affichage
 ============================================================= */
 .size-xs { --scale: 0.8; }
 .size-sm { --scale: 0.9; }
@@ -1160,7 +1161,7 @@ button img {
 }
 
 /* =============================================================
-   QR code modal
+  QR code modal
 ============================================================= */
 #qrModal {
   position: fixed;

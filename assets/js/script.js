@@ -670,9 +670,20 @@ function renderLists() {
             </div>
           </div>
           <div class="lbtns">
-            <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="${t('lists.add_map')}">📷</button>
+            <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="${t('lists.add_map')}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="5" width="20" height="14" rx="2" ry="2"/>
+  <circle cx="12" cy="12" r="4"/>
+  <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+  <rect x="16" y="7" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
+  <circle cx="18" cy="10" r="1" fill="currentColor" stroke="none"/>
+</svg></button>
             <button class="lbtn" onclick="event.stopPropagation(); renameList('${list.id}')" aria-label="${t('common.edit')} ${esc(list.name)}">✏️</button>
-            <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="${t('common.delete')} ${esc(list.name)}">🗑</button>
+            <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="${t('common.delete')} ${esc(list.name)}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="3 6 5 6 21 6"></polyline>
+  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+  <line x1="10" y1="11" x2="10" y2="17"></line>
+  <line x1="14" y1="11" x2="14" y2="17"></line>
+</svg></button>
           </div>
         </div>`;
     }).join('');

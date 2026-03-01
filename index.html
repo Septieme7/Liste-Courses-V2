@@ -98,11 +98,36 @@
       <div id="listMapContainer" style="margin-bottom: 0.75rem; display: none;">
         <div class="card" style="padding: 0.75rem;">
           <div style="display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;">
-            <span style="font-weight: 600;" data-i18n="home.map_title">🗺️ Carte du magasin</span>
-            <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n-aria="home.change_map_aria" aria-label="Changer la carte" style="padding: 0.3125rem 0.5rem;">🖊️</button>
-            <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n-aria="home.delete_map_aria" aria-label="Supprimer la carte" style="padding: 0.3125rem 0.5rem;">🗑️</button>
-            <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n-aria="home.locate_store_aria" aria-label="Localiser le magasin" style="padding: 0.3125rem 0.5rem;">📍</button>
-            <button class="sact-btn sact-muted" id="routeStoreBtn" data-i18n-aria="home.route_store_aria" aria-label="Itinéraire" style="padding: 0.3125rem 0.5rem;">🧭</button>
+            <span style="font-weight: 600;" data-i18n="home.map_title">💳 Carte du magasin</span>
+            <button class="sact-btn sact-muted" id="changeMapBtn" data-i18n-aria="home.change_map_aria" aria-label="Changer la carte" style="padding: 0.3125rem 0.5rem;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6M3 22v-6h6"/>
+            <path d="M21 13a9 9 0 0 1-15 6.7L3 22M21 2l-3.7 3.7A9 9 0 0 0 3 11"/>
+            </svg></button>
+            <button class="sact-btn sact-danger" id="deleteMapBtn" data-i18n-aria="home.delete_map_aria" aria-label="Supprimer la carte" style="padding: 0.3125rem 0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            </button>           
+            <button class="sact-btn sact-muted" id="locateStoreBtn" data-i18n-aria="home.locate_store_aria" aria-label="Localiser le magasin" style="padding: 0.3125rem 0.5rem;"><svg viewBox="0 0 24 24" width="512" height="512" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+              <circle cx="12" cy="8" r="4" fill="#FF0000" stroke="none"/>
+              <path d="M12 12 L12 22" stroke="currentColor" stroke-width="2"/>
+            </svg></button>
+              <button class="sact-btn sact-muted" id="routeStoreBtn" data-i18n-aria="home.route_store_aria" aria-label="Itinéraire" style="padding: 0.3125rem 0.5rem;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="12" y1="3" x2="12" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                <line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                <line x1="3" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                <line x1="18" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                <path d="M12 7 L7 12 L12 17 L12 7" fill="#FF4444" stroke="none"/>
+                <path d="M12 7 L17 12 L12 17 L12 7" fill="#FFFFFF" stroke="none"/>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+                <text x="12" y="3.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">N</text>
+                <text x="12" y="21.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                <text x="3" y="13.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">W</text>
+                <text x="21" y="13.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">E</text>
+            </svg></button>
           </div>
           <img id="mapThumb" src="" alt="Carte" style="max-width: 100%; max-height: 9.375rem; margin-top: 0.5rem; border-radius: var(--r-xs); display: none; cursor: pointer;">
         </div>
@@ -203,39 +228,39 @@
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.currency">Monnaie</span>
-            <select id="currencySelector" class="ssel" aria-label="Monnaie">
-              <option value="€">Euro (€)</option>
-              <option value="$">Dollar US ($)</option>
-              <option value="£">Livre sterling (£)</option>
-              <option value="¥">Yen (¥)</option>
-              <option value="CHF">Franc suisse (CHF)</option>
-              <option value="CAD">Dollar canadien (CAD)</option>
-              <option value="AUD">Dollar australien (AUD)</option>
-              <option value="NZD">Dollar néo-zélandais (NZD)</option>
-              <option value="SEK">Couronne suédoise (SEK)</option>
-              <option value="NOK">Couronne norvégienne (NOK)</option>
-              <option value="DKK">Couronne danoise (DKK)</option>
-              <option value="PLN">Złoty polonais (PLN)</option>
-              <option value="CZK">Couronne tchèque (CZK)</option>
-              <option value="HUF">Forint hongrois (HUF)</option>
-              <option value="RUB">Rouble russe (RUB)</option>
-              <option value="TRY">Livre turque (TRY)</option>
-              <option value="CNY">Yuan chinois (CNY)</option>
-              <option value="KRW">Won sud-coréen (KRW)</option>
-              <option value="INR">Roupie indienne (INR)</option>
-              <option value="BRL">Real brésilien (BRL)</option>
-              <option value="MXN">Peso mexicain (MXN)</option>
-              <option value="ZAR">Rand sud-africain (ZAR)</option>
-              <option value="XOF">Franc CFA (XOF)</option>
-              <option value="AED">Dirham émirati (AED)</option>
-              <option value="SAR">Riyal saoudien (SAR)</option>
-              <option value="ILS">Shekel israélien (ILS)</option>
-              <option value="THB">Baht thaïlandais (THB)</option>
-              <option value="SGD">Dollar singapourien (SGD)</option>
-              <option value="HKD">Dollar hongkongais (HKD)</option>
-              <option value="MYR">Ringgit malaisien (MYR)</option>
-              <option value="IDR">Roupie indonésienne (IDR)</option>
-            </select>
+              <select id="currencySelector" class="ssel" aria-label="Monnaie">
+                <option value="€" data-i18n="currency.EUR">Euro (€)</option>
+                <option value="$" data-i18n="currency.USD">Dollar US ($)</option>
+                <option value="£" data-i18n="currency.GBP">Livre sterling (£)</option>
+                <option value="¥" data-i18n="currency.JPY">Yen (¥)</option>
+                <option value="CHF" data-i18n="currency.CHF">Franc suisse (CHF)</option>
+                <option value="CAD" data-i18n="currency.CAD">Dollar canadien (CAD)</option>
+                <option value="AUD" data-i18n="currency.AUD">Dollar australien (AUD)</option>
+                <option value="NZD" data-i18n="currency.NZD">Dollar néo-zélandais (NZD)</option>
+                <option value="SEK" data-i18n="currency.SEK">Couronne suédoise (SEK)</option>
+                <option value="NOK" data-i18n="currency.NOK">Couronne norvégienne (NOK)</option>
+                <option value="DKK" data-i18n="currency.DKK">Couronne danoise (DKK)</option>
+                <option value="PLN" data-i18n="currency.PLN">Złoty polonais (PLN)</option>
+                <option value="CZK" data-i18n="currency.CZK">Couronne tchèque (CZK)</option>
+                <option value="HUF" data-i18n="currency.HUF">Forint hongrois (HUF)</option>
+                <option value="RUB" data-i18n="currency.RUB">Rouble russe (RUB)</option>
+                <option value="TRY" data-i18n="currency.TRY">Livre turque (TRY)</option>
+                <option value="CNY" data-i18n="currency.CNY">Yuan chinois (CNY)</option>
+                <option value="KRW" data-i18n="currency.KRW">Won sud-coréen (KRW)</option>
+                <option value="INR" data-i18n="currency.INR">Roupie indienne (INR)</option>
+                <option value="BRL" data-i18n="currency.BRL">Real brésilien (BRL)</option>
+                <option value="MXN" data-i18n="currency.MXN">Peso mexicain (MXN)</option>
+                <option value="ZAR" data-i18n="currency.ZAR">Rand sud-africain (ZAR)</option>
+                <option value="XOF" data-i18n="currency.XOF">Franc CFA (XOF)</option>
+                <option value="AED" data-i18n="currency.AED">Dirham émirati (AED)</option>
+                <option value="SAR" data-i18n="currency.SAR">Riyal saoudien (SAR)</option>
+                <option value="ILS" data-i18n="currency.ILS">Shekel israélien (ILS)</option>
+                <option value="THB" data-i18n="currency.THB">Baht thaïlandais (THB)</option>
+                <option value="SGD" data-i18n="currency.SGD">Dollar singapourien (SGD)</option>
+                <option value="HKD" data-i18n="currency.HKD">Dollar hongkongais (HKD)</option>
+                <option value="MYR" data-i18n="currency.MYR">Ringgit malaisien (MYR)</option>
+                <option value="IDR" data-i18n="currency.IDR">Roupie indonésienne (IDR)</option>
+              </select>
           </div>
           <!-- Nouveau sélecteur de taille d'affichage -->
           <div class="srow">
@@ -259,15 +284,15 @@
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.sound">Son d'alerte</span>
-            <select class="ssel" id="soundSel" aria-label="Choisir le son d'alerte">
-              <option value="A">Son A</option>
-              <option value="B">Son B</option>
-              <option value="C">Son C</option>
-              <option value="D">Son D</option>
-              <option value="E">Son E</option>
-              <option value="F">Son F</option>
-              <option value="G">Son G</option>
-            </select>
+              <select class="ssel" id="soundSel" aria-label="Choisir le son d'alerte">
+                <option value="A" data-i18n="sound.A">Son A</option>
+                <option value="B" data-i18n="sound.B">Son B</option>
+                <option value="C" data-i18n="sound.C">Son C</option>
+                <option value="D" data-i18n="sound.D">Son D</option>
+                <option value="E" data-i18n="sound.E">Son E</option>
+                <option value="F" data-i18n="sound.F">Son F</option>
+                <option value="G" data-i18n="sound.G">Son G</option>
+              </select>
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.test_sound">Tester le son</span>
@@ -291,7 +316,7 @@
         <div class="sgroup">
           <div class="srow">
             <span class="slbl" data-i18n="settings.calculator">Calculateur Conso</span>
-            <a href="https://septieme7.github.io/Conso-Comptoir/" target="_blank" rel="noopener noreferrer" class="sact-btn" aria-label="Ouvrir la calculatrice (nouvel onglet)">🧮</a>
+            <a href="https://septieme7.github.io/Conso-Comptoir/" target="_blank" rel="noopener noreferrer" class="sact-btn" aria-label="Ouvrir la calculateur (nouvel onglet)">🥃🍸🍹🍾</a>
           </div>
           <div class="srow">
             <span class="slbl" data-i18n="settings.help">Aide</span>
@@ -329,16 +354,16 @@
               <span data-i18n="help.feature_scan"> Scan de codes-barres (via Open Food Facts)</span>
             </li>
             <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
-            <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
+            <li data-i18n="help.feature_map">💳 Carte du magasin associée à chaque liste</li>
             <li>
               <img src="assets/images/iconeCSV.svg" alt="CSV" style="width:1.2em; height:1.2em; vertical-align:middle;">
               <span data-i18n="help.feature_export"> Export/Import CSV avec fusion intelligente</span>
             </li>
             <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes, de la langue et de la taille d'affichage</li>
             <li>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
-                <circle cx="12" cy="8" r="4" fill="currentColor" stroke="none"></circle>
-                <path d="M12 12 L12 22" stroke="currentColor" stroke-width="2"></path>
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                <circle cx="12" cy="8" r="4" fill="#FF0000" stroke="none"/>
+                <path d="M12 12 L12 22" stroke="currentColor" stroke-width="2"/>
               </svg>
               <span data-i18n="help.feature_location"> Localisation du magasin : enregistrez l'adresse et visualisez-la</span>
             </li>
@@ -557,7 +582,10 @@
             <option value="🖕 Sheet List" data-i18n="category.sheet">🖕 Sheet List</option>
             <option value="🧙‍♂️ Magic List" data-i18n="category.magic">🧙‍♂️ Magic List</option>
           </select>
-          <button type="button" id="btnManageCategories" class="sact-btn" style="padding: 0 0.5rem;" aria-label="Gérer les catégories">⚙️</button>
+          <button type="button" id="btnManageCategories" class="sact-btn" style="padding: 0 0.5rem;" aria-label="Gérer les catégories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg></button>
         </div>
       </div>
 
