@@ -117,23 +117,32 @@
     "overview_text": "Blanja Pinter mbantu sampeyan ngatur dhaptar blanja, nglacak anggaran, lan ngatur tumbas.",
     "features": "Fitur utama",
     "feature_lists": "📋 Nggawe lan ngatur pirang-pirang dhaptar",
-    "feature_scan": "📷 Scan kode bar (liwat Open Food Facts)",
+    "feature_scan": " Scan kode bar (liwat Open Food Facts)",
     "feature_budget": "💰 Nglacak anggaran kanthi wigati sing bisa diatur",
     "feature_map": "🗺️ Peta toko sing digandhengake karo saben dhaptar",
-    "feature_export": "📤 Ekspor/Impor CSV",
-    "feature_custom": "🎨 Kustomisasi tema lan basa",
-    "feature_location": "📍 Lokasi toko: simpen alamat lan deleng",
+    "feature_export": " Ekspor/Impor CSV kanthi gabungan cerdas",
+    "feature_custom": "🎨 Kustomisasi tema, basa, lan ukuran antarmuka",
+    "feature_location": " Lokasi toko: simpen alamat lan deleng",
     "feature_units": "⚖️ Unit ukuran (kg, L, potong) lan rega saben kilo",
     "feature_dragdrop": "🖱️ Seret lan seleh kanggo ngatur maneh barang",
-    "feature_voice": "🎤 Input swara kanggo barang",
+    "feature_voice": " Input swara kanggo barang",
+    "feature_custom_categories": "📦 Kategori khusus nganggo emoji lan werna",
+    "feature_ui_sizes": "📏 5 ukuran antarmuka (mikroskopis nganti big strong)",
+    "feature_languages": "🌍 15 basa kasedhiya",
+    "feature_multi_scan": "🔁 Mode multi-scan kanggo scan berturut-turut",
     "tips": "Tips",
     "tip_units": "• Kanggo barang bobot, pilih unit 'kg' lan lebokake rega saben kg kanggo pitungan otomatis.",
     "tip_drag": "• Kanggo mindhah barang, pencet jenenge banjur seret.",
     "tip_voice": "• Gunakake mikropon ing formulir tambah kanggo nyebut jeneng barang.",
     "tip_location": "• Lokasi toko mbantu sampeyan nemokake alamat (ora ana notifikasi otomatis).",
     "tip_thresholds": "• Ing setelan, sampeyan bisa milih ing bates anggaran endi wigati diaktifake.",
+    "tip_multi_scan": "• Ing mode multi-scan, sampeyan bisa nambah akeh barang kanthi cepet tanpa mbukak kamera maneh.",
+    "tip_import_merge": "• Nalika ngimpor CSV, sampeyan bisa nggabung dhaptar sing wis ana karo sing anyar lan ngatur duplikat.",
+    "tip_ui_size": "• Atur ukuran antarmuka ing setelan kanggo maca sing luwih apik.",
     "support": "Dhukungan",
-    "support_text": "Kanggo pitakonan, bukak masalah ing <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Kanggo pitakonan, bukak masalah ing <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Bagi aplikasi",
+    "scan_qr": "Pindai kode QR iki kanggo ngakses aplikasi"
   },
   "share": {
     "no_list": "Ora ana dhaptar sing dipilih",
@@ -173,7 +182,8 @@
     "delete": "Busak",
     "edit": "Owahi",
     "undo": "Batalake",
-    "deleted": "dibusak"
+    "deleted": "dibusak",
+    "default": "(standar)"
   },
   "units": {
     "piece": "potong",
@@ -272,6 +282,7 @@
     "edit_title": "Owahi kategori",
     "name": "Jeneng",
     "emoji": "Emoji",
-    "color": "Werna"
+    "color": "Werna",
+    "placeholder_name": "Conto: Woh lan Sayuran"
   }
 }

@@ -269,7 +269,7 @@ function renderCategoriesList() {
           ${display}
         </span>
         <div>
-          <span style="color:var(--tx3); font-size:0.8em;">(défaut)</span>
+          <span style="color:var(--tx3); font-size:0.8em;" data-i18n="common.default">(défaut)</span>
         </div>
       </div>`;
   });
@@ -2262,6 +2262,55 @@ function attachListeners() {
   // Modal logo
   getEl('logoModal')?.addEventListener('click', closeLogoModal);
 }
+
+// Zoom au scroll pour l'image QR (dans la section Aide)
+(function setupQrZoom() {
+  const qrImage = document.getElementById('helpQrCode');
+  const content = document.getElementById('content');
+  if (!qrImage || !content) return;
+
+  const MAX_SCALE = 3.0;        // Taille maximale de l'image (3 fois)
+  const ACTIVATION_DISTANCE = 300; // Distance en pixels à partir de laquelle l'effet commence
+
+  function updateQrZoom() {
+    const rect = qrImage.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Centre de l'image
+    const imageCenterY = rect.top + rect.height / 2;
+    // Centre de la fenêtre
+    const windowCenterY = windowHeight / 2;
+
+    // Distance absolue entre le centre de l'image et le centre de la fenêtre
+    const distance = Math.abs(imageCenterY - windowCenterY);
+
+    let scale = 1.0;
+    if (distance < ACTIVATION_DISTANCE) {
+      // Interpolation linéaire : plus la distance est petite, plus le scale est grand
+      const progress = 1 - distance / ACTIVATION_DISTANCE;
+      scale = 1 + progress * (MAX_SCALE - 1);
+      scale = Math.min(scale, MAX_SCALE); // Ne pas dépasser la taille max
+    }
+
+    // Appliquer la transformation
+    qrImage.style.transform = `scale(${scale})`;
+
+    // Optionnel : ajouter une classe pour gérer le z-index
+    if (scale > 1.1) {
+      qrImage.classList.add('zoomed');
+    } else {
+      qrImage.classList.remove('zoomed');
+    }
+  }
+
+  // Écouter le scroll sur le conteneur principal
+  content.addEventListener('scroll', updateQrZoom);
+  // Déclencher une première fois pour initialiser
+  updateQrZoom();
+
+  // Mettre à jour aussi au redimensionnement de la fenêtre
+  window.addEventListener('resize', updateQrZoom);
+})();
 
 /* =============================================================
   DÉMARRAGE

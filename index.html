@@ -307,58 +307,82 @@
     </section>
 
     <!-- AIDE -->
-<section class="view" id="v-help" aria-label="Aide">
-  <h2 class="vtitle" data-i18n="help.title">Aide</h2>
-  <div class="card" style="padding: 1rem;">
-    <div class="ssec">
-      <p class="stitle" data-i18n="help.overview">Vue d'ensemble</p>
-      <p data-i18n="help.overview_text">Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.</p>
-    </div>
-    <div class="ssec">
-      <p class="stitle" data-i18n="help.features">Fonctionnalités principales</p>
-      <ul style="list-style: disc; padding-left: 1.25rem;">
-        <li data-i18n="help.feature_lists">📋 Création et gestion de plusieurs listes</li>
-        <li data-i18n="help.feature_scan">📷 Scan de codes-barres (via Open Food Facts)</li>
-        <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
-        <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
-        <li data-i18n="help.feature_export">📤 Export/Import CSV avec fusion intelligente</li>
-        <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes, de la langue et de la taille d'affichage</li>
-        <li data-i18n="help.feature_location">📍 Localisation du magasin : enregistrez l'adresse et visualisez-la</li>
-        <li data-i18n="help.feature_units">⚖️ Unités de mesure (kg, L, pièce) et prix au kilo</li>
-        <li data-i18n="help.feature_dragdrop">🖱️ Glisser-déposer pour réorganiser les articles</li>
-        <li data-i18n="help.feature_voice">🎤 Saisie vocale des articles</li>
-        <li>📦 Catégories personnalisées avec emoji et couleur</li>
-        <li>📏 5 tailles d'interface (microscopique à big strong)</li>
-        <li>🌍 15 langues disponibles</li>
-        <li>🔁 Mode scan multiple pour enchaîner les scans</li>
-      </ul>
-    </div>
-    <div class="ssec">
-      <p class="stitle" data-i18n="help.tips">Astuces</p>
-      <p data-i18n="help.tip_units">• Pour les articles au poids, choisissez l'unité 'kg' et saisissez le prix au kilo pour un calcul automatique.</p>
-      <p data-i18n="help.tip_drag">• Pour déplacer un article, appuyez sur son nom et glissez-le.</p>
-      <p data-i18n="help.tip_voice">• Utilisez le microphone dans le formulaire d'ajout pour dicter le nom de l'article.</p>
-      <p data-i18n="help.tip_location">• La localisation du magasin vous aide à retrouver son adresse (pas de notification automatique).</p>
-      <p data-i18n="help.tip_thresholds">• Dans les réglages, vous pouvez choisir à quels seuils de budget déclencher une alerte.</p>
-      <p>• En mode scan multiple, vous pouvez ajouter plusieurs articles rapidement sans rouvrir la caméra.</p>
-      <p>• Lors de l'import CSV, vous pouvez fusionner les listes existantes avec les nouvelles et gérer les doublons.</p>
-      <p>• Ajustez la taille de l'interface dans les réglages pour une meilleure lisibilité.</p>
-    </div>
-    <div class="ssec">
-      <p class="stitle" data-i18n="help.support">Support</p>
-      <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
-    </div>
-    <div class="ssec">
-      <p class="stitle">Partager l'application</p>
-      <div style="text-align: center;">
-        <div id="helpQrCode" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; background: #fff;"></div>
-        <p>Scannez ce QR code pour accéder à l'application</p>
+    <section class="view" id="v-help" aria-label="Aide">
+      <h2 class="vtitle" data-i18n="help.title">Aide</h2>
+      <div class="card" style="padding: 1rem;">
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.overview">Vue d'ensemble</p>
+          <p data-i18n="help.overview_text">Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.features">Fonctionnalités principales</p>
+          <ul style="list-style: disc; padding-left: 1.25rem;">
+            <li data-i18n="help.feature_lists">📋 Création et gestion de plusieurs listes</li>
+            <li>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                <path d="M10 10h4v4h-4z"></path>
+              </svg>
+              <span data-i18n="help.feature_scan"> Scan de codes-barres (via Open Food Facts)</span>
+            </li>
+            <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
+            <li data-i18n="help.feature_map">🗺️ Carte du magasin associée à chaque liste</li>
+            <li>
+              <img src="assets/images/iconeCSV.svg" alt="CSV" style="width:1.2em; height:1.2em; vertical-align:middle;">
+              <span data-i18n="help.feature_export"> Export/Import CSV avec fusion intelligente</span>
+            </li>
+            <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes, de la langue et de la taille d'affichage</li>
+            <li>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                <circle cx="12" cy="8" r="4" fill="currentColor" stroke="none"></circle>
+                <path d="M12 12 L12 22" stroke="currentColor" stroke-width="2"></path>
+              </svg>
+              <span data-i18n="help.feature_location"> Localisation du magasin : enregistrez l'adresse et visualisez-la</span>
+            </li>
+            <li data-i18n="help.feature_units">⚖️ Unités de mesure (kg, L, pièce) et prix au kilo</li>
+            <li data-i18n="help.feature_dragdrop">🖱️ Glisser-déposer pour réorganiser les articles</li>
+            <li>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"></path>
+              </svg>
+              <span data-i18n="help.feature_voice"> Saisie vocale des articles</span>
+            </li>
+            <li data-i18n="help.feature_custom_categories">📦 Catégories personnalisées avec emoji et couleur</li>
+            <li data-i18n="help.feature_ui_sizes">📏 5 tailles d'interface (microscopique à big strong)</li>
+            <li data-i18n="help.feature_languages">🌍 15 langues disponibles</li>
+            <li data-i18n="help.feature_multi_scan">🔁 Mode scan multiple pour enchaîner les scans</li>
+          </ul>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.tips">Astuces</p>
+          <p data-i18n="help.tip_units">• Pour les articles au poids, choisissez l'unité 'kg' et saisissez le prix au kilo pour un calcul automatique.</p>
+          <p data-i18n="help.tip_drag">• Pour déplacer un article, appuyez sur son nom et glissez-le.</p>
+          <p data-i18n="help.tip_voice">• Utilisez le microphone dans le formulaire d'ajout pour dicter le nom de l'article.</p>
+          <p data-i18n="help.tip_location">• La localisation du magasin vous aide à retrouver son adresse (pas de notification automatique).</p>
+          <p data-i18n="help.tip_thresholds">• Dans les réglages, vous pouvez choisir à quels seuils de budget déclencher une alerte.</p>
+          <p data-i18n="help.tip_multi_scan">• En mode scan multiple, vous pouvez ajouter plusieurs articles rapidement sans rouvrir la caméra.</p>
+          <p data-i18n="help.tip_import_merge">• Lors de l'import CSV, vous pouvez fusionner les listes existantes avec les nouvelles et gérer les doublons.</p>
+          <p data-i18n="help.tip_ui_size">• Ajustez la taille de l'interface dans les réglages pour une meilleure lisibilité.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.support">Support</p>
+          <p data-i18n="help.support_text">Pour toute question, ouvrez une issue sur <a href="https://github.com/Septieme7/Liste-Courses-V2" target="_blank">GitHub</a>.</p>
+        </div>
+        <div class="ssec">
+          <p class="stitle" data-i18n="help.share_app">Partager l'application</p>
+          <div style="text-align: center;">
+            <!-- Remplacement par l'image QRcode7.png -->
+            <img id="helpQrCode" src="assets/images/QRcode7.png" alt="QR Code de l'application" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; display: block;">
+            <p data-i18n="help.scan_qr">Scannez ce QR code pour accéder à l'application</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
   </main>
-
   <nav id="nav" role="navigation" aria-label="Navigation principale">
     <button class="tab on" id="t-home" aria-label="Accueil" aria-current="page">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -616,7 +640,7 @@
       <div id="categoryForm" style="display: block; margin-top: 1rem;">
         <div class="fld">
           <label for="catName" data-i18n="categories.name">Nom</label>
-          <input type="text" id="catName" placeholder="Ex: Fruits">
+            <input type="text" id="catName" data-i18n="categories.placeholder_name" placeholder="Ex: Fruits">
         </div>
         <div class="fld">
           <label for="catEmoji" data-i18n="categories.emoji">Emoji</label>

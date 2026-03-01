@@ -1086,6 +1086,20 @@ input, select, textarea { font-family: inherit; }
 .icheck.on { animation: checkBounce 0.25s ease-out; }
 
 /* =============================================================
+/* Effet de zoom pour le QR code
+============================================================= */
+#helpQrCode {
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+  transform-origin: center center;
+  position: relative;
+  z-index: 1;
+}
+#helpQrCode.zoomed {
+  z-index: 10; /* pour que l'image passe au-dessus du contenu quand elle est agrandie */
+}
+
+/* =============================================================
    22. RESPONSIVE (≥ 640px)
 ============================================================= */
 @media (min-width: 640px) {

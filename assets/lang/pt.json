@@ -117,23 +117,32 @@
     "overview_text": "Lista de Compras ajuda-o a gerir as suas listas de compras, controlar o orçamento e organizar as suas compras.",
     "features": "Principais funcionalidades",
     "feature_lists": "📋 Criação e gestão de várias listas",
-    "feature_scan": "📷 Leitura de códigos de barras (via Open Food Facts)",
+    "feature_scan": " Leitura de códigos de barras (via Open Food Facts)",
     "feature_budget": "💰 Acompanhamento do orçamento com alertas personalizáveis",
     "feature_map": "🗺️ Mapa da loja associado a cada lista",
-    "feature_export": "📤 Exportação/Importação CSV",
-    "feature_custom": "🎨 Personalização de temas e idioma",
-    "feature_location": "📍 Localização da loja: guarde o endereço e visualize-o",
+    "feature_export": " Exportação/Importação CSV com fusão inteligente",
+    "feature_custom": "🎨 Personalização de temas, idioma e tamanho da interface",
+    "feature_location": " Localização da loja: guarde o endereço e visualize-o",
     "feature_units": "⚖️ Unidades de medida (kg, L, peça) e preço por quilo",
     "feature_dragdrop": "🖱️ Arrastar e largar para reorganizar artigos",
-    "feature_voice": "🎤 Entrada por voz para artigos",
+    "feature_voice": " Entrada por voz para artigos",
+    "feature_custom_categories": "📦 Categorias personalizadas com emoji e cor",
+    "feature_ui_sizes": "📏 5 tamanhos de interface (microscópico a big strong)",
+    "feature_languages": "🌍 15 idiomas disponíveis",
+    "feature_multi_scan": "🔁 Modo de leitura múltipla para encadear leituras",
     "tips": "Dicas",
     "tip_units": "• Para artigos por peso, escolha a unidade 'kg' e insira o preço por quilo para cálculo automático.",
     "tip_drag": "• Para mover um artigo, pressione o seu nome e arraste.",
     "tip_voice": "• Use o microfone no formulário de adição para ditar o nome do artigo.",
     "tip_location": "• A localização da loja ajuda-o a encontrar o endereço (sem notificações automáticas).",
     "tip_thresholds": "• Nas configurações, pode escolher em que limites de orçamento acionar um alerta.",
+    "tip_multi_scan": "• No modo de leitura múltipla, pode adicionar rapidamente vários artigos sem reabrir a câmara.",
+    "tip_import_merge": "• Ao importar um CSV, pode fundir as listas existentes com as novas e gerir duplicados.",
+    "tip_ui_size": "• Ajuste o tamanho da interface nas configurações para uma melhor legibilidade.",
     "support": "Suporte",
-    "support_text": "Para qualquer dúvida, abra um issue no <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Para qualquer dúvida, abra um issue no <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Partilhar a aplicação",
+    "scan_qr": "Digitalize este código QR para aceder à aplicação"
   },
   "share": {
     "no_list": "Nenhuma lista selecionada",
@@ -173,7 +182,8 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "undo": "Desfazer",
-    "deleted": "eliminado"
+    "deleted": "eliminado",
+    "default": "(padrão)"
   },
   "units": {
     "piece": "peça",
@@ -272,6 +282,7 @@
     "edit_title": "Editar categoria",
     "name": "Nome",
     "emoji": "Emoji",
-    "color": "Cor"
+    "color": "Cor",
+    "placeholder_name": "Ex: Frutas e Legumes"
   }
 }

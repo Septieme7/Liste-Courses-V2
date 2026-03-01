@@ -117,23 +117,32 @@
     "overview_text": "Smart Shopping hilft Ihnen, Ihre Einkaufslisten zu verwalten, Ihr Budget zu verfolgen und Ihre Einkäufe zu organisieren.",
     "features": "Hauptfunktionen",
     "feature_lists": "📋 Erstellung und Verwaltung mehrerer Listen",
-    "feature_scan": "📷 Barcode-Scan (über Open Food Facts)",
+    "feature_scan": " Barcode-Scan (über Open Food Facts)",
     "feature_budget": "💰 Budgetverfolgung mit anpassbaren Warnungen",
     "feature_map": "🗺️ Ladenplan für jede Liste",
-    "feature_export": "📤 CSV-Export/Import",
-    "feature_custom": "🎨 Anpassung von Themen und Sprache",
-    "feature_location": "📍 Ladenstandort: Adresse speichern und anzeigen",
+    "feature_export": " CSV-Export/Import mit intelligenter Zusammenführung",
+    "feature_custom": "🎨 Anpassung von Themen, Sprache und Anzeigegröße",
+    "feature_location": " Ladenstandort: Adresse speichern und anzeigen",
     "feature_units": "⚖️ Maßeinheiten (kg, L, Stück) und Preis pro Einheit",
     "feature_dragdrop": "🖱️ Ziehen und Ablegen zum Neuanordnen",
-    "feature_voice": "🎤 Spracheingabe für Artikel",
+    "feature_voice": " Spracheingabe für Artikel",
+    "feature_custom_categories": "📦 Benutzerdefinierte Kategorien mit Emoji und Farbe",
+    "feature_ui_sizes": "📏 5 Oberflächengrößen (mikroskopisch bis big strong)",
+    "feature_languages": "🌍 15 Sprachen verfügbar",
+    "feature_multi_scan": "🔁 Multi-Scan-Modus zum Aneinanderreihen von Scans",
     "tips": "Tipps",
     "tip_units": "• Bei Gewichtsartikeln wählen Sie die Einheit 'kg' und geben den Preis pro kg ein für automatische Berechnung.",
     "tip_drag": "• Um einen Artikel zu verschieben, drücken Sie auf seinen Namen und ziehen Sie ihn.",
     "tip_voice": "• Verwenden Sie das Mikrofon im Hinzufügeformular, um den Artikelnamen zu diktieren.",
     "tip_location": "• Der Ladenstandort hilft Ihnen, die Adresse zu finden (keine automatischen Benachrichtigungen).",
     "tip_thresholds": "• In den Einstellungen können Sie auswählen, bei welchen Budgetschwellen eine Warnung ausgelöst wird.",
+    "tip_multi_scan": "• Im Multi-Scan-Modus können Sie schnell mehrere Artikel hinzufügen, ohne die Kamera erneut zu öffnen.",
+    "tip_import_merge": "• Beim Import einer CSV können Sie vorhandene Listen mit neuen zusammenführen und Duplikate verwalten.",
+    "tip_ui_size": "• Passen Sie die Oberflächengröße in den Einstellungen für eine bessere Lesbarkeit an.",
     "support": "Support",
-    "support_text": "Bei Fragen öffnen Sie ein Issue auf <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Bei Fragen öffnen Sie ein Issue auf <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "App teilen",
+    "scan_qr": "Scannen Sie diesen QR-Code, um auf die App zuzugreifen"
   },
   "share": {
     "no_list": "Keine Liste ausgewählt",
@@ -173,7 +182,8 @@
     "delete": "Löschen",
     "edit": "Bearbeiten",
     "undo": "Rückgängig",
-    "deleted": "gelöscht"
+    "deleted": "gelöscht",
+    "default": "(Standard)"
   },
   "units": {
     "piece": "Stück",
@@ -272,6 +282,7 @@
     "edit_title": "Kategorie bearbeiten",
     "name": "Name",
     "emoji": "Emoji",
-    "color": "Farbe"
+    "color": "Farbe",
+    "placeholder_name": "z.B. Obst & Gemüse"
   }
 }

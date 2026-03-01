@@ -117,23 +117,32 @@
     "overview_text": "スマートショッピングは、買い物リストの管理、予算の追跡、買い物の整理を支援します。",
     "features": "主な機能",
     "feature_lists": "📋 複数のリストの作成と管理",
-    "feature_scan": "📷 バーコードスキャン（Open Food Facts経由）",
+    "feature_scan": " バーコードスキャン（Open Food Facts経由）",
     "feature_budget": "💰 カスタマイズ可能なアラート付き予算追跡",
     "feature_map": "🗺️ 各リストに添付された店舗マップ",
-    "feature_export": "📤 CSVエクスポート/インポート",
-    "feature_custom": "🎨 テーマと言語のカスタマイズ",
-    "feature_location": "📍 店舗の位置情報：住所を保存して表示",
+    "feature_export": " CSVエクスポート/インポート（スマートマージ）",
+    "feature_custom": "🎨 テーマ、言語、表示サイズのカスタマイズ",
+    "feature_location": " 店舗の位置情報：住所を保存して表示",
     "feature_units": "⚖️ 測定単位（kg、L、個）とキロ単価",
     "feature_dragdrop": "🖱️ ドラッグ＆ドロップで商品を並べ替え",
-    "feature_voice": "🎤 音声入力",
+    "feature_voice": " 音声入力",
+    "feature_custom_categories": "📦 絵文字と色を使ったカスタムカテゴリ",
+    "feature_ui_sizes": "📏 5つのインターフェースサイズ（極小から特大）",
+    "feature_languages": "🌍 15言語対応",
+    "feature_multi_scan": "🔁 マルチスキャンモードで連続スキャン",
     "tips": "ヒント",
     "tip_units": "• 重量商品の場合は単位「kg」を選択し、自動計算のためにキロ単価を入力してください。",
     "tip_drag": "• 商品を移動するには、名前を押したままドラッグします。",
     "tip_voice": "• 追加フォームでマイクを使用して商品名を口述します。",
     "tip_location": "• 店舗の位置情報は住所を見つけるのに役立ちます（自動通知はありません）。",
     "tip_thresholds": "• 設定で、どの予算しきい値でアラートをトリガーするか選択できます。",
+    "tip_multi_scan": "• マルチスキャンモードでは、カメラを再度開かずに複数の商品をすばやく追加できます。",
+    "tip_import_merge": "• CSVをインポートする際、既存のリストと新しいリストをマージし、重複を処理できます。",
+    "tip_ui_size": "• 設定でインターフェースサイズを調整すると、読みやすさが向上します。",
     "support": "サポート",
-    "support_text": "ご質問がある場合は、<a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>でissueを開いてください。"
+    "support_text": "ご質問がある場合は、<a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>でissueを開いてください。",
+    "share_app": "アプリを共有",
+    "scan_qr": "このQRコードをスキャンしてアプリにアクセス"
   },
   "share": {
     "no_list": "リストが選択されていません",
@@ -173,7 +182,8 @@
     "delete": "削除",
     "edit": "編集",
     "undo": "元に戻す",
-    "deleted": "削除しました"
+    "deleted": "削除しました",
+    "default": "(デフォルト)"
   },
   "units": {
     "piece": "個",
@@ -272,6 +282,7 @@
     "edit_title": "カテゴリを編集",
     "name": "名前",
     "emoji": "絵文字",
-    "color": "色"
+    "color": "色",
+    "placeholder_name": "例：果物と野菜"
   }
 }

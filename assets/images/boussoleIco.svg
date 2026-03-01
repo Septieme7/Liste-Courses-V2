@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="12" y1="3" x2="12" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <line x1="3" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <line x1="18" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <path d="M12 7 L7 12 L12 17 L12 7" fill="#FF4444" stroke="none"/>
+  <path d="M12 7 L17 12 L12 17 L12 7" fill="#FFFFFF" stroke="none"/>
+  <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+  <text x="12" y="3.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">N</text>
+  <text x="12" y="21.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">S</text>
+  <text x="3" y="13.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">W</text>
+  <text x="21" y="13.5" font-family="Arial, sans-serif" font-size="2.2" font-weight="bold" text-anchor="middle" fill="white">E</text>
+</svg>

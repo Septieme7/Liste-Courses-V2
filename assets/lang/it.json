@@ -117,23 +117,32 @@
     "overview_text": "Lista della Spesa ti aiuta a gestire le tue liste della spesa, monitorare il budget e organizzare gli acquisti.",
     "features": "Caratteristiche principali",
     "feature_lists": "📋 Creazione e gestione di più liste",
-    "feature_scan": "📷 Scansione codici a barre (via Open Food Facts)",
+    "feature_scan": " Scansione codici a barre (via Open Food Facts)",
     "feature_budget": "💰 Monitoraggio del budget con avvisi personalizzabili",
     "feature_map": "🗺️ Mappa del negozio associata a ogni lista",
-    "feature_export": "📤 Esportazione/Importazione CSV",
-    "feature_custom": "🎨 Personalizzazione temi e lingua",
-    "feature_location": "📍 Posizione del negozio: salva l'indirizzo e visualizzalo",
+    "feature_export": " Esportazione/Importazione CSV con fusione intelligente",
+    "feature_custom": "🎨 Personalizzazione temi, lingua e dimensione interfaccia",
+    "feature_location": " Posizione del negozio: salva l'indirizzo e visualizzalo",
     "feature_units": "⚖️ Unità di misura (kg, L, pezzo) e prezzo al chilo",
     "feature_dragdrop": "🖱️ Trascina e rilascia per riordinare gli articoli",
-    "feature_voice": "🎤 Inserimento vocale degli articoli",
+    "feature_voice": " Inserimento vocale degli articoli",
+    "feature_custom_categories": "📦 Categorie personalizzate con emoji e colore",
+    "feature_ui_sizes": "📏 5 dimensioni interfaccia (microscopica a big strong)",
+    "feature_languages": "🌍 15 lingue disponibili",
+    "feature_multi_scan": "🔁 Modalità multi-scan per scansioni in sequenza",
     "tips": "Consigli",
     "tip_units": "• Per gli articoli a peso, scegli l'unità 'kg' e inserisci il prezzo al chilo per il calcolo automatico.",
     "tip_drag": "• Per spostare un articolo, premi sul suo nome e trascinalo.",
     "tip_voice": "• Usa il microfono nel modulo di aggiunta per dettare il nome dell'articolo.",
     "tip_location": "• La posizione del negozio ti aiuta a trovare l'indirizzo (nessuna notifica automatica).",
     "tip_thresholds": "• Nelle impostazioni, puoi scegliere a quali soglie di budget attivare un avviso.",
+    "tip_multi_scan": "• In modalità multi-scan, puoi aggiungere rapidamente più articoli senza riaprire la fotocamera.",
+    "tip_import_merge": "• Quando importi un CSV, puoi unire le liste esistenti con quelle nuove e gestire i duplicati.",
+    "tip_ui_size": "• Regola la dimensione dell'interfaccia nelle impostazioni per una migliore leggibilità.",
     "support": "Supporto",
-    "support_text": "Per qualsiasi domanda, apri un issue su <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Per qualsiasi domanda, apri un issue su <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Condividi l'app",
+    "scan_qr": "Scansiona questo codice QR per accedere all'app"
   },
   "share": {
     "no_list": "Nessuna lista selezionata",
@@ -173,7 +182,8 @@
     "delete": "Elimina",
     "edit": "Modifica",
     "undo": "Annulla",
-    "deleted": "eliminato"
+    "deleted": "eliminato",
+    "default": "(predefinito)"
   },
   "units": {
     "piece": "pezzo",
@@ -272,6 +282,7 @@
     "edit_title": "Modifica categoria",
     "name": "Nome",
     "emoji": "Emoji",
-    "color": "Colore"
+    "color": "Colore",
+    "placeholder_name": "Es: Frutta e Verdura"
   }
 }

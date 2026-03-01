@@ -117,23 +117,32 @@
     "overview_text": "Lista de la Compra te ayuda a gestionar tus listas de la compra, controlar tu presupuesto y organizar tus compras.",
     "features": "Características principales",
     "feature_lists": "📋 Creación y gestión de múltiples listas",
-    "feature_scan": "📷 Escaneo de códigos de barras (vía Open Food Facts)",
+    "feature_scan": " Escaneo de códigos de barras (vía Open Food Facts)",
     "feature_budget": "💰 Seguimiento del presupuesto con alertas personalizables",
     "feature_map": "🗺️ Plano del supermercado asociado a cada lista",
-    "feature_export": "📤 Exportación/Importación CSV",
-    "feature_custom": "🎨 Personalización de temas e idioma",
-    "feature_location": "📍 Ubicación de la tienda: guarda la dirección y visualízala",
+    "feature_export": " Exportación/Importación CSV con fusión inteligente",
+    "feature_custom": "🎨 Personalización de temas, idioma y tamaño de interfaz",
+    "feature_location": " Ubicación de la tienda: guarda la dirección y visualízala",
     "feature_units": "⚖️ Unidades de medida (kg, L, pieza) y precio por kilo",
     "feature_dragdrop": "🖱️ Arrastrar y soltar para reorganizar artículos",
-    "feature_voice": "🎤 Entrada por voz para artículos",
+    "feature_voice": " Entrada por voz para artículos",
+    "feature_custom_categories": "📦 Categorías personalizadas con emoji y color",
+    "feature_ui_sizes": "📏 5 tamaños de interfaz (microscópico a big strong)",
+    "feature_languages": "🌍 15 idiomas disponibles",
+    "feature_multi_scan": "🔁 Modo multi-escaneo para encadenar escaneos",
     "tips": "Consejos",
     "tip_units": "• Para artículos por peso, elige la unidad 'kg' y escribe el precio por kilo para cálculo automático.",
     "tip_drag": "• Para mover un artículo, mantén pulsado su nombre y arrastra.",
     "tip_voice": "• Usa el micrófono en el formulario de añadir para dictar el nombre del artículo.",
     "tip_location": "• La ubicación de la tienda te ayuda a encontrar la dirección (sin notificaciones automáticas).",
     "tip_thresholds": "• En ajustes, puedes elegir en qué umbrales de presupuesto activar una alerta.",
+    "tip_multi_scan": "• En modo multi-escaneo, puedes añadir varios artículos rápidamente sin reabrir la cámara.",
+    "tip_import_merge": "• Al importar un CSV, puedes fusionar las listas existentes con las nuevas y gestionar duplicados.",
+    "tip_ui_size": "• Ajusta el tamaño de la interfaz en los ajustes para una mejor legibilidad.",
     "support": "Soporte",
-    "support_text": "Para cualquier pregunta, abre un issue en <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Para cualquier pregunta, abre un issue en <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Compartir la aplicación",
+    "scan_qr": "Escanea este código QR para acceder a la aplicación"
   },
   "share": {
     "no_list": "Ninguna lista seleccionada",
@@ -173,7 +182,8 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "undo": "Deshacer",
-    "deleted": "eliminado"
+    "deleted": "eliminado",
+    "default": "(predeterminado)"
   },
   "units": {
     "piece": "pieza",
@@ -272,6 +282,7 @@
     "edit_title": "Editar categoría",
     "name": "Nombre",
     "emoji": "Emoji",
-    "color": "Color"
+    "color": "Color",
+    "placeholder_name": "Ej: Frutas y Verduras"
   }
 }

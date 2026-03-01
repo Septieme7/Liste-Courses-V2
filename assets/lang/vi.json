@@ -117,23 +117,32 @@
     "overview_text": "Mua Sắm Thông Minh giúp bạn quản lý danh sách mua sắm, theo dõi ngân sách và tổ chức việc mua sắm.",
     "features": "Tính năng chính",
     "feature_lists": "📋 Tạo và quản lý nhiều danh sách",
-    "feature_scan": "📷 Quét mã vạch (qua Open Food Facts)",
+    "feature_scan": " Quét mã vạch (qua Open Food Facts)",
     "feature_budget": "💰 Theo dõi ngân sách với cảnh báo tùy chỉnh",
     "feature_map": "🗺️ Bản đồ cửa hàng đính kèm mỗi danh sách",
-    "feature_export": "📤 Xuất/Nhập CSV",
-    "feature_custom": "🎨 Tùy chỉnh giao diện và ngôn ngữ",
-    "feature_location": "📍 Vị trí cửa hàng: lưu địa chỉ và xem",
+    "feature_export": " Xuất/Nhập CSV với hợp nhất thông minh",
+    "feature_custom": "🎨 Tùy chỉnh giao diện, ngôn ngữ và kích thước",
+    "feature_location": " Vị trí cửa hàng: lưu địa chỉ và xem",
     "feature_units": "⚖️ Đơn vị đo lường (kg, L, cái) và giá theo kg",
     "feature_dragdrop": "🖱️ Kéo thả để sắp xếp lại mặt hàng",
-    "feature_voice": "🎤 Nhập bằng giọng nói cho mặt hàng",
+    "feature_voice": " Nhập bằng giọng nói cho mặt hàng",
+    "feature_custom_categories": "📦 Danh mục tùy chỉnh với biểu tượng và màu sắc",
+    "feature_ui_sizes": "📏 5 kích thước giao diện (cực nhỏ đến rất lớn)",
+    "feature_languages": "🌍 15 ngôn ngữ có sẵn",
+    "feature_multi_scan": "🔁 Chế độ quét nhiều để quét liên tiếp",
     "tips": "Mẹo",
     "tip_units": "• Đối với mặt hàng theo cân, chọn đơn vị 'kg' và nhập giá theo kg để tính tự động.",
     "tip_drag": "• Để di chuyển mặt hàng, nhấn vào tên và kéo.",
     "tip_voice": "• Sử dụng micrô trong biểu mẫu thêm để đọc tên mặt hàng.",
     "tip_location": "• Vị trí cửa hàng giúp bạn tìm địa chỉ (không có thông báo tự động).",
     "tip_thresholds": "• Trong cài đặt, bạn có thể chọn ngưỡng ngân sách nào sẽ kích hoạt cảnh báo.",
+    "tip_multi_scan": "• Ở chế độ quét nhiều, bạn có thể thêm nhiều mặt hàng nhanh chóng mà không cần mở lại camera.",
+    "tip_import_merge": "• Khi nhập CSV, bạn có thể hợp nhất danh sách hiện có với danh sách mới và quản lý trùng lặp.",
+    "tip_ui_size": "• Điều chỉnh kích thước giao diện trong cài đặt để dễ đọc hơn.",
     "support": "Hỗ trợ",
-    "support_text": "Mọi câu hỏi, vui lòng mở issue trên <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Mọi câu hỏi, vui lòng mở issue trên <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Chia sẻ ứng dụng",
+    "scan_qr": "Quét mã QR này để truy cập ứng dụng"
   },
   "share": {
     "no_list": "Chưa chọn danh sách",
@@ -173,7 +182,8 @@
     "delete": "Xóa",
     "edit": "Sửa",
     "undo": "Hoàn tác",
-    "deleted": "đã xóa"
+    "deleted": "đã xóa",
+    "default": "(mặc định)"
   },
   "units": {
     "piece": "cái",
@@ -272,6 +282,7 @@
     "edit_title": "Sửa danh mục",
     "name": "Tên",
     "emoji": "Biểu tượng cảm xúc",
-    "color": "Màu sắc"
+    "color": "Màu sắc",
+    "placeholder_name": "Ví dụ: Trái cây"
   }
 }

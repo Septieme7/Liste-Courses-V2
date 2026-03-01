@@ -117,23 +117,32 @@
     "overview_text": "Courses Malin vous aide à gérer vos listes de courses, suivre votre budget et organiser vos achats.",
     "features": "Fonctionnalités principales",
     "feature_lists": "📋 Création et gestion de plusieurs listes",
-    "feature_scan": "📷 Scan de codes-barres (via Open Food Facts)",
+    "feature_scan": "Scan de codes-barres (via Open Food Facts)",
     "feature_budget": "💰 Suivi du budget avec alertes personnalisables",
     "feature_map": "🗺️ Carte du magasin associée à chaque liste",
-    "feature_export": "📤 Export/Import CSV",
-    "feature_custom": "🎨 Personnalisation des thèmes et de la langue",
-    "feature_location": "📍 Localisation du magasin : enregistrez l'adresse et visualisez-la",
+    "feature_export": "Export/Import CSV avec fusion intelligente",
+    "feature_custom": "🎨 Personnalisation des thèmes, de la langue et de la taille d'affichage",
+    "feature_location": "Localisation du magasin : enregistrez l'adresse et visualisez-la",
     "feature_units": "⚖️ Unités de mesure (kg, L, pièce) et prix au kilo",
     "feature_dragdrop": "🖱️ Glisser-déposer pour réorganiser les articles",
-    "feature_voice": "🎤 Saisie vocale des articles",
+    "feature_voice": "Saisie vocale des articles",
+    "feature_custom_categories": "📦 Catégories personnalisées avec emoji et couleur",
+    "feature_ui_sizes": "📏 5 tailles d'interface (microscopique à big strong)",
+    "feature_languages": "🌍 15 langues disponibles",
+    "feature_multi_scan": "🔁 Mode scan multiple pour enchaîner les scans",
     "tips": "Astuces",
     "tip_units": "• Pour les articles au poids, choisissez l'unité 'kg' et saisissez le prix au kilo pour un calcul automatique.",
     "tip_drag": "• Pour déplacer un article, appuyez sur son nom et glissez-le.",
     "tip_voice": "• Utilisez le microphone dans le formulaire d'ajout pour dicter le nom de l'article.",
     "tip_location": "• La localisation du magasin vous aide à retrouver son adresse (pas de notification automatique).",
     "tip_thresholds": "• Dans les réglages, vous pouvez choisir à quels seuils de budget déclencher une alerte.",
+    "tip_multi_scan": "• En mode scan multiple, vous pouvez ajouter plusieurs articles rapidement sans rouvrir la caméra.",
+    "tip_import_merge": "• Lors de l'import CSV, vous pouvez fusionner les listes existantes avec les nouvelles et gérer les doublons.",
+    "tip_ui_size": "• Ajustez la taille de l'interface dans les réglages pour une meilleure lisibilité.",
     "support": "Support",
-    "support_text": "Pour toute question, ouvrez une issue sur <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "Pour toute question, ouvrez une issue sur <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Partager l'application",
+    "scan_qr": "Scannez ce QR code pour accéder à l'application"
   },
   "share": {
     "no_list": "Aucune liste sélectionnée",
@@ -173,7 +182,8 @@
     "delete": "Supprimer",
     "edit": "Modifier",
     "undo": "Annuler",
-    "deleted": "supprimé"
+    "deleted": "supprimé",
+    "default": "(défaut)"
   },
   "units": {
     "piece": "pièce",
@@ -272,6 +282,7 @@
     "edit_title": "Modifier la catégorie",
     "name": "Nom",
     "emoji": "Emoji",
-    "color": "Couleur"
+    "color": "Couleur",
+    "placeholder_name": "Ex: Fruits"
   }
 }

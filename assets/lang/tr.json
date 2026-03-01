@@ -117,23 +117,32 @@
     "overview_text": "Akıllı Alışveriş, alışveriş listelerinizi yönetmenize, bütçenizi takip etmenize ve alışverişlerinizi düzenlemenize yardımcı olur.",
     "features": "Ana özellikler",
     "feature_lists": "📋 Birden çok liste oluşturma ve yönetme",
-    "feature_scan": "📷 Barkod tarama (Open Food Facts üzerinden)",
+    "feature_scan": " Barkod tarama (Open Food Facts üzerinden)",
     "feature_budget": "💰 Özelleştirilebilir uyarılarla bütçe takibi",
     "feature_map": "🗺️ Her listeye ekli mağaza haritası",
-    "feature_export": "📤 CSV Dışa/İçe Aktarma",
-    "feature_custom": "🎨 Tema ve dil kişiselleştirme",
-    "feature_location": "📍 Mağaza konumu: adresi kaydedin ve görüntüleyin",
+    "feature_export": " CSV Dışa/İçe Aktarma akıllı birleştirme ile",
+    "feature_custom": "🎨 Tema, dil ve arayüz boyutu kişiselleştirme",
+    "feature_location": " Mağaza konumu: adresi kaydedin ve görüntüleyin",
     "feature_units": "⚖️ Ölçü birimleri (kg, L, adet) ve kilo başına fiyat",
     "feature_dragdrop": "🖱️ Ürünleri yeniden düzenlemek için sürükle ve bırak",
-    "feature_voice": "🎤 Ürünler için sesli giriş",
+    "feature_voice": " Ürünler için sesli giriş",
+    "feature_custom_categories": "📦 Emoji ve renk ile özel kategoriler",
+    "feature_ui_sizes": "📏 5 arayüz boyutu (mikroskobikten çok büyüğe)",
+    "feature_languages": "🌍 15 dil mevcut",
+    "feature_multi_scan": "🔁 Tarama zinciri için çoklu tarama modu",
     "tips": "İpuçları",
     "tip_units": "• Ağırlıklı ürünler için 'kg' birimini seçin ve otomatik hesaplama için kilo başına fiyatı girin.",
     "tip_drag": "• Bir ürünü taşımak için adına basın ve sürükleyin.",
     "tip_voice": "• Ürün adını söylemek için ekleme formunda mikrofonu kullanın.",
     "tip_location": "• Mağaza konumu adresi bulmanıza yardımcı olur (otomatik bildirim yok).",
     "tip_thresholds": "• Ayarlarda, hangi bütçe eşiklerinde uyarı tetikleneceğini seçebilirsiniz.",
+    "tip_multi_scan": "• Çoklu tarama modunda, kamerayı yeniden açmadan birden çok ürünü hızlıca ekleyebilirsiniz.",
+    "tip_import_merge": "• CSV içe aktarırken, mevcut listeleri yenileriyle birleştirebilir ve yinelenenleri yönetebilirsiniz.",
+    "tip_ui_size": "• Daha iyi okunabilirlik için ayarlarda arayüz boyutunu ayarlayın.",
     "support": "Destek",
-    "support_text": "Herhangi bir soru için, <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>'da bir konu açın."
+    "support_text": "Herhangi bir soru için, <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>'da bir konu açın.",
+    "share_app": "Uygulamayı paylaş",
+    "scan_qr": "Uygulamaya erişmek için bu QR kodunu tarayın"
   },
   "share": {
     "no_list": "Hiçbir liste seçilmedi",
@@ -173,7 +182,8 @@
     "delete": "Sil",
     "edit": "Düzenle",
     "undo": "Geri al",
-    "deleted": "silindi"
+    "deleted": "silindi",
+    "default": "(varsayılan)"
   },
   "units": {
     "piece": "adet",
@@ -272,6 +282,7 @@
     "edit_title": "Kategoriyi düzenle",
     "name": "Ad",
     "emoji": "Emoji",
-    "color": "Renk"
+    "color": "Renk",
+    "placeholder_name": "Örn: Meyve ve Sebzeler"
   }
 }

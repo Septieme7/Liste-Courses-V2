@@ -117,23 +117,32 @@
     "overview_text": "Smart Shopping helps you manage your shopping lists, track your budget and organize your purchases.",
     "features": "Main features",
     "feature_lists": "📋 Create and manage multiple lists",
-    "feature_scan": "📷 Barcode scanning (via Open Food Facts)",
+    "feature_scan": " Barcode scanning (via Open Food Facts)",
     "feature_budget": "💰 Budget tracking with customizable alerts",
     "feature_map": "🗺️ Store map attached to each list",
-    "feature_export": "📤 CSV Export/Import",
-    "feature_custom": "🎨 Theme and language customization",
-    "feature_location": "📍 Store location: save the address and view it",
+    "feature_export": " CSV Export/Import with smart merging",
+    "feature_custom": "🎨 Theme, language and UI size customization",
+    "feature_location": " Store location: save the address and view it",
     "feature_units": "⚖️ Units of measure (kg, L, piece) and price per unit",
     "feature_dragdrop": "🖱️ Drag and drop to reorder items",
-    "feature_voice": "🎤 Voice input for items",
+    "feature_voice": " Voice input for items",
+    "feature_custom_categories": "📦 Custom categories with emoji and color",
+    "feature_ui_sizes": "📏 5 interface sizes (microscopic to big strong)",
+    "feature_languages": "🌍 15 languages available",
+    "feature_multi_scan": "🔁 Multi-scan mode to chain scans",
     "tips": "Tips",
     "tip_units": "• For weighed items, choose 'kg' unit and enter the price per kg for automatic calculation.",
     "tip_drag": "• To move an item, press its name and drag.",
     "tip_voice": "• Use the microphone in the add form to dictate the item's name.",
     "tip_location": "• Store location helps you find the address (no automatic notifications).",
     "tip_thresholds": "• In settings, you can choose at which budget thresholds to trigger an alert.",
+    "tip_multi_scan": "• In multi-scan mode, you can quickly add multiple items without reopening the camera.",
+    "tip_import_merge": "• When importing a CSV, you can merge existing lists with new ones and handle duplicates.",
+    "tip_ui_size": "• Adjust the interface size in settings for better readability.",
     "support": "Support",
-    "support_text": "For any question, open an issue on <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>."
+    "support_text": "For any question, open an issue on <a href='https://github.com/Septieme7/Liste-Courses-V2' target='_blank'>GitHub</a>.",
+    "share_app": "Share the app",
+    "scan_qr": "Scan this QR code to access the app"
   },
   "share": {
     "no_list": "No list selected",
@@ -173,7 +182,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "undo": "Undo",
-    "deleted": "deleted"
+    "deleted": "deleted",
+    "default": "(default)"
   },
   "units": {
     "piece": "piece",
@@ -272,6 +282,7 @@
     "edit_title": "Edit category",
     "name": "Name",
     "emoji": "Emoji",
-    "color": "Color"
+    "color": "Color",
+    "placeholder_name": "Ex: Fruits"
   }
 }
