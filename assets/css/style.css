@@ -114,7 +114,7 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
-               'Segoe UI', system-ui, sans-serif;
+              'Segoe UI', system-ui, sans-serif;
   font-size: calc(1rem * var(--scale)); /* 1rem = 16px de base */
   line-height: 1.4;
   background: var(--bg);
@@ -130,7 +130,7 @@ button { font-family: inherit; cursor: pointer; background: none; border: none; 
 input, select, textarea { font-family: inherit; }
 
 /* =============================================================
-   3. LAYOUT PRINCIPAL
+  3. LAYOUT PRINCIPAL
 ============================================================= */
 #hdr {
   position: fixed;
@@ -209,7 +209,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-   4. NAVIGATION BOTTOM TAB BAR
+  4. NAVIGATION BOTTOM TAB BAR
 ============================================================= */
 #nav {
   position: fixed;
@@ -247,7 +247,7 @@ input, select, textarea { font-family: inherit; }
 .tab:active { transform: scale(0.9); }
 
 /* =============================================================
-   5. BOUTON FLOTTANT (FAB)
+  5. BOUTON FLOTTANT (FAB)
 ============================================================= */
 #fab {
   position: fixed;
