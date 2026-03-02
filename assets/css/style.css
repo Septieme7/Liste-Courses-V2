@@ -176,8 +176,8 @@ input, select, textarea { font-family: inherit; }
   text-overflow: ellipsis;
 }
 
-.hbtn {
-  width: calc(2.25rem * var(--scale)); /* 36px */
+/* .hbtn {
+  width: calc(2.25rem * var(--scale)); 
   height: calc(2.25rem * var(--scale));
   border-radius: 50%;
   background: transparent;
@@ -196,7 +196,7 @@ input, select, textarea { font-family: inherit; }
   color: #fff;
 }
 .hbtn.pri:hover,
-.hbtn.pri:focus-visible { background: var(--pd); }
+.hbtn.pri:focus-visible { background: var(--pd); } */
 
 #content {
   position: fixed;
