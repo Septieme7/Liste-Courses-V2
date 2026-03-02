@@ -1,6 +1,5 @@
 /* =============================================================
-  COURSES MALIN · script.js
-  Version finale avec toutes les fonctionnalités
+  COURSES MALIN · script.js (version corrigée)
 ============================================================= */
 
 /* =============================================================
@@ -17,69 +16,53 @@ const COLORS = [
 ];
 
 const EMOJIS = [
-  // Base (déjà présents)
+  // Base
   '🛒', '🏪', '🍎', '🥗', '🏠', '🎉', '💊', '🐾', '🌿', '🍕', '🧙‍♂️', '🖕', '🤬', '💕', '🛍️', '📦',
-
   // Fruits (30)
   '🍌', '🍊', '🍇', '🍉', '🍒', '🍓', '🥝', '🥭', '🍍', '🍋', '🍈', '🍐', '🍑', '🍅', '🍆',
-  '🥑', '🌽', '🥕', '🥔', '🧄', '🧅', '🌶️', '🥦', '🥬', '🍄', '🥜', '🌰', '🍠', '🥥', '🍊',  // 🍊 en double
-
+  '🥑', '🌽', '🥕', '🥔', '🧄', '🧅', '🌶️', '🥦', '🥬', '🍄', '🥜', '🌰', '🍠', '🥥', '🍊',
   // Viandes, poissons, œufs (20)
   '🥩', '🍗', '🍖', '🥓', '🍔', '🌭', '🍟', '🍕', '🥪', '🌮', '🌯', '🥙', '🧆', '🥚', '🍳',
-  '🥘', '🍲', '🥣', '🥗', '🍿',  // 🥗 déjà dans base, 🍕 déjà dans base
-
+  '🥘', '🍲', '🥣', '🥗', '🍿',
   // Poisson et fruits de mer (15)
   '🐟', '🐠', '🐡', '🦐', '🦑', '🦀', '🐙', '🦪', '🐚', '🍣', '🍤', '🍥', '🥠', '🦞', '🐋',
-
   // Fromages et desserts (25)
   '🧀', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯',
-
   // Boulangerie et pains (15)
-  '🍞', '🥖', '🥨', '🥐', '🥯', '🍚', '🍙', '🍘', '🍥', '🥠', '🥟', '🍛', '🍜', '🍝', '🍲',  // 🍲 déjà dans viandes, 🍥 déjà, 🥠 déjà
-
+  '🍞', '🥖', '🥨', '🥐', '🥯', '🍚', '🍙', '🍘', '🍥', '🥠', '🥟', '🍛', '🍜', '🍝', '🍲',
   // Conserves, épicerie (20)
   '🥫', '🍱', '🍛', '🍜', '🍝', '🍢', '🥡', '🍦', '🍧',
-  '🍨', '🍩', '🍪', '🎂', '🍰',  // tous déjà dans desserts
-
   // Boissons diverses (20)
   '🧃', '🥤', '🧋', '🥛', '☕', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃',
-  '🧉', '🧊',  '🧋', '🍼',  // 🧋 en double
-
+  '🧉', '🧊', '🧋', '🍼',
   // Hygiène et soins (25)
   '🧴', '🧼', '🧽', '🧹', '🧺', '🧻', '🚽', '🚿', '🛁', '🪥', '🪒', '🧴', '💄', '💅', '👄',
-  '👀', '👂', '👃', '🦷', '👅', '🧠', '🫀', '🫁', '🦴', '👤',  // 🧴 en double
-
+  '👀', '👂', '👃', '🦷', '👅', '🧠', '🫀', '🫁', '🦴', '👤',
   // Ménage et maison (30)
   '🧹', '🧺', '🧻', '🧽', '🧼', '🪣', '🪠', '🧴', '🪥', '🪒', '🔪', '🍴', '🥄', '🥢', '🍽️',
-  '🍳', '🥘', '🧂',  // beaucoup de doubles avec hygiène
-
+  '🍳', '🥘', '🧂',
   // Animaux et plantes (20)
   '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐸', '🐧', '🐔', '🐦', '🐤', '🐣',
   '🐥', '🐺', '🐗', '🐴', '🦄',
-
   // Objets divers et humoristiques (50)
   '💰', '💳', '🧾', '📝', '📋', '📅', '📆', '📌', '📍', '📎', '🖇️', '📏', '📐', '✂️', '🖊️',
   '🖋️', '✒️', '🖌️', '🖍️', '📚', '📖', '🔍', '🔎', '🔒', '🔓', '🔑', '🗝️', '🧰', '🔧', '🔨',
   '⚒️', '🛠️', '⛏️', '🔩', '⚙️', '🧲', '🔫', '💣', '🧨', '🔪', '🗡️', '⚔️', '🛡️', '🚬', '⚰️',
   '⚱️', '🏺', '🔮', '📿', '💈',
-
   // Plus d'humour et divers (50)
   '🤪', '🥴', '😂', '🤣', '😭', '😱', '🙄', '😒', '🤷', '🙃', '💀', '👻', '🤖', '🎃', '😈',
   '👽', '🤡', '💩', '👾', '🎅', '🦸', '🦹', '🧛', '🧟', '🧞', '🧝', '🧚', '🧜', '🧙', '🦷',
   '👁️', '👅', '👂', '👃', '🦵', '🦶', '🖐️', '👌', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉',
   '👆', '👇', '👍', '👎', '👊',
-
-  // Radioactif, nucléaire, médical (nouveaux)
+  // Radioactif, nucléaire, médical
   '☢️', '⚛️', '☣️', '💥', '🔥', '🏥', '💉', '🩺', '🩸', '🩹', '🩻', '🦠', '🧬', '🧪', '🧫',
   '🚑', '🚒', '🩼', '🦺',
-
-  // Drapeaux (sélection de pays)
+  // Drapeaux
   '🇫🇷', '🇬🇧', '🇺🇸', '🇪🇸', '🇮🇹', '🇩🇪', '🇯🇵', '🇨🇳', '🇧🇷', '🇮🇳',
   '🇨🇦', '🇦🇺', '🇳🇿', '🇿🇦', '🇲🇽', '🇦🇷', '🇵🇹', '🇳🇱', '🇧🇪', '🇨🇭',
   '🇸🇪', '🇳🇴', '🇩🇰', '🇫🇮', '🇵🇱', '🇨🇿', '🇭🇺', '🇦🇹', '🇬🇷', '🇹🇷',
   '🇷🇺', '🇺🇦', '🇮🇱', '🇸🇦', '🇦🇪', '🇻🇳', '🇹🇭', '🇰🇷', '🇵🇭', '🇲🇾',
   '🇸🇬', '🇮🇩', '🇵🇰', '🇧🇩', '🇳🇬', '🇰🇪', '🇪🇬', '🇲🇦', '🇨🇱', '🇵🇪',
-
   // Complément pour arriver à 300 (environ 30)
   '🧵', '🧶', '👕', '👖', '🧥', '🧦', '👗', '👘', '🥻', '🩳', '👙', '👚', '👛', '👜', '👝',
   '🎒', '👞', '👟', '🥿', '👠', '👡', '👢', '🧢', '🎩', '🧣', '🧤', '🧦', '🧥', '🧦', '🧢',
@@ -87,7 +70,6 @@ const EMOJIS = [
   '👞', '👟', '👠', '👡', '👢', '👙', '👚', '👛', '👜', '👝', '🎒', '👓', '🕶️', '🥽', '🥼'
 ];
 
-// Clés pour les suggestions rapides (traduites)
 const QUICK_ITEMS_KEYS = [
   'quick.bread', 'quick.milk', 'quick.eggs', 'quick.butter', 'quick.cheese', 'quick.yogurt',
   'quick.water', 'quick.apples', 'quick.bananas', 'quick.chicken', 'quick.pasta', 'quick.rice',
@@ -96,7 +78,6 @@ const QUICK_ITEMS_KEYS = [
   'quick.fish', 'quick.carrots', 'quick.tomatoes'
 ];
 
-// Couleurs des catégories par défaut
 const CAT_COLORS = {
   '🥦 Fruits & Légumes':   '#10B981',
   '🥩 Viandes & Poissons': '#EF4444',
@@ -113,7 +94,6 @@ const CAT_COLORS = {
   '💕 Love 💕':            '#ec4899',
 };
 
-// Mapping pour la traduction des catégories par défaut
 const CATEGORY_MAP = {
   '🥦 Fruits & Légumes': 'fruits',
   '🥩 Viandes & Poissons': 'meat',
@@ -136,7 +116,7 @@ const LS_BUDGET = 'cm_budget';
 const LS_ACTIVE = 'cm_active';
 
 /* =============================================================
-  2. ÉTAT GLOBAL
+   2. ÉTAT GLOBAL
 ============================================================= */
 let lists        = [];
 let cfg          = {};
@@ -151,29 +131,34 @@ let snkCallback  = null;
 let audioInstance= null;
 let triggeredThresholds = {};
 
-// Catégories personnalisées
 let customCategories = [];
-let editingCategoryIndex = -1; // pour le formulaire de catégorie
+let editingCategoryIndex = -1;
 
-// Scan
 let html5QrCode = null;
 let multiScanMode = false;
 let lastScannedBarcode = null;
 let lastScannedProductData = null;
 
-// Éditeur d'image
 let cropper = null;
 let currentListIdForImage = null;
 
-// Monnaie
 let currency = '€';
 
 /* =============================================================
-  3. INITIALISATION
+   3. INITIALISATION (asynchrone)
 ============================================================= */
-function init() {
+async function init() {
   loadData();
   loadCategories();
+
+  // Charger la langue avant de construire l'UI
+  if (cfg.lang) {
+    await loadLanguage(cfg.lang);
+  } else {
+    await loadLanguage('fr');
+  }
+
+  // Maintenant les traductions sont disponibles
   buildColorGrid('cGrid',  cfg.color || 'blue', onMainColorPick);
   buildColorGrid('lCGrid', null,                onListColorPick);
   buildEmojiChips();
@@ -190,19 +175,9 @@ function init() {
     document.body.classList.add('size-md');
   }
 
-  // Charger la langue avant le premier rendu
-  if (cfg.lang) {
-    loadLanguage(cfg.lang).then(() => {
-      renderAll();
-      buildCategorySelect();
-    });
-  } else {
-    // Langue par défaut : français
-    loadLanguage('fr').then(() => {
-      renderAll();
-      buildCategorySelect();
-    });
-  }
+  // Rendu final
+  renderAll();
+  buildCategorySelect();
 
   if (!cfg.thresholds) {
     cfg.thresholds = { 50: true, 80: true, 100: true };
@@ -210,7 +185,7 @@ function init() {
 }
 
 /* =============================================================
-  4. PERSISTANCE
+   4. PERSISTANCE
 ============================================================= */
 function loadData() {
   try { lists  = JSON.parse(localStorage.getItem(LS_LISTS))  || []; } catch { lists  = []; }
@@ -245,7 +220,6 @@ function saveConfig() {
   currency = cfg.currency;
   cfg.uiSize = document.getElementById('sizeSelector')?.value || 'md';
   localStorage.setItem(LS_CFG, JSON.stringify(cfg));
-  // Mettre à jour l'affichage des prix
   renderHome();
 }
 
@@ -256,7 +230,7 @@ function resetAll() {
 }
 
 /* =============================================================
-  5. GESTION DES CATÉGORIES
+   5. GESTION DES CATÉGORIES
 ============================================================= */
 function loadCategories() {
   customCategories = cfg.categories || [];
@@ -300,16 +274,14 @@ function buildCategorySelect() {
   select.innerHTML = html;
 }
 
-// Fonctions pour la gestion des catégories (appelées depuis le formulaire)
 function openCategoryEditor(index) {
   editingCategoryIndex = index;
   const sheet = document.getElementById('shCategoryEdit');
   if (!sheet) return;
   
-  renderCategoriesList(); // Affiche la liste avec boutons supprimer
+  renderCategoriesList();
   
   if (index === -1) {
-    // Nouvelle catégorie
     document.getElementById('catName').value = '';
     document.getElementById('catEmoji').value = '🥦';
     document.getElementById('catColor').value = '#10B981';
@@ -328,10 +300,9 @@ function renderCategoriesList() {
   const container = document.getElementById('categoryList');
   if (!container) return;
   let html = '';
-  // Catégories par défaut (non supprimables) - CORRECTION : afficher display sans emoji en double
   Object.keys(CAT_COLORS).forEach(cat => {
     const key = CATEGORY_MAP[cat];
-    const display = key ? t('category.' + key) : cat; // display contient déjà l'emoji
+    const display = key ? t('category.' + key) : cat;
     html += `
       <div class="srow" style="margin-bottom: 8px;">
         <span style="background:${CAT_COLORS[cat]}22; padding:4px 8px; border-radius:12px;">
@@ -342,7 +313,6 @@ function renderCategoriesList() {
         </div>
       </div>`;
   });
-  // Catégories personnalisées
   customCategories.forEach((cat, index) => {
     html += `
       <div class="srow" style="margin-bottom: 8px;">
@@ -427,7 +397,7 @@ function saveCategory() {
   renderCategoriesList();
   buildCategorySelect();
   renderHome();
-  closeSheet(); // ferme le sheet d'édition
+  closeSheet();
 }
 
 function cancelCategoryEdit() {
@@ -435,7 +405,7 @@ function cancelCategoryEdit() {
 }
 
 /* =============================================================
-  6. THÈME & COULEURS
+   6. THÈME & COULEURS
 ============================================================= */
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', cfg.dark ? 'dark' : 'light');
@@ -543,7 +513,7 @@ function syncSettingsUI() {
 }
 
 /* =============================================================
-  7. NAVIGATION
+   7. NAVIGATION
 ============================================================= */
 let currentTab = 'home';
 
@@ -599,7 +569,7 @@ function getActiveName() {
 }
 
 /* =============================================================
-  8. RENDU – ACCUEIL
+   8. RENDU – ACCUEIL
 ============================================================= */
 function renderAll() {
   renderHome();
@@ -705,7 +675,7 @@ function renderHome() {
 }
 
 /* =============================================================
-  9. RENDU – LISTES
+   9. RENDU – LISTES
 ============================================================= */
 function renderLists() {
   const grid    = document.getElementById('lgrid');
@@ -740,19 +710,19 @@ function renderLists() {
           </div>
           <div class="lbtns">
             <button class="lbtn map" onclick="event.stopPropagation(); captureMap('${list.id}')" aria-label="${t('lists.add_map')}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="2" y="5" width="20" height="14" rx="2" ry="2"/>
-  <circle cx="12" cy="12" r="4"/>
-  <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-  <rect x="16" y="7" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
-  <circle cx="18" cy="10" r="1" fill="currentColor" stroke="none"/>
-</svg></button>
+              <rect x="2" y="5" width="20" height="14" rx="2" ry="2"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+              <rect x="16" y="7" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
+              <circle cx="18" cy="10" r="1" fill="currentColor" stroke="none"/>
+            </svg></button>
             <button class="lbtn" onclick="event.stopPropagation(); renameList('${list.id}')" aria-label="${t('common.edit')} ${esc(list.name)}">✏️</button>
             <button class="lbtn danger" onclick="event.stopPropagation(); removeList('${list.id}')" aria-label="${t('common.delete')} ${esc(list.name)}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <polyline points="3 6 5 6 21 6"></polyline>
-  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-  <line x1="10" y1="11" x2="10" y2="17"></line>
-  <line x1="14" y1="11" x2="14" y2="17"></line>
-</svg></button>
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg></button>
           </div>
         </div>`;
     }).join('');
@@ -766,7 +736,7 @@ function renderLists() {
 }
 
 /* =============================================================
-  10. BUDGET
+   10. BUDGET
 ============================================================= */
 function onBudgetChange() {
   const budgetIn = document.getElementById('budgetIn');
@@ -833,7 +803,7 @@ function updateBudget() {
 }
 
 /* =============================================================
-  11. CRUD ARTICLES
+   11. CRUD ARTICLES
 ============================================================= */
 function toggleCheck(itemId) {
   const item = getItem(itemId);
@@ -897,7 +867,7 @@ function getItem(itemId) {
 }
 
 /* =============================================================
-  12. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
+   12. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
 ============================================================= */
 function openAddItem() {
   if (!activeId) {
@@ -911,7 +881,6 @@ function openAddItem() {
   const shItemTitle = document.getElementById('shItemTitle');
   if (shItemTitle) shItemTitle.textContent = t('item.add_title');
   const iSubmit = document.getElementById('iSubmit');
-  // Le bouton iSubmit est maintenant une icône, on n'affiche plus de texte
   if (iSubmit) {
     iSubmit.setAttribute('aria-label', t('item.add_button'));
   }
@@ -1011,7 +980,6 @@ function validateItemForm() {
   const isMulti = names.length > 1;
 
   const iSubmit = document.getElementById('iSubmit');
-  // Le bouton est maintenant une icône, on le désactive/active en changeant l'attribut disabled
   if (iSubmit) iSubmit.disabled = !filled;
 
   const hint = document.getElementById('iNameHint');
@@ -1148,7 +1116,7 @@ function buildQuickChips() {
 }
 
 /* =============================================================
-  13. BOTTOM SHEET CRÉATION DE LISTE
+   13. BOTTOM SHEET CRÉATION DE LISTE
 ============================================================= */
 function openAddList() {
   const lName = document.getElementById('lName');
@@ -1218,7 +1186,7 @@ function buildEmojiChips() {
 }
 
 /* =============================================================
-  14. GESTION DES LISTES + CARTE MAGASIN
+   14. GESTION DES LISTES + CARTE MAGASIN
 ============================================================= */
 function pickList(listId) {
   activeId = listId;
@@ -1301,7 +1269,7 @@ function deleteMap() {
 }
 
 /* =============================================================
-  15. PARTAGE / EXPORT .TXT (partage texte lisible)
+   15. PARTAGE / EXPORT .TXT (partage texte lisible)
 ============================================================= */
 function buildTxtContent(list) {
   const sep  = '─'.repeat(36);
@@ -1386,7 +1354,7 @@ function downloadTxt(content, listName) {
 }
 
 /* =============================================================
-  16. EXPORT CSV (pour le bouton Exporter)
+   16. EXPORT CSV (pour le bouton Exporter)
 ============================================================= */
 function downloadCSV(content, listName) {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
@@ -1399,7 +1367,7 @@ function downloadCSV(content, listName) {
 }
 
 /* =============================================================
-  17. SON
+   17. SON
 ============================================================= */
 function playSound() {
   stopSound();
@@ -1432,7 +1400,7 @@ function playFallbackBeep() {
 }
 
 /* =============================================================
-  18. OVERLAY & SHEETS
+   18. OVERLAY & SHEETS (avec correction aria-hidden)
 ============================================================= */
 function openSheet(sheetId) {
   openSheetId = sheetId;
@@ -1447,6 +1415,16 @@ function openSheet(sheetId) {
 
 function closeSheet() {
   stopBarcodeScan();
+
+  // Avant de masquer, on déplace le focus si nécessaire
+  if (openSheetId) {
+    const sheet = document.getElementById(openSheetId);
+    // Si le focus est dans le sheet, on le remet sur le body
+    if (sheet && sheet.contains(document.activeElement)) {
+      document.body.focus();
+    }
+  }
+
   if (openSheetId) {
     const sheet = document.getElementById(openSheetId);
     if (sheet) {
@@ -1460,7 +1438,7 @@ function closeSheet() {
 }
 
 /* =============================================================
-  19. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
+   19. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
 function startBarcodeScan() {
   if (html5QrCode) return;
@@ -1635,7 +1613,7 @@ function addProductFromScan(product) {
 }
 
 /* =============================================================
-  20. ÉDITEUR D'IMAGE (recadrage, rotation)
+   20. ÉDITEUR D'IMAGE (recadrage, rotation)
 ============================================================= */
 function openImageEditor(imageDataUrl, listId) {
   currentListIdForImage = listId;
@@ -1656,7 +1634,7 @@ function openImageEditor(imageDataUrl, listId) {
 }
 
 /* =============================================================
-  21. MODAL LOGO
+   21. MODAL LOGO
 ============================================================= */
 function showLogoModal() {
   const modal = document.getElementById('logoModal');
@@ -1669,7 +1647,7 @@ function closeLogoModal() {
 }
 
 /* =============================================================
-  22. SNACKBAR
+   22. SNACKBAR
 ============================================================= */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
@@ -1690,7 +1668,7 @@ function triggerSnackAction() {
 }
 
 /* =============================================================
-  23. UTILITAIRES
+   23. UTILITAIRES
 ============================================================= */
 function esc(str) {
   return String(str)
@@ -1702,7 +1680,7 @@ function esc(str) {
 }
 
 /* =============================================================
-  24. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
+   24. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
 ============================================================= */
 
 function showListSelector(title, callback, filter = () => true, options = {}) {
@@ -2089,7 +2067,7 @@ function processNextItem(items, index, targetList, addedCount, applyToAll) {
 }
 
 /* =============================================================
-  25. SWIPE POUR CHANGER DE LISTE
+   25. SWIPE POUR CHANGER DE LISTE
 ============================================================= */
 function initSwipe() {
   const container = document.getElementById('activeListInfo');
@@ -2129,7 +2107,7 @@ function changeList(direction) {
 }
 
 /* =============================================================
-  26. QR CODE SUR LE TITRE
+   26. QR CODE SUR LE TITRE
 ============================================================= */
 function showQRCode() {
   const url = window.location.href; // ou une URL fixe
@@ -2146,7 +2124,7 @@ function showQRCode() {
 }
 
 /* =============================================================
-  27. ATTACHEMENT DES ÉCOUTEURS
+   27. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
   const getEl = (id) => document.getElementById(id);
@@ -2349,33 +2327,25 @@ function attachListeners() {
   const content = document.getElementById('content');
   if (!qrImage || !content) return;
 
-  const MAX_SCALE = 3.0;        // Taille maximale de l'image (3 fois)
-  const ACTIVATION_DISTANCE = 300; // Distance en pixels à partir de laquelle l'effet commence
+  const MAX_SCALE = 3.0;
+  const ACTIVATION_DISTANCE = 300;
 
   function updateQrZoom() {
     const rect = qrImage.getBoundingClientRect();
     const windowHeight = window.innerHeight;
-
-    // Centre de l'image
     const imageCenterY = rect.top + rect.height / 2;
-    // Centre de la fenêtre
     const windowCenterY = windowHeight / 2;
-
-    // Distance absolue entre le centre de l'image et le centre de la fenêtre
     const distance = Math.abs(imageCenterY - windowCenterY);
 
     let scale = 1.0;
     if (distance < ACTIVATION_DISTANCE) {
-      // Interpolation linéaire : plus la distance est petite, plus le scale est grand
       const progress = 1 - distance / ACTIVATION_DISTANCE;
       scale = 1 + progress * (MAX_SCALE - 1);
-      scale = Math.min(scale, MAX_SCALE); // Ne pas dépasser la taille max
+      scale = Math.min(scale, MAX_SCALE);
     }
 
-    // Appliquer la transformation
     qrImage.style.transform = `scale(${scale})`;
 
-    // Optionnel : ajouter une classe pour gérer le z-index
     if (scale > 1.1) {
       qrImage.classList.add('zoomed');
     } else {
@@ -2383,16 +2353,14 @@ function attachListeners() {
     }
   }
 
-  // Écouter le scroll sur le conteneur principal
   content.addEventListener('scroll', updateQrZoom);
-  // Déclencher une première fois pour initialiser
   updateQrZoom();
-
-  // Mettre à jour aussi au redimensionnement de la fenêtre
   window.addEventListener('resize', updateQrZoom);
 })();
 
 /* =============================================================
-  DÉMARRAGE
+  DÉMARRAGE (asynchrone)
 ============================================================= */
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  init().catch(console.error);
+});
