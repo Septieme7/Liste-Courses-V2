@@ -1,10 +1,10 @@
 /* =============================================================
-   COURSES MALIN · script.js
-   Version finale avec toutes les fonctionnalités
+  COURSES MALIN · script.js
+  Version finale avec toutes les fonctionnalités
 ============================================================= */
 
 /* =============================================================
-   1. CONFIGURATION & CONSTANTES
+  1. CONFIGURATION & CONSTANTES
 ============================================================= */
 const COLORS = [
   { n: 'blue',   h: '#3B82F6' },
@@ -136,7 +136,7 @@ const LS_BUDGET = 'cm_budget';
 const LS_ACTIVE = 'cm_active';
 
 /* =============================================================
-   2. ÉTAT GLOBAL
+  2. ÉTAT GLOBAL
 ============================================================= */
 let lists        = [];
 let cfg          = {};
@@ -169,7 +169,7 @@ let currentListIdForImage = null;
 let currency = '€';
 
 /* =============================================================
-   3. INITIALISATION
+  3. INITIALISATION
 ============================================================= */
 function init() {
   loadData();
@@ -210,7 +210,7 @@ function init() {
 }
 
 /* =============================================================
-   4. PERSISTANCE
+  4. PERSISTANCE
 ============================================================= */
 function loadData() {
   try { lists  = JSON.parse(localStorage.getItem(LS_LISTS))  || []; } catch { lists  = []; }
@@ -256,7 +256,7 @@ function resetAll() {
 }
 
 /* =============================================================
-   5. GESTION DES CATÉGORIES
+  5. GESTION DES CATÉGORIES
 ============================================================= */
 function loadCategories() {
   customCategories = cfg.categories || [];
@@ -435,7 +435,7 @@ function cancelCategoryEdit() {
 }
 
 /* =============================================================
-   6. THÈME & COULEURS
+  6. THÈME & COULEURS
 ============================================================= */
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', cfg.dark ? 'dark' : 'light');
@@ -543,7 +543,7 @@ function syncSettingsUI() {
 }
 
 /* =============================================================
-   7. NAVIGATION
+  7. NAVIGATION
 ============================================================= */
 let currentTab = 'home';
 
@@ -599,7 +599,7 @@ function getActiveName() {
 }
 
 /* =============================================================
-   8. RENDU – ACCUEIL
+  8. RENDU – ACCUEIL
 ============================================================= */
 function renderAll() {
   renderHome();
@@ -705,7 +705,7 @@ function renderHome() {
 }
 
 /* =============================================================
-   9. RENDU – LISTES
+  9. RENDU – LISTES
 ============================================================= */
 function renderLists() {
   const grid    = document.getElementById('lgrid');
@@ -766,7 +766,7 @@ function renderLists() {
 }
 
 /* =============================================================
-   10. BUDGET
+  10. BUDGET
 ============================================================= */
 function onBudgetChange() {
   const budgetIn = document.getElementById('budgetIn');
@@ -833,7 +833,7 @@ function updateBudget() {
 }
 
 /* =============================================================
-   11. CRUD ARTICLES
+  11. CRUD ARTICLES
 ============================================================= */
 function toggleCheck(itemId) {
   const item = getItem(itemId);
@@ -897,7 +897,7 @@ function getItem(itemId) {
 }
 
 /* =============================================================
-   12. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
+  12. BOTTOM SHEET ARTICLE (AJOUT / MODIFICATION)
 ============================================================= */
 function openAddItem() {
   if (!activeId) {
@@ -1148,7 +1148,7 @@ function buildQuickChips() {
 }
 
 /* =============================================================
-   13. BOTTOM SHEET CRÉATION DE LISTE
+  13. BOTTOM SHEET CRÉATION DE LISTE
 ============================================================= */
 function openAddList() {
   const lName = document.getElementById('lName');
@@ -1218,7 +1218,7 @@ function buildEmojiChips() {
 }
 
 /* =============================================================
-   14. GESTION DES LISTES + CARTE MAGASIN
+  14. GESTION DES LISTES + CARTE MAGASIN
 ============================================================= */
 function pickList(listId) {
   activeId = listId;
@@ -1301,7 +1301,7 @@ function deleteMap() {
 }
 
 /* =============================================================
-   15. PARTAGE / EXPORT .TXT (partage texte lisible)
+  15. PARTAGE / EXPORT .TXT (partage texte lisible)
 ============================================================= */
 function buildTxtContent(list) {
   const sep  = '─'.repeat(36);
@@ -1386,7 +1386,7 @@ function downloadTxt(content, listName) {
 }
 
 /* =============================================================
-   16. EXPORT CSV (pour le bouton Exporter)
+  16. EXPORT CSV (pour le bouton Exporter)
 ============================================================= */
 function downloadCSV(content, listName) {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
@@ -1399,7 +1399,7 @@ function downloadCSV(content, listName) {
 }
 
 /* =============================================================
-   17. SON
+  17. SON
 ============================================================= */
 function playSound() {
   stopSound();
@@ -1432,7 +1432,7 @@ function playFallbackBeep() {
 }
 
 /* =============================================================
-   18. OVERLAY & SHEETS
+  18. OVERLAY & SHEETS
 ============================================================= */
 function openSheet(sheetId) {
   openSheetId = sheetId;
@@ -1460,7 +1460,7 @@ function closeSheet() {
 }
 
 /* =============================================================
-   19. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
+  19. SCAN DE CODE-BARRES (avec html5-qrcode + Open Food Facts)
 ============================================================= */
 function startBarcodeScan() {
   if (html5QrCode) return;
@@ -1635,7 +1635,7 @@ function addProductFromScan(product) {
 }
 
 /* =============================================================
-   20. ÉDITEUR D'IMAGE (recadrage, rotation)
+  20. ÉDITEUR D'IMAGE (recadrage, rotation)
 ============================================================= */
 function openImageEditor(imageDataUrl, listId) {
   currentListIdForImage = listId;
@@ -1656,7 +1656,7 @@ function openImageEditor(imageDataUrl, listId) {
 }
 
 /* =============================================================
-   21. MODAL LOGO
+  21. MODAL LOGO
 ============================================================= */
 function showLogoModal() {
   const modal = document.getElementById('logoModal');
@@ -1669,7 +1669,7 @@ function closeLogoModal() {
 }
 
 /* =============================================================
-   22. SNACKBAR
+  22. SNACKBAR
 ============================================================= */
 function showSnack(message, action, cb) {
   const el = document.getElementById('snk');
@@ -1690,7 +1690,7 @@ function triggerSnackAction() {
 }
 
 /* =============================================================
-   23. UTILITAIRES
+  23. UTILITAIRES
 ============================================================= */
 function esc(str) {
   return String(str)
@@ -1702,7 +1702,7 @@ function esc(str) {
 }
 
 /* =============================================================
-   24. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
+  24. EXPORT / IMPORT CSV + PARTAGE TEXTE + IMPORT LISTE
 ============================================================= */
 
 function showListSelector(title, callback, filter = () => true, options = {}) {
@@ -2089,7 +2089,7 @@ function processNextItem(items, index, targetList, addedCount, applyToAll) {
 }
 
 /* =============================================================
-   25. SWIPE POUR CHANGER DE LISTE
+  25. SWIPE POUR CHANGER DE LISTE
 ============================================================= */
 function initSwipe() {
   const container = document.getElementById('activeListInfo');
@@ -2129,7 +2129,7 @@ function changeList(direction) {
 }
 
 /* =============================================================
-   26. QR CODE SUR LE TITRE
+  26. QR CODE SUR LE TITRE
 ============================================================= */
 function showQRCode() {
   const url = window.location.href; // ou une URL fixe
@@ -2146,7 +2146,7 @@ function showQRCode() {
 }
 
 /* =============================================================
-   27. ATTACHEMENT DES ÉCOUTEURS
+  27. ATTACHEMENT DES ÉCOUTEURS
 ============================================================= */
 function attachListeners() {
   const getEl = (id) => document.getElementById(id);

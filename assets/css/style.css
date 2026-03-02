@@ -366,7 +366,8 @@ input, select, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   text-align: right;
-  -moz-appearance: textfield;
+  appearance: textfield;        /* propriété standard */
+  -moz-appearance: textfield;   /* pour Firefox */
 }
 .btotal input::-webkit-outer-spin-button,
 .btotal input::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -645,7 +646,8 @@ input, select, textarea { font-family: inherit; }
   text-align: right;
   font-size: calc(0.8125rem * var(--scale));
   color: var(--tx);
-  -moz-appearance: textfield;
+  appearance: textfield;        /* propriété standard */
+  -moz-appearance: textfield;   /* pour Firefox */
 }
 .iprice input::-webkit-outer-spin-button,
 .iprice input::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -910,8 +912,10 @@ input, select, textarea { font-family: inherit; }
 
 .fld input[type="number"]::-webkit-outer-spin-button,
 .fld input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-.fld input[type="number"] { -moz-appearance: textfield; }
-
+.fld input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
 .emoji-input {
   width: calc(4rem * var(--scale)) !important; /* 64px */
   text-align: center !important;
@@ -1159,6 +1163,8 @@ button img {
   width: 1.5em;
   height: 1.5em;
 }
+
+
 
 /* =============================================================
   QR code modal

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Courses Malin – Gérez vos listes de courses, suivez votre budget et organisez vos achats intelligemment.">
   <meta name="theme-color" content="#3B82F6">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Courses Malin · Liste & Budget</title>
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
@@ -469,41 +469,48 @@
         <div class="chips" id="qChips" role="group" aria-label="Suggestions rapides"></div>
       </div>
 
-      <!-- MODIFICATION : nouveaux boutons avec icônes SVG -->
+      <!-- Champ nom avec boutons micro et scan empilés à droite -->
       <div class="fld">
         <label for="iName">
           <span data-i18n="item.name_label">Nom</span>
           <span aria-hidden="true">*</span>
           <span class="hint" data-i18n="item.name_hint"> — séparez par une virgule pour en ajouter plusieurs</span>
         </label>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="display: flex; gap: 0.5rem; align-items: stretch;">
           <input type="text" id="iName" data-i18n="item.name_placeholder" placeholder="Ex : Pain, Lait, Beurre…" autocomplete="off" aria-required="true" aria-describedby="iNameHint" style="flex: 1;">
-          <button type="button" id="btnScanBarcode" class="icon-btn" aria-label="Scanner un code-barres">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-              <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-              <path d="M10 10h4v4h-4z"></path>
-            </svg>
-          </button>
-          <button type="button" id="btnSpeech" class="icon-btn" aria-label="Ajouter par la voix">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-              <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"></path>
-            </svg>
-          </button>
-          <button type="button" id="iSubmit" class="icon-btn" aria-label="Ajouter">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="8" cy="20" r="1"></circle>
-              <circle cx="18" cy="20" r="1"></circle>
-              <path d="M2 2h4l2.8 13.5a1 1 0 0 0 1 .5h8.4a1 1 0 0 0 1-.5L22 6H7"></path>
-            </svg>
-          </button>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <button type="button" id="btnSpeech" class="icon-btn" aria-label="Ajouter par la voix">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"></path>
+              </svg>
+            </button>
+            <button type="button" id="btnScanBarcode" class="icon-btn" aria-label="Scanner un code-barres">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                <path d="M10 10h4v4h-4z"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <p class="multi-hint" id="iNameHint"></p>
       </div>
 
+      <!-- Bouton de validation (caddie) centré et agrandi -->
+      <div style="display: flex; justify-content: center; margin: 0.5rem 0;">
+        <button type="button" id="iSubmit" class="icon-btn" aria-label="Ajouter" style="width: 4rem; height: 4rem; display: flex; /* align-items: center; */ justify-content: center; padding: 0;">
+          <svg viewBox="0 0 24 24" style="width:50%; height:50%;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+            <path d="M2 2h4l2.8 13.5a1 1 0 0 0 1 .5h8.4a1 1 0 0 0 1-.5L22 6H7"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Le reste du formulaire inchangé -->
       <!-- Mode scan multiple -->
       <div class="fld" style="display: flex; align-items: center; justify-content: space-between;">
         <label for="multiScanToggle" data-i18n="item.multi_scan">Mode scan multiple</label>
@@ -593,7 +600,6 @@
         <label for="iNote" data-i18n="item.note_label">Note / Marque</label>
         <textarea id="iNote" data-i18n="item.note_placeholder" placeholder="Précisions, marque préférée…"></textarea>
       </div>
-      <!-- L'ancien bouton de soumission a été supprimé, remplacé par l'icône dans le champ nom -->
     </div>
   </div>
 
