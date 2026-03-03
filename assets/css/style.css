@@ -822,6 +822,7 @@ input, select, textarea { font-family: inherit; }
   max-height: calc(90dvh - 4rem); /* ajustez selon vos besoins */  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--sh-lg);
+  overscroll-behavior: contain;
 }
 .sheet.on { transform: translateY(0); }
 

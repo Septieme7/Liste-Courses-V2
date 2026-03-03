@@ -1425,7 +1425,8 @@ function openSheet(sheetId) {
 }
 
 function closeSheet() {
-  stopBarcodeScan();
+    console.log('closeSheet appelée depuis :', new Error().stack);
+    stopBarcodeScan();
 
   if (openSheetId) {
     const sheet = document.getElementById(openSheetId);
@@ -2456,17 +2457,16 @@ function attachListeners() {
     cropper = null;
   });
 
-// Swipe pour fermer les sheets (ne ferme que si on est tout en haut)
 // Swipe pour fermer les sheets (corrigé avec seuil à 50)
-let touchStartY = 0;
-document.querySelectorAll('.sheet').forEach(sheet => {
-  sheet.addEventListener('touchstart', e => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  sheet.addEventListener('touchend', e => {
-    if (e.changedTouches[0].clientY - touchStartY > 50) closeSheet();
-  }, { passive: true });
-});
+// let touchStartY = 0;
+// document.querySelectorAll('.sheet').forEach(sheet => {
+//   sheet.addEventListener('touchstart', e => {
+//     touchStartY = e.touches[0].clientY;
+//   }, { passive: true });
+//   sheet.addEventListener('touchend', e => {
+//     if (e.changedTouches[0].clientY - touchStartY > 50) closeSheet();
+//   }, { passive: true });
+// });
 
   // Touche Échap
   document.addEventListener('keydown', e => {
