@@ -58,11 +58,11 @@ const EMOJIS = [
   '☢️', '⚛️', '☣️', '💥', '🔥', '🏥', '💉', '🩺', '🩸', '🩹', '🩻', '🦠', '🧬', '🧪', '🧫',
   '🚑', '🚒', '🩼', '🦺',
   // Drapeaux
-  // '🇫🇷', '🇬🇧', '🇺🇸', '🇪🇸', '🇮🇹', '🇩🇪', '🇯🇵', '🇨🇳', '🇧🇷', '🇮🇳',
-  // '🇨🇦', '🇦🇺', '🇳🇿', '🇿🇦', '🇲🇽', '🇦🇷', '🇵🇹', '🇳🇱', '🇧🇪', '🇨🇭',
-  // '🇸🇪', '🇳🇴', '🇩🇰', '🇫🇮', '🇵🇱', '🇨🇿', '🇭🇺', '🇦🇹', '🇬🇷', '🇹🇷',
-  // '🇷🇺', '🇺🇦', '🇮🇱', '🇸🇦', '🇦🇪', '🇻🇳', '🇹🇭', '🇰🇷', '🇵🇭', '🇲🇾',
-  // '🇸🇬', '🇮🇩', '🇵🇰', '🇧🇩', '🇳🇬', '🇰🇪', '🇪🇬', '🇲🇦', '🇨🇱', '🇵🇪',
+  '🇫🇷', '🇬🇧', '🇺🇸', '🇪🇸', '🇮🇹', '🇩🇪', '🇯🇵', '🇨🇳', '🇧🇷', '🇮🇳',
+  '🇨🇦', '🇦🇺', '🇳🇿', '🇿🇦', '🇲🇽', '🇦🇷', '🇵🇹', '🇳🇱', '🇧🇪', '🇨🇭',
+  '🇸🇪', '🇳🇴', '🇩🇰', '🇫🇮', '🇵🇱', '🇨🇿', '🇭🇺', '🇦🇹', '🇬🇷', '🇹🇷',
+  '🇷🇺', '🇺🇦', '🇮🇱', '🇸🇦', '🇦🇪', '🇻🇳', '🇹🇭', '🇰🇷', '🇵🇭', '🇲🇾',
+  '🇸🇬', '🇮🇩', '🇵🇰', '🇧🇩', '🇳🇬', '🇰🇪', '🇪🇬', '🇲🇦', '🇨🇱', '🇵🇪',
   // Complément pour arriver à 300 (environ 30)
   '🧵', '🧶', '👕', '👖', '🧥', '🧦', '👗', '👘', '🥻', '🩳', '👙', '👚', '👛', '👜', '👝',
   '🎒', '👞', '👟', '🥿', '👠', '👡', '👢', '🧢', '🎩', '🧣', '🧤', '🧦', '🧥', '🧦', '🧢',
@@ -156,7 +156,6 @@ let lastListQuery = '';
 
 // Pour le sélecteur d'emoji
 let currentEmojiTarget = null;
-let previousSheetId = null; // Ajout pour revenir au formulaire précédent
 
 /* =============================================================
   3. INITIALISATION (asynchrone)
@@ -165,12 +164,14 @@ async function init() {
   loadData();
   loadCategories();
 
+  // Charger la langue avant de construire l'UI
   if (cfg.lang) {
     await loadLanguage(cfg.lang);
   } else {
     await loadLanguage('fr');
   }
 
+  // Maintenant les traductions sont disponibles
   buildColorGrid('cGrid',  cfg.color || 'blue', onMainColorPick);
   buildColorGrid('lCGrid', null,                onListColorPick);
   buildQuickChips();
@@ -179,12 +180,14 @@ async function init() {
   attachListeners();
   initSwipe();
 
+  // Appliquer la taille d'affichage
   if (cfg.uiSize) {
     document.body.classList.add('size-' + cfg.uiSize);
   } else {
     document.body.classList.add('size-md');
   }
 
+  // Rendu final
   renderAll();
   buildCategorySelect();
 
@@ -192,6 +195,7 @@ async function init() {
     cfg.thresholds = { 50: true, 80: true, 100: true };
   }
 
+  // Sauvegarder l'ordre original des listes
   originalListsOrder = lists.map(l => l.id);
 }
 
@@ -728,6 +732,7 @@ function renderLists() {
         </div>`;
     }).join('');
 
+    // Initialiser Sortable pour le glisser-déposer des listes
     if (typeof Sortable !== 'undefined') {
       if (listsSortable) listsSortable.destroy();
       listsSortable = new Sortable(grid, {
@@ -741,14 +746,16 @@ function renderLists() {
             const listId = card.dataset.listId;
             if (listId) newOrder.push(listId);
           });
+          // Réorganiser le tableau 'lists' selon le nouvel ordre
           const orderedLists = newOrder.map(id => lists.find(l => l.id === id)).filter(l => l);
           lists = orderedLists;
           saveData();
-          renderLists();
+          renderLists(); // re-rend pour mettre à jour les attributs
         }
       });
     }
 
+    // Appliquer le filtre de recherche si actif
     if (listSearchActive && lastListQuery) {
       filterLists(lastListQuery);
     }
@@ -2144,14 +2151,8 @@ function showQRCode() {
   27. NOUVELLES FONCTIONS : SÉLECTEUR D'EMOJI, CHANGER DE LISTE, RECHERCHE
 ============================================================= */
 
-// Ouvrir le sélecteur d'emoji (CORRIGÉ)
+// Ouvrir le sélecteur d'emoji
 function openEmojiPicker(targetId) {
-  // Sauvegarder le sheet actuel
-  previousSheetId = openSheetId;
-  // Fermer le sheet actuel (si ouvert)
-  if (openSheetId) {
-    closeSheet();
-  }
   currentEmojiTarget = targetId;
   const grid = document.getElementById('emojiGrid');
   if (!grid) return;
@@ -2167,15 +2168,10 @@ function openEmojiPicker(targetId) {
       const input = document.getElementById(currentEmojiTarget);
       if (input) {
         input.value = btn.textContent;
+        // Déclencher l'événement input pour que le formulaire détecte le changement
         input.dispatchEvent(new Event('input', { bubbles: true }));
       }
-      // Fermer le sélecteur
-      closeSheet();
-      // Rouvrir le sheet précédent
-      if (previousSheetId) {
-        openSheet(previousSheetId);
-        previousSheetId = null;
-      }
+      closeSheet(); // ferme le sélecteur d'emoji
     });
   });
 
@@ -2263,7 +2259,7 @@ function toggleListSearch() {
 }
 
 /* =============================================================
-  28. ATTACHEMENT DES ÉCOUTEURS
+  28. ATTACHEMENT DES ÉCOUTEURS (avec correction du swipe et fermeture)
 ============================================================= */
 function attachListeners() {
   const getEl = (id) => document.getElementById(id);
@@ -2376,13 +2372,7 @@ function attachListeners() {
   // Nouveaux boutons pour le sélecteur d'emoji
   getEl('btnPickListEmoji')?.addEventListener('click', () => openEmojiPicker('lEmoji'));
   getEl('btnPickCatEmoji')?.addEventListener('click', () => openEmojiPicker('catEmoji'));
-  getEl('btnCancelEmoji')?.addEventListener('click', () => {
-    closeSheet();
-    if (previousSheetId) {
-      openSheet(previousSheetId);
-      previousSheetId = null;
-    }
-  });
+  getEl('btnCancelEmoji')?.addEventListener('click', closeSheet);
 
   // Mes Listes
   getEl('btnExportLists')?.addEventListener('click', showExportSelector);

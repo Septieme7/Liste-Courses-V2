@@ -16,7 +16,6 @@
   <link rel="stylesheet" href="assets/css/style2.css">
   <!-- Cropper.js pour l'édition d'image -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-  <style></style>
 </head>
 <body>
 
@@ -31,12 +30,6 @@
       <img src="assets/images/LogoCourses.png" alt="" class="hlogo" id="headerLogo" aria-hidden="false" role="button" tabindex="0" aria-label="Afficher le logo en grand">
       <h1 id="htitle">Mes Courses</h1>
     </div>
-    <!-- <button class="hbtn pri" id="btnAdd" aria-label="Ajouter un article">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-        <line x1="12" y1="5" x2="12" y2="19"/>
-        <line x1="5" y1="12" x2="19" y2="12"/>
-      </svg> -->
-    </button>
   </header>
 
   <main id="content" role="main">
@@ -176,8 +169,32 @@
           <button class="sact-btn" id="btnShareListsText" aria-label="Partager en texte" style="background: none; padding: 0;">
             <img src="assets/images/iconeTXT.svg" alt="TXT">
           </button>
+          <!-- Nouveau bouton pour changer de liste (SVG inline) -->
+          <button class="sact-btn" id="btnChangeList" aria-label="Changer de liste" style="background: none; padding: 0;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3" y2="6"></line>
+              <line x1="3" y1="12" x2="3" y2="12"></line>
+              <line x1="3" y1="18" x2="3" y2="18"></line>
+              <path d="M17 16l4-4-4-4" stroke-width="2.5"></path>
+            </svg>
+          </button>
         </div>
       </div>
+
+      <!-- Barre de recherche pour les listes -->
+      <div id="listSearchContainer" style="display: none; margin-bottom: 0.75rem;">
+        <div class="sbar" style="margin-bottom: 0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" id="listSearchInput" placeholder="Rechercher une liste..." aria-label="Rechercher une liste" autocomplete="off">
+        </div>
+      </div>
+
       <div class="lgrid" id="lgrid" role="list" aria-label="Listes de courses"></div>
       <div class="empty" id="listsEmpty" style="display:none" aria-live="polite">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -408,6 +425,7 @@
       </div>
     </section>
   </main>
+
   <nav id="nav" role="navigation" aria-label="Navigation principale">
     <button class="tab on" id="t-home" aria-label="Accueil" aria-current="page">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -444,11 +462,19 @@
     </svg>
   </button>
 
-  <!-- Nouveau FAB pour Mes Listes -->
+  <!-- FAB pour Mes Listes -->
   <button id="fab-list" class="fab-secondary" aria-label="Créer une nouvelle liste" style="display: none;">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
       <line x1="12" y1="5" x2="12" y2="19"/>
       <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  </button>
+
+  <!-- Nouveau FAB pour la recherche de listes -->
+  <button id="fab-search" class="fab-search" aria-label="Rechercher une liste" style="display: none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
   </button>
 
@@ -501,7 +527,7 @@
 
       <!-- Bouton de validation (caddie) centré et agrandi -->
       <div style="display: flex; justify-content: center; margin: 0.5rem 0;">
-        <button type="button" id="iSubmit" class="icon-btn" aria-label="Ajouter" style="width: 4rem; height: 4rem; display: flex; /* align-items: center; */ justify-content: center; padding: 0;">
+        <button type="button" id="iSubmit" class="icon-btn" aria-label="Ajouter" style="width: 4rem; height: 4rem; display: flex; justify-content: center; padding: 0;">
           <svg viewBox="0 0 24 24" style="width:50%; height:50%;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="8" cy="20" r="1"></circle>
             <circle cx="18" cy="20" r="1"></circle>
@@ -510,7 +536,6 @@
         </button>
       </div>
 
-      <!-- Le reste du formulaire inchangé -->
       <!-- Mode scan multiple -->
       <div class="fld" style="display: flex; align-items: center; justify-content: space-between;">
         <label for="multiScanToggle" data-i18n="item.multi_scan">Mode scan multiple</label>
@@ -614,8 +639,10 @@
       </div>
       <div class="fld">
         <label for="lEmoji" data-i18n="lists.emoji_label">Emoji</label>
-        <div class="chips" id="eChips" role="group" aria-label="Choisir un emoji"></div>
-        <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" aria-label="Emoji de la liste">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <input type="text" id="lEmoji" value="🛒" maxlength="4" class="emoji-input" style="flex:1;">
+          <button type="button" class="sact-btn" id="btnPickListEmoji" style="padding: 0 0.5rem;">📋</button>
+        </div>
       </div>
       <div class="fld">
         <label data-i18n="lists.color_label">Couleur</label>
@@ -674,12 +701,14 @@
       <div id="categoryForm" style="display: block; margin-top: 1rem;">
         <div class="fld">
           <label for="catName" data-i18n="categories.name">Nom</label>
-            <input type="text" id="catName" data-i18n="categories.placeholder_name" placeholder="Ex: Fruits">
+          <input type="text" id="catName" data-i18n="categories.placeholder_name" placeholder="Ex: Fruits">
         </div>
         <div class="fld">
           <label for="catEmoji" data-i18n="categories.emoji">Emoji</label>
-          <div class="chips" id="catEmojiChips" role="group" aria-label="Choisir un emoji"></div>
-          <input type="text" id="catEmoji" value="🥦" maxlength="4" class="emoji-input">
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="catEmoji" value="🥦" maxlength="4" class="emoji-input" style="flex:1;">
+            <button type="button" class="sact-btn" id="btnPickCatEmoji" style="padding: 0 0.5rem;">📋</button>
+          </div>
         </div>
         <div class="fld">
           <label for="catColor" data-i18n="categories.color">Couleur</label>
@@ -690,6 +719,34 @@
           <button class="sbtn sact-muted" id="btnCancelCategoryEdit" style="flex:1;" data-i18n="common.cancel">Annuler</button>
           <button class="sbtn pri" id="btnSaveCategory" style="flex:1;" data-i18n="common.save">Enregistrer</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet : Sélecteur d'emoji -->
+  <div class="sheet" id="shEmojiPicker" role="dialog" aria-modal="true" aria-labelledby="shEmojiTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shEmojiTitle">Choisissez un emoji</h2>
+    <div class="sbody">
+      <div class="emoji-grid" id="emojiGrid"></div>
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+        <button class="sbtn sact-muted" id="btnCancelEmoji" style="flex:1;">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet : Changer de liste -->
+  <div class="sheet" id="shChangeList" role="dialog" aria-modal="true" aria-labelledby="shChangeListTitle">
+    <div class="shandle" aria-hidden="true"></div>
+    <h2 class="stit" id="shChangeListTitle">Changer de liste</h2>
+    <div class="sbody">
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+        <button class="sbtn sact-muted" id="btnSortAlpha" style="flex:1;">Trier A-Z</button>
+        <button class="sbtn sact-muted" id="btnSortOriginal" style="flex:1;">Ordre initial</button>
+      </div>
+      <div id="changeListContainer" style="max-height: 50vh; overflow-y: auto;"></div>
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+        <button class="sbtn sact-muted" id="btnCancelChangeList" style="flex:1;">Annuler</button>
       </div>
     </div>
   </div>

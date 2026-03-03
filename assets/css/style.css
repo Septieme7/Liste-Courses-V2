@@ -24,6 +24,7 @@
     20.  Snackbar
     21.  Animations & Transitions
     22.  Responsive (≥ 640px)
+    23.  NOUVEAUX STYLES (boutons emoji, fab-search, etc.)
 ============================================================= */
 
 /* =============================================================
@@ -175,28 +176,6 @@ input, select, textarea { font-family: inherit; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-/* .hbtn {
-  width: calc(2.25rem * var(--scale)); 
-  height: calc(2.25rem * var(--scale));
-  border-radius: 50%;
-  background: transparent;
-  color: var(--tx2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background var(--tr), color var(--tr);
-}
-.hbtn:hover,
-.hbtn:focus-visible { background: var(--sur2); }
-
-.hbtn.pri {
-  background: var(--p);
-  color: #fff;
-}
-.hbtn.pri:hover,
-.hbtn.pri:focus-visible { background: var(--pd); } */
 
 #content {
   position: fixed;
@@ -791,14 +770,12 @@ input, select, textarea { font-family: inherit; }
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  /* transition: background var(--tr); */
 }
 .sact-btn img {
   display: block;
   width: calc(5.9375rem * var(--scale)); /* 95px */
   height: calc(2.5rem * var(--scale)); /* 40px */
 }
-/* .sact-btn:hover { background: var(--pd); } */
 .sact-btn.sact-muted { background: var(--sur2); color: var(--tx2); }
 .sact-btn.sact-muted:hover { background: var(--bd); }
 .sact-btn.sact-danger { background: #FEE2E2; color: var(--err); }
@@ -840,8 +817,8 @@ input, select, textarea { font-family: inherit; }
   z-index: 210;
   transform: translateY(100%);
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-  max-height: 90dvh;
-  overflow-y: auto;
+  padding: 0 calc(1rem * var(--scale)) calc(2.5rem * var(--scale));
+  max-height: calc(90dvh - 4rem); /* ajustez selon vos besoins */  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--sh-lg);
 }
@@ -861,8 +838,12 @@ input, select, textarea { font-family: inherit; }
   padding: calc(0.625rem * var(--scale)) calc(1rem * var(--scale)) calc(1rem * var(--scale)); /* 10px 16px 16px */
   color: var(--tx);
 }
-.sbody { padding: 0 calc(1rem * var(--scale)) calc(2.5rem * var(--scale)); } /* 16px 40px */
-
+.sbody { 
+  padding: 0 calc(1rem * var(--scale)) calc(2.5rem * var(--scale));
+  max-height: calc(90dvh - 4rem); /* ajustez selon vos besoins */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .fld { margin-bottom: calc(1rem * var(--scale)); } /* 16px */
 .fld label {
   display: block;
@@ -1164,8 +1145,6 @@ button img {
   height: 1.5em;
 }
 
-
-
 /* =============================================================
   QR code modal
 ============================================================= */
@@ -1192,4 +1171,145 @@ button img {
   border-radius: 1.25rem; /* 20px */
   box-sizing: border-box;
   object-fit: contain;
+}
+
+/* =============================================================
+  23. NOUVEAUX STYLES (ajouts et corrections)
+============================================================= */
+
+/* Sélecteur d'emoji : grille et boutons */
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+.emoji-item {
+  font-size: 2.2rem;
+  line-height: 1.2;
+  padding: 0.3rem 0;
+  background: var(--sur2);
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+}
+.emoji-item:hover,
+.emoji-item:focus-visible {
+  background: var(--bd);
+  outline: 2px solid var(--p);
+}
+
+/* Bouton de recherche dans Mes listes */
+.fab-search {
+  position: fixed;
+  bottom: calc(3.75rem * var(--scale) + 4rem * var(--scale)); /* plus haut que le FAB d'ajout */
+  right: calc(1.125rem * var(--scale));
+  width: calc(2.5rem * var(--scale));
+  height: calc(2.5rem * var(--scale));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--p) 30%, transparent);
+  color: var(--p);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sh);
+  z-index: 89;
+  backdrop-filter: blur(4px);
+  transition: background var(--tr), transform var(--tr);
+}
+.fab-search:hover {
+  background: color-mix(in srgb, var(--p) 50%, transparent);
+  transform: scale(1.05);
+}
+.fab-search:active {
+  transform: scale(0.95);
+}
+
+/* Boutons d'emoji dans les formulaires */
+#btnPickListEmoji,
+#btnPickCatEmoji {
+  background: var(--sur2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-sm);
+  padding: 0.5rem !important;
+  font-size: 1.2rem;
+  line-height: 1;
+  min-width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+#btnPickListEmoji:hover,
+#btnPickCatEmoji:hover {
+  background: var(--bd);
+  border-color: var(--p);
+}
+
+/* Bouton Changer de liste */
+#btnChangeList {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tx);
+}
+#btnChangeList svg {
+  width: 1.5rem;
+  height: 1.5rem;
+
+}
+#btnChangeList:hover {
+  opacity: 0.8;
+}
+
+/* Réglages : alignement des sélecteurs */
+#v-settings .srow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+#v-settings .ssel {
+  width: auto;
+  min-width: 120px;
+  margin-left: 1rem;
+}
+@media (max-width: 480px) {
+  #v-settings .srow {
+    flex-direction: column;
+    align-items: flex-end; /* aligne le select à droite */
+  }
+  #v-settings .ssel {
+    margin-left: 0;
+    width: 100%;
+    max-width: none;
+  }
+  #v-settings .slbl {
+    align-self: flex-start;
+    width: 100%;
+  }
+}
+
+/* Liste de sélection dans changer de liste */
+#changeListContainer .srow {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+#changeListContainer .srow:hover {
+  background: var(--sur2);
 }
