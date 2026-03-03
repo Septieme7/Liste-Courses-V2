@@ -706,7 +706,8 @@ input, select, textarea { font-family: inherit; }
   font-size: calc(1.75rem * var(--scale)); /* 28px */
 }
 .linfo    { padding: calc(0.625rem * var(--scale)) calc(0.75rem * var(--scale)) calc(0.25rem * var(--scale)); } /* 10px 12px 4px */
-.lname    { font-size: calc(0.875rem * var(--scale)); font-weight: 600; margin-bottom: calc(0.1875rem * var(--scale)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); } /* 14px 3px */
+.lname    { 
+  font-size: calc(0.875rem * var(--scale)); font-weight: 600; margin-bottom: calc(0.1875rem * var(--scale)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx); } /* 14px 3px */
 .lstats   { font-size: calc(0.6875rem * var(--scale)); color: var(--tx2); } /* 11px */
 
 .lprog  { height: calc(0.1875rem * var(--scale)); background: var(--sur2); margin: calc(0.4375rem * var(--scale)) 0 calc(0.375rem * var(--scale)); border-radius: 2px; overflow: hidden; } /* 3px 7px 6px */
@@ -904,6 +905,7 @@ input, select, textarea { font-family: inherit; }
   padding: calc(0.5rem * var(--scale)) !important; /* 8px */
   margin-top: calc(0.375rem * var(--scale)); /* 6px */
   border-radius: calc(0.625rem * var(--scale)) !important; /* 10px */
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif !important;
 }
 
 .sbtn {
@@ -1180,7 +1182,7 @@ button img {
 /* Sélecteur d'emoji : grille et boutons */
 .emoji-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
   max-height: 50vh;
   overflow-y: auto;
@@ -1198,13 +1200,19 @@ button img {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif !important;
 }
 .emoji-item:hover,
 .emoji-item:focus-visible {
   background: var(--bd);
   outline: 2px solid var(--p);
 }
+
+/* #emojiGrid .emoji-item,
+#lEmoji,
+#catEmoji {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', 'EmojiOne Color', sans-serif;
+} */
 
 /* Bouton de recherche dans Mes listes */
 .fab-search {
