@@ -1288,7 +1288,7 @@ button img {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 }
 #v-settings .ssel {
   width: 35%;
