@@ -3,6 +3,17 @@ Euh Comment Ss7.txt
 Updates Liste de courses V2.md
 Cahier des charge.txt
 
+# Dossiers à ignorer
+assets/css/Minimises/
+assets/css/originoxxx/
+
+assets/images/Minimises/
+assets/images/originoxxx/
+
+assets/js/originoxxx/
+assets/js/trafikk/
+assets/js/minimises/
+
 # Fichiers de configuration
 .env
 .env.local
@@ -22,10 +33,6 @@ out/
 *.exe
 *.dmg
 *.zip
-originoxxx/
-minimises/
-Minimises/
-trafikk/
 
 # Fichiers système
 .DS_Store
