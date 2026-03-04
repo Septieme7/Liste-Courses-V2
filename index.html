@@ -12,10 +12,13 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
   <link rel="manifest" href="assets/manifest/site.webmanifest">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/style2.css">
+  <link rel="preload" href="assets/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/style.css"></noscript>
+  <link rel="preload" href="assets/css/style2.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/style2.css"></noscript>
   <!-- Cropper.js pour l'édition d'image -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"></noscript>
 </head>
 <body>
 
@@ -27,7 +30,10 @@
       </svg>
     </button>
     <div class="htitle-wrap">
-      <img src="assets/images/LogoCourses.png" alt="" class="hlogo" id="headerLogo" aria-hidden="false" role="button" tabindex="0" aria-label="Afficher le logo en grand">
+      <picture>
+        <source srcset="assets/images/LogoCourses.webp" type="image/webp">
+        <img src="assets/images/LogoCourses.png" alt="Courses Malin" class="hlogo" id="headerLogo" role="button" tabindex="0" aria-label="Afficher le logo en grand">
+      </picture>
       <h1 id="htitle">Mes Courses</h1>
     </div>
   </header>
@@ -53,7 +59,7 @@
             <div class="bst-val" id="remV" aria-live="polite">50.00 €</div>
           </div>
         </div>
-        <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbarWrap">
+          <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbarWrap" aria-label="Progression du budget">
           <div class="pfill" id="pfill" style="width:0%"></div>
         </div>
         <div class="balert" id="balert" role="alert" aria-live="assertive">
@@ -418,7 +424,10 @@
           <p class="stitle" data-i18n="help.share_app">Partager l'application</p>
           <div style="text-align: center;">
             <!-- Remplacement par l'image QRcode7.png -->
-            <img id="helpQrCode" src="assets/images/QRcode7.png" alt="QR Code de l'application" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; display: block;">
+            <picture>
+              <source srcset="assets/images/QRcode7.webp" type="image/webp">
+              <img id="helpQrCode" src="assets/images/QRcode7.png" alt="QR Code de l'application" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; display: block;">
+            </picture>
             <p data-i18n="help.scan_qr">Scannez ce QR code pour accéder à l'application</p>
           </div>
         </div>
@@ -759,7 +768,7 @@
   <div id="snk" role="status" aria-live="polite"></div>
 
   <!-- Bibliothèques externes -->
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <!-- <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
@@ -771,5 +780,13 @@
   <script src="assets/js/speech.js"></script>
   <script src="assets/js/geolocation.js"></script>
   <script src="assets/js/script.js"></script>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>

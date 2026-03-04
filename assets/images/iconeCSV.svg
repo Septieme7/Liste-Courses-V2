@@ -1,13 +1,1 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <path d="M100 40h220l100 100v312c0 11-9 20-20 20H100c-11 0-20-9-20-20V60c0-11 9-20 20-20z" fill="#FFCC66"/>
-  <path d="M320 40v80c0 11 9 20 20 20h80L320 40z" fill="#1A1A1A" fill-opacity="0.8"/>
-  <g fill="#1A1A1A" fill-opacity="0.3">
-    <rect x="120" y="80" width="160" height="8" rx="4"/>
-    <rect x="120" y="105" width="160" height="8" rx="4"/>
-    <rect x="120" y="130" width="160" height="8" rx="4"/>
-  </g>
-  <rect x="26" y="240" width="460" height="150" rx="20" ry="20" fill="#1A1A1A"/>
-  <text x="256" y="345" font-family="Arial, sans-serif" font-weight="900" font-size="110" text-anchor="middle" fill="white">CSV</text>
-  <rect x="180" y="430" width="152" height="6" rx="3" fill="#1A1A1A"/>
-  <rect x="145" y="445" width="222" height="3" rx="1.5" fill="#1A1A1A"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="#fc6" d="M100 40h220l100 100v312c0 11-9 20-20 20H100c-11 0-20-9-20-20V60c0-11 9-20 20-20"/><path fill="#1a1a1a" fill-opacity=".8" d="M320 40v80c0 11 9 20 20 20h80z"/><g fill="#1a1a1a" fill-opacity=".3"><rect width="160" height="8" x="120" y="80" rx="4"/><rect width="160" height="8" x="120" y="105" rx="4"/><rect width="160" height="8" x="120" y="130" rx="4"/></g><rect width="460" height="150" x="26" y="240" fill="#1a1a1a" rx="20" ry="20"/><text x="256" y="345" fill="#fff" font-family="Arial, sans-serif" font-size="110" font-weight="900" text-anchor="middle">CSV</text><rect width="152" height="6" x="180" y="430" fill="#1a1a1a" rx="3"/><rect width="222" height="3" x="145" y="445" fill="#1a1a1a" rx="1.5"/></svg>
