@@ -1284,13 +1284,14 @@ button img {
 
 /* Réglages : alignement des sélecteurs */
 #v-settings .srow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 #v-settings .ssel {
-  width: auto;
+  width: 35%;
   min-width: 120px;
   margin-left: 1rem;
 }
@@ -1301,7 +1302,7 @@ button img {
   }
   #v-settings .ssel {
     margin-left: 0;
-    width: 100%;
+    width: 35%;
     max-width: none;
   }
   #v-settings .slbl {
