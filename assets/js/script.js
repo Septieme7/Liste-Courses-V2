@@ -158,6 +158,10 @@ let lastListQuery = '';
 let currentEmojiTarget = null;
 let previousSheetId = null; // Ajout pour revenir au formulaire précédent
 
+// --- Nouveaux gestionnaires pour le clavier virtuel ---
+let visualViewportHandler = null;
+let currentSheetId = null;
+
 /* =============================================================
   3. INITIALISATION (asynchrone)
 ============================================================= */
@@ -1403,8 +1407,26 @@ function playFallbackBeep() {
 }
 
 /* =============================================================
-  18. OVERLAY & SHEETS (avec correction aria-hidden)
+  18. OVERLAY & SHEETS (avec correction aria-hidden et gestion clavier)
 ============================================================= */
+
+// Nouvelle fonction pour ajuster le padding-bottom du sheet en fonction du clavier
+function handleVisualViewportResize() {
+  if (!currentSheetId) return;
+  const sheet = document.getElementById(currentSheetId);
+  if (!sheet) return;
+
+  const vv = window.visualViewport;
+  if (!vv) return;
+
+  const windowHeight = window.innerHeight;
+  const visibleHeight = vv.height;
+  const keyboardHeight = windowHeight - visibleHeight;
+
+  // Appliquer un padding-bottom égal à la hauteur du clavier (si clavier ouvert)
+  sheet.style.paddingBottom = keyboardHeight > 0 ? keyboardHeight + 'px' : '';
+}
+
 function openSheet(sheetId) {
   // Si un autre sheet est déjà ouvert, on le ferme d'abord
   if (openSheetId && openSheetId !== sheetId) {
@@ -1415,6 +1437,8 @@ function openSheet(sheetId) {
     }
   }
   openSheetId = sheetId;
+  currentSheetId = sheetId; // pour le gestionnaire de clavier
+
   const ovl = document.getElementById('ovl');
   if (ovl) ovl.classList.add('on');
   const sheet = document.getElementById(sheetId);
@@ -1422,11 +1446,29 @@ function openSheet(sheetId) {
     sheet.classList.add('on');
     sheet.setAttribute('aria-hidden', 'false');
   }
+
+  // Attacher l'écouteur de redimensionnement du viewport (clavier)
+  if (window.visualViewport && !visualViewportHandler) {
+    visualViewportHandler = handleVisualViewportResize;
+    window.visualViewport.addEventListener('resize', visualViewportHandler);
+    // Déclencher une première fois pour initialiser le padding
+    handleVisualViewportResize();
+  }
 }
 
 function closeSheet() {
-    console.log('closeSheet appelée depuis :', new Error().stack);
-    stopBarcodeScan();
+  console.log('closeSheet appelée depuis :', new Error().stack);
+  stopBarcodeScan();
+
+  // Retirer l'écouteur du clavier
+  if (window.visualViewport && visualViewportHandler) {
+    window.visualViewport.removeEventListener('resize', visualViewportHandler);
+    visualViewportHandler = null;
+  }
+  // Remettre le padding à zéro sur tous les sheets
+  document.querySelectorAll('.sheet').forEach(sheet => {
+    sheet.style.paddingBottom = '';
+  });
 
   if (openSheetId) {
     const sheet = document.getElementById(openSheetId);
@@ -1441,6 +1483,7 @@ function closeSheet() {
   const ovl = document.getElementById('ovl');
   if (ovl) ovl.classList.remove('on');
   openSheetId = null;
+  currentSheetId = null;
 }
 
 // Fonction de fermeture forcée (utilisée quand openSheetId pourrait être perdu)
@@ -1452,7 +1495,16 @@ function forceCloseSheet(sheetId) {
     sheet.setAttribute('aria-hidden', 'true');
   }
   if (ovl) ovl.classList.remove('on');
-  if (openSheetId === sheetId) openSheetId = null;
+  if (openSheetId === sheetId) {
+    openSheetId = null;
+    currentSheetId = null;
+    // Retirer l'écouteur du clavier
+    if (window.visualViewport && visualViewportHandler) {
+      window.visualViewport.removeEventListener('resize', visualViewportHandler);
+      visualViewportHandler = null;
+    }
+    document.querySelectorAll('.sheet').forEach(s => s.style.paddingBottom = '');
+  }
 }
 
 /* =============================================================

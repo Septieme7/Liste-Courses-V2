@@ -757,6 +757,13 @@ input, select, textarea { font-family: inherit; }
 .srow:last-child { border-bottom: none; }
 .srow-col { flex-direction: column; align-items: flex-start; gap: calc(0.625rem * var(--scale)); } /* 10px */
 
+/* --- Correction alignement mode sombre (toggle sur la même ligne) --- */
+#v-settings .srow:has(button.tog) {
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .slbl { font-size: calc(0.9375rem * var(--scale)); color: var(--tx); } /* 15px */
 .sbl-danger { color: var(--err); }
 
@@ -819,7 +826,8 @@ input, select, textarea { font-family: inherit; }
   transform: translateY(100%);
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   padding: 0 calc(1rem * var(--scale)) calc(2.5rem * var(--scale));
-  max-height: calc(90dvh - 4rem); /* ajustez selon vos besoins */  overflow-y: auto;
+  max-height: calc(90dvh - 4rem); /* ajustez selon vos besoins */
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--sh-lg);
   overscroll-behavior: contain;
