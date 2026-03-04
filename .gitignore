@@ -22,6 +22,10 @@ out/
 *.exe
 *.dmg
 *.zip
+originoxxx/
+minimises/
+Minimises/
+trafikk/
 
 # Fichiers système
 .DS_Store

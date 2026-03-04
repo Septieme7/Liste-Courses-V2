@@ -1,16 +1,16 @@
 /* =============================================================
-   COURSES MALIN · style.css
-   Style mobile-first – HTML5 – Dark Mode – Thème dynamique
-   Structure :
-     1.  Variables CSS (tokens de design)
-     2.  Reset & Base
-     3.  Layout principal (header, content, nav)
-     4.  Navigation bottom tab bar
-     5.  Bouton flottant FAB
-     6.  Vues (home / lists / settings)
-     7.  Bloc Budget
-     8.  Indicateur liste active
-     9.  Carte du magasin
+  COURSES MALIN · style.css
+  Style mobile-first – HTML5 – Dark Mode – Thème dynamique
+  Structure :
+    1.  Variables CSS (tokens de design)
+    2.  Reset & Base
+    3.  Layout principal (header, content, nav)
+    4.  Navigation bottom tab bar
+    5.  Bouton flottant FAB
+    6.  Vues (home / lists / settings)
+    7.  Bloc Budget
+    8.  Indicateur liste active
+    9.  Carte du magasin
     10.  Barre de recherche
     11.  En-têtes de catégories
     12.  Lignes d'articles
@@ -28,7 +28,7 @@
 ============================================================= */
 
 /* =============================================================
-   1. VARIABLES CSS
+  1. VARIABLES CSS
 ============================================================= */
 :root {
   /* --- Couleur primaire (thème "blue" par défaut) --- */
