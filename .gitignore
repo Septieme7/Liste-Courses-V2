@@ -11,8 +11,10 @@ assets/images/Minimises/
 assets/images/originoxxx/
 
 assets/js/originoxxx/
+assets/js/originoxxx
 assets/js/trafikk/
 assets/js/minimises/
+
 
 # Fichiers de configuration
 .env

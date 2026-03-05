@@ -326,5 +326,8 @@
     "E": "Som E",
     "F": "Som F",
     "G": "Som G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Escolha um emoji"
+}
 }

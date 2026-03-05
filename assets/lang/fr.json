@@ -326,5 +326,8 @@
     "E": "Son E",
     "F": "Son F",
     "G": "Son G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Choisissez un emoji"
+}
 }

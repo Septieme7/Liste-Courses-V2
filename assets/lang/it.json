@@ -326,5 +326,8 @@
     "E": "Suono E",
     "F": "Suono F",
     "G": "Suono G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Scegli un emoji"
+}
 }

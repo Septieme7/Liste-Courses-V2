@@ -326,5 +326,8 @@
     "E": "Swara E",
     "F": "Swara F",
     "G": "Swara G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Pilih emoji"
+}
 }

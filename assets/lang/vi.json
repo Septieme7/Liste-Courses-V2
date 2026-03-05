@@ -326,5 +326,8 @@
     "E": "Âm thanh E",
     "F": "Âm thanh F",
     "G": "Âm thanh G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Chọn một biểu tượng cảm xúc"
+}
 }

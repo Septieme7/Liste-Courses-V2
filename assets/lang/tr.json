@@ -326,5 +326,8 @@
     "E": "Ses E",
     "F": "Ses F",
     "G": "Ses G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Bir emoji seçin"
+}
 }

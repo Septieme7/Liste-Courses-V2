@@ -326,5 +326,8 @@
     "E": "Ton E",
     "F": "Ton F",
     "G": "Ton G"
-  }
+  },
+  "emoji_picker": {
+  "title": "Wähle ein Emoji"
+}
 }
