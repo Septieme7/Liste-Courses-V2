@@ -29,14 +29,14 @@ const EMOJIS = [
   // Fromages et desserts (25)
   '🧀', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯',
   // Boulangerie et pains (15)
-  '🍞', '🥖', '🥨', '🥐', '🥯', '🍚', '🍙', '🍘', '🍥', '🥠', '🥟', '🍛', '🍜', '🍝', '🍲',
+  '🍞', '🥖', '🥨', '🥐', '🥯', '🍚', '🍙', '🍘', '🍥', '🥠', '🥟', '🍲',
   // Conserves, épicerie (20)
-  '🥫', '🍱', '🍛', '🍜', '🍝', '🍢', '🥡', '🍦', '🍧',
+  '🥫', '🍱', '🍛', '🍜', '🍝', '🍢', '🥡',
   // Boissons diverses (20)
   '🧃', '🥤', '🧋', '🥛', '☕', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃',
   '🧉', '🧊', '🧋', '🍼',
   // Hygiène et soins (25)
-  '🧴', '🧼', '🧽', '🧹', '🧺', '🧻', '🚽', '🚿', '🛁', '🪥', '🪒', '🧴', '💄', '💅', '👄',
+  '🧴', '🚽', '🚿', '🛁', '💄', '💅', '👄',
   '👀', '👂', '👃', '🦷', '👅', '🧠', '🫀', '🫁', '🦴', '👤',
   // Ménage et maison (30)
   '🧹', '🧺', '🧻', '🧽', '🧼', '🪣', '🪠', '🧴', '🪥', '🪒', '🔪', '🍴', '🥄', '🥢', '🍽️',
@@ -298,7 +298,7 @@ function openCategoryEditor(index) {
   
   if (index === -1) {
     document.getElementById('catName').value = '';
-    document.getElementById('catEmoji').value = '🥦';
+    document.getElementById('catEmoji').value = '🛍️';
     document.getElementById('catColor').value = '#10B981';
   } else {
     const cat = customCategories[index];
@@ -386,7 +386,7 @@ function saveCategory() {
     showSnack('Le nom est requis');
     return;
   }
-  const emoji = document.getElementById('catEmoji').value || '🥦';
+  const emoji = document.getElementById('catEmoji').value || '🛍️';
   const color = document.getElementById('catColor').value || '#10B981';
   
   if (editingCategoryIndex === -1) {
@@ -590,7 +590,7 @@ function renderHome() {
   const aListName = document.getElementById('aListName');
   if (aListName) aListName.textContent = list?.name || t('home.no_list');
   const aListIco = document.getElementById('aListIco');
-  if (aListIco) aListIco.textContent = list?.emoji || '🛒';
+  if (aListIco) aListIco.textContent = list?.emoji || '☕';
 
   const mapContainer = document.getElementById('listMapContainer');
   const mapThumb = document.getElementById('mapThumb');
@@ -1146,7 +1146,7 @@ function openAddList() {
   const lName = document.getElementById('lName');
   if (lName) lName.value = '';
   const lEmoji = document.getElementById('lEmoji');
-  if (lEmoji) lEmoji.value = '🛒';
+  if (lEmoji) lEmoji.value = '☕';
   const lSubmit = document.getElementById('lSubmit');
   if (lSubmit) lSubmit.disabled = true;
 
@@ -1283,7 +1283,7 @@ function buildTxtContent(list) {
   const date = new Date().toLocaleDateString(cfg.lang || 'fr', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   let txt = '';
-  txt += `${list.emoji || '🛒'}  ${list.name.toUpperCase()}\n`;
+  txt += `${list.emoji || '☕'}  ${list.name.toUpperCase()}\n`;
   txt += `${sep}\n`;
   txt += `📅 ${date}\n\n`;
 

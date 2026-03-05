@@ -1036,7 +1036,12 @@ sub {
 }
 .tog.on::after { transform: translateX(calc(1.25rem * var(--scale))); } /* 20px */
 
-.cgrid { display: flex; gap: calc(0.5rem * var(--scale)); flex-wrap: wrap; } /* 8px */
+.cgrid { 
+  display: flex;
+  gap: calc(0.2rem * var(--scale));
+  flex-direction: row;
+  justify-content: space-between
+} /* 8px */
 .csw {
   width: calc(2rem * var(--scale)); /* 32px */
   height: calc(2rem * var(--scale));
@@ -1343,7 +1348,7 @@ button img {
 }
 @media (max-width: 480px) {
   #v-settings .srow {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-end; /* aligne le select à droite */
   }
   #v-settings .ssel {
