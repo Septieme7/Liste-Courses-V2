@@ -7,6 +7,20 @@
   <meta name="theme-color" content="#3B82F6">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  /* Masquer toutes les sheets dès le départ (évite l'affichage temporaire) */
+  .sheet {
+    transform: translateY(100%);
+  }
+  /* Définir la variable d'échelle en fonction de la classe présente sur <body> */
+  body.size-xs { --scale: 0.8; }
+  body.size-sm { --scale: 0.9; }
+  body.size-md { --scale: 1; }
+  body.size-lg { --scale: 1.2; }
+  body.size-xl { --scale: 1.5; }
+  /* Si aucune classe n'est encore appliquée, valeur par défaut */
+  body { --scale: 1; }
+  </style>
   <title>Courses Malin · Liste & Budget</title>
 
   <!-- Préconnexion aux CDN (améliore le temps de chargement) -->
@@ -20,10 +34,14 @@
   <link rel="manifest" href="assets/manifest/site.webmanifest?v=2.8">
 
   <!-- Styles (versionnés) -->
-  <link rel="preload" href="assets/css/style.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/style.css?v=2.8"></noscript>
-  <link rel="preload" href="assets/css/style2.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/style2.css?v=2.8"></noscript>
+  <!-- <link rel="preload" href="assets/css/style.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'"> -->
+  <!-- <noscript><link rel="stylesheet" href="assets/css/style.css?v=2.8"></noscript> -->
+  <!-- <link rel="preload" href="assets/css/style2.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'"> -->
+  <!-- <noscript><link rel="stylesheet" href="assets/css/style2.css?v=2.8"></noscript> -->
+
+    <!-- Styles (NON versionnés) -->
+  <link rel="stylesheet" href="assets/css/style.css?v=2.8">
+  <link rel="stylesheet" href="assets/css/style2.css?v=2.8">
 
   <!-- Cropper.js pour l'édition d'image -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
