@@ -127,7 +127,7 @@ body {
 
 a   { color: var(--p); text-decoration: none; }
 ul  { list-style: none; }
-button { font-family: inherit; cursor: pointer; background: none; border: none; }
+button { align-items: center; color: var(--tx); font-family: inherit; cursor: pointer; background: none; border: none; }
 input, select, textarea { font-family: inherit; }
 
 /* =============================================================

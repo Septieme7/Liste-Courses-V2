@@ -76,7 +76,7 @@
 ### 📱 Partage amélioré
 - **Partagez votre liste** sous forme de texte lisible (prêt à être collé dans un message) via l'API Web Share
 - Si le partage n'est pas disponible, le texte est copié dans le presse-papiers
-- En dernier recours, un fichier `.txt` est téléchargé
+- En dernier recours, un fichier- `.txt` est téléchargé
 - **Partage en texte depuis Mes Listes** : sélectionnez une ou plusieurs listes et générez un fichier `.txt` contenant leur contenu formaté
 
 ### 🎨 Personnalisation
