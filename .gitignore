@@ -14,7 +14,7 @@ assets/js/originoxxx/
 assets/js/originoxxx
 assets/js/trafikk/
 assets/js/minimises/
-
+/main/assets/js/trafikk
 
 # Fichiers de configuration
 .env
