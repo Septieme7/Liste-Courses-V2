@@ -25,6 +25,17 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+    caches.match(event.request).then(cached => {
+      const fetchPromise = fetch(event.request)
+        .then(response => {
+          // Mettre en cache avec une durée longue
+          const responseClone = response.clone();
+          caches.open('courses-malin-v1').then(cache => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        });
+      return cached || fetchPromise;
+    })
   );
 });

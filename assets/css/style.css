@@ -942,7 +942,7 @@ sub {
   appearance: textfield;
 }
 .emoji-input {
-  width: calc(13rem * var(--scale)) !important; /* 64px */
+  width: calc(21rem * var(--scale)) !important; /* 64px */
   text-align: center !important;
   font-size: calc(1.375rem * var(--scale)) !important; /* 22px */
   padding: calc(0.5rem * var(--scale)) !important; /* 8px */
