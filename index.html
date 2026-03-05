@@ -8,14 +8,23 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Courses Malin · Liste & Budget</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
-  <link rel="manifest" href="assets/manifest/site.webmanifest">
-  <link rel="preload" href="assets/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/style.css"></noscript>
-  <link rel="preload" href="assets/css/style2.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/style2.css"></noscript>
+
+  <!-- Préconnexion aux CDN (améliore le temps de chargement) -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!-- Icônes et manifeste -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png?v=2.8">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png?v=2.8">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png?v=2.8">
+  <link rel="manifest" href="assets/manifest/site.webmanifest?v=2.8">
+
+  <!-- Styles (versionnés) -->
+  <link rel="preload" href="assets/css/style.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/style.css?v=2.8"></noscript>
+  <link rel="preload" href="assets/css/style2.css?v=2.8" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/style2.css?v=2.8"></noscript>
+
   <!-- Cropper.js pour l'édition d'image -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"></noscript>
@@ -31,8 +40,9 @@
     </button>
     <div class="htitle-wrap">
       <picture>
-        <source srcset="assets/images/LogoCourses.webp" type="image/webp">
-        <img src="assets/images/LogoCourses.png" alt="Courses Malin" class="hlogo" id="headerLogo" role="button" tabindex="0" aria-label="Afficher le logo en grand">
+        <source srcset="assets/images/LogoCourses.webp?v=2.8" type="image/webp">
+        <!-- Dimensions ajoutées pour éviter le CLS -->
+        <img src="assets/images/LogoCourses.png?v=2.8" alt="Courses Malin" class="hlogo" id="headerLogo" width="26" height="23" role="button" tabindex="0" aria-label="Afficher le logo en grand">
       </picture>
       <h1 id="htitle">Mes Courses</h1>
     </div>
@@ -167,13 +177,13 @@
       <div class="vhdr" style="display: flex;justify-content: space-between;align-items: center;">
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <button class="sact-btn" id="btnExportLists" aria-label="Exporter en CSV" style="background: none; padding: 0;">
-            <img src="assets/images/iconeCSV.svg" alt="CSV">
+            <img src="assets/images/iconeCSV.svg?v=2.8" alt="CSV" width="95" height="40">
           </button>
           <button class="sact-btn" id="btnImportLists" aria-label="Importer un fichier" style="background: none; padding: 0;">
-            <img src="assets/images/iconeIMPORT.svg" alt="Importer">
+            <img src="assets/images/iconeIMPORT.svg?v=2.8" alt="Importer" width="95" height="40">
           </button>
           <button class="sact-btn" id="btnShareListsText" aria-label="Partager en texte" style="background: none; padding: 0;">
-            <img src="assets/images/iconeTXT.svg" alt="TXT">
+            <img src="assets/images/iconeTXT.svg?v=2.8" alt="TXT" width="95" height="40">
           </button>
           <!-- Nouveau bouton pour changer de liste (SVG inline) -->
           <button class="sact-btn" id="btnChangeList" aria-label="Changer de liste" style="background: none; padding: 0;">
@@ -379,7 +389,7 @@
             <li data-i18n="help.feature_budget">💰 Suivi du budget avec alertes personnalisables</li>
             <li data-i18n="help.feature_map">💳 Carte du magasin associée à chaque liste</li>
             <li>
-              <img src="assets/images/iconeCSV.svg" alt="CSV" style="width:1.2em; height:1.2em; vertical-align:middle;">
+              <img src="assets/images/iconeCSV.svg?v=2.8" alt="CSV" style="width:1.2em; height:1.2em; vertical-align:middle;" width="24" height="24">
               <span data-i18n="help.feature_export"> Export/Import CSV avec fusion intelligente</span>
             </li>
             <li data-i18n="help.feature_custom">🎨 Personnalisation des thèmes, de la langue et de la taille d'affichage</li>
@@ -425,8 +435,8 @@
           <div style="text-align: center;">
             <!-- Remplacement par l'image QRcode7.png -->
             <picture>
-              <source srcset="assets/images/QRcode7.webp" type="image/webp">
-              <img id="helpQrCode" src="assets/images/QRcode7.png" alt="QR Code de l'application" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; display: block;">
+              <source srcset="assets/images/QRcode7.webp?v=2.8" type="image/webp">
+              <img id="helpQrCode" src="assets/images/QRcode7.png?v=2.8" alt="QR Code de l'application" style="margin: 0.625rem auto; width: 12.5rem; height: 12.5rem; display: block;" width="200" height="200">
             </picture>
             <p data-i18n="help.scan_qr">Scannez ce QR code pour accéder à l'application</p>
           </div>
@@ -494,9 +504,9 @@
     <img id="qrImage" src="" alt="QR Code">
   </div>
 
-  <!-- ================= SHEETS MODIFIÉES ================= -->
+  <!-- ================= SHEETS ================= -->
 
-  <!-- Bottom Sheet : Ajouter / Modifier un article (NOUVEL ORDRE) -->
+  <!-- Bottom Sheet : Ajouter / Modifier un article -->
   <div class="sheet" id="shItem" role="dialog" aria-modal="true" aria-labelledby="shItemTitle">
     <div class="shandle" aria-hidden="true"></div>
     <h2 class="stit" id="shItemTitle">Ajouter un article</h2>
@@ -543,7 +553,7 @@
         <button class="tog" id="multiScanToggle" role="switch" aria-checked="false"></button>
       </div>
 
-      <!-- Bouton de validation (caddie) – déplacé juste après le toggle -->
+      <!-- Bouton de validation (caddie) -->
       <div style="display: flex; justify-content: center; margin: 1rem 0 0.5rem;">
         <button type="button" id="iSubmit" class="icon-btn" aria-label="Ajouter" style="width: 6rem; height: 6rem; display: flex; justify-content: center; padding: 0;">
           <svg viewBox="0 0 24 24" style="width:50%; height:50%;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -630,7 +640,7 @@
         <textarea id="iNote" data-i18n="item.note_placeholder" placeholder="Précisions, marque préférée…"></textarea>
       </div>
 
-      <!-- Conteneur pour la caméra (toujours en dernier) -->
+      <!-- Conteneur pour la caméra -->
       <div id="scannerContainer" style="display: none; margin-top: 0.625rem; border-radius: var(--r-sm); overflow: hidden; background: #000; min-height: 15.625rem;">
         <div id="qr-reader" style="width: 100%;"></div>
         <div style="display: flex; gap: 0.5rem; padding: 0.5rem; justify-content: center;">
@@ -649,7 +659,7 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet : Créer une liste (MODIFIÉ : emoji à droite) -->
+  <!-- Bottom Sheet : Créer une liste -->
   <div class="sheet" id="shList" role="dialog" aria-modal="true" aria-labelledby="shListTitle">
     <div class="shandle" aria-hidden="true"></div>
     <h2 class="stit" id="shListTitle" data-i18n="lists.new_list_title">Nouvelle liste</h2>
@@ -680,7 +690,8 @@
     <h2 class="stit" id="shImageTitle">Éditer l'image</h2>
     <div class="sbody">
       <div style="max-height: 50vh; overflow: hidden; margin-bottom: 1rem;">
-        <img id="imageToEdit" src="" style="max-width: 100%; display: block;">
+        <!-- Dimensions explicites ajoutées pour éviter le CLS -->
+        <img id="imageToEdit" src="" style="max-width: 100%; display: block;" width="400" height="300">
       </div>
       <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap;">
         <button class="sact-btn sact-muted" id="btnRotateLeft" aria-label="Tourner à gauche">↺ 90°</button>
@@ -744,7 +755,7 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet : Sélecteur d'emoji (MODIFIÉ : i18n ajoutés) -->
+  <!-- Bottom Sheet : Sélecteur d'emoji -->
   <div class="sheet" id="shEmojiPicker" role="dialog" aria-modal="true" aria-labelledby="shEmojiTitle">
     <div class="shandle" aria-hidden="true"></div>
     <h2 class="stit" id="shEmojiTitle" data-i18n="emoji_picker.title">Choisissez un emoji</h2>
@@ -774,29 +785,28 @@
 
   <!-- Modal pour afficher le logo ou la carte en grand -->
   <div id="logoModal" class="modal" onclick="closeLogoModal()" role="dialog" aria-modal="true" aria-label="Logo agrandi" style="display: none;">
-    <img src="assets/images/LogoCourses.png" alt="Logo Courses Malin">
+    <img src="assets/images/LogoCourses.png?v=2.8" alt="Logo Courses Malin" width="400" height="400">
   </div>
 
   <div id="snk" role="status" aria-live="polite"></div>
 
   <!-- Bibliothèques externes -->
-  <!-- <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 
-  <!-- Nouveaux scripts -->
-  <script src="assets/js/i18n.js"></script>
-  <script src="assets/js/units.js"></script>
-  <script src="assets/js/dragdrop.js"></script>
-  <script src="assets/js/speech.js"></script>
-  <script src="assets/js/geolocation.js"></script>
-  <script src="assets/js/script.js"></script>
+  <!-- Scripts internes (versionnés) -->
+  <script src="assets/js/i18n.js?v=2.8"></script>
+  <script src="assets/js/units.js?v=2.8"></script>
+  <script src="assets/js/dragdrop.js?v=2.8"></script>
+  <script src="assets/js/speech.js?v=2.8"></script>
+  <script src="assets/js/geolocation.js?v=2.8"></script>
+  <script src="assets/js/script.js?v=2.8"></script>
 
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('/sw.js?v=2.8').catch(err => console.log('SW registration failed:', err));
     });
   }
 </script>

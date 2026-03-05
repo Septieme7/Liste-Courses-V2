@@ -212,7 +212,7 @@ input, select, textarea { font-family: inherit; }
   gap: calc(0.1875rem * var(--scale)); /* 3px */
   border: none;
   background: transparent;
-  color: var(--tx3);
+  color: var(--tx2);  /* Modifié : était --tx3, passe à --tx2 pour meilleur contraste */
   font-size: calc(0.625rem * var(--scale)); /* 10px */
   font-weight: 500;
   transition: color var(--tr);
@@ -405,7 +405,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* =============================================================
-8. INDICATEUR LISTE ACTIVE
+  8. INDICATEUR LISTE ACTIVE
 ============================================================= */
 .alist {
   display: flex;
@@ -421,6 +421,21 @@ input, select, textarea { font-family: inherit; }
 #aListIco { font-size: calc(1.625rem * var(--scale)); line-height: 1; flex-shrink: 0; }
 .alist-info { flex: 1; min-width: 0; }
 .alist-sub {
+  font-size: calc(0.6875rem * var(--scale)); /* 11px */
+  color: var(--tx2);  /* Modifié : était --tx3, passe à --tx2 pour meilleur contraste */
+  margin-bottom: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.alist-name {
+  font-size: calc(0.9375rem * var(--scale)); /* 15px */
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--tx);
+}
+sub {
   font-size: calc(0.6875rem * var(--scale)); /* 11px */
   color: var(--tx3);
   margin-bottom: 1px;
