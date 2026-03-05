@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "絵文字を選んでください"
+},
+  "change_list": {
+  "title": "リストを変更",
+  "sort_alpha": "A-Z順に並べ替え",
+  "sort_original": "元の順序"
 }
 }

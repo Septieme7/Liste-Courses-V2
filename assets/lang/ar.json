@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "اختر رمزًا تعبيريًا"
+},
+  "change_list": {
+    "title": "تغيير القائمة",
+    "sort_alpha": "ترتيب أ-ي",
+    "sort_original": "الترتيب الأصلي"
 }
 }

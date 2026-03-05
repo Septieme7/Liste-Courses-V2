@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "Выберите эмодзи"
+},
+"change_list": {
+  "title": "Сменить список",
+  "sort_alpha": "Сортировать А-Я",
+  "sort_original": "Исходный порядок"
 }
 }

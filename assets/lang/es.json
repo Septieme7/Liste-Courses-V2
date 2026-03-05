@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "Elige un emoji"
+},
+  "change_list": {
+    "title": "Cambiar lista",
+    "sort_alpha": "Ordenar A-Z",
+    "sort_original": "Orden original"
 }
 }

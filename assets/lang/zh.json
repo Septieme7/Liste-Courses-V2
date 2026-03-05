@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "选择一个表情符号"
+},
+"change_list": {
+  "title": "切换列表",
+  "sort_alpha": "按字母排序",
+  "sort_original": "原始顺序"
 }
 }

@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "একটি ইমোজি বেছে নিন"
+},
+  "change_list": {
+    "title": "তালিকা পরিবর্তন করুন",
+    "sort_alpha": "A-Z সাজান",
+    "sort_original": "মূল ক্রম"
 }
 }

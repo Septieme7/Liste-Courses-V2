@@ -785,21 +785,23 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet : Changer de liste -->
-  <div class="sheet" id="shChangeList" role="dialog" aria-modal="true" aria-labelledby="shChangeListTitle">
-    <div class="shandle" aria-hidden="true"></div>
-    <h2 class="stit" id="shChangeListTitle">Changer de liste</h2>
-    <div class="sbody">
-      <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-        <button class="sbtn sact-muted" id="btnSortAlpha" style="flex:1;">Trier A-Z</button>
-        <button class="sbtn sact-muted" id="btnSortOriginal" style="flex:1;">Ordre initial</button>
-      </div>
-      <div id="changeListContainer" style="max-height: 50vh; overflow-y: auto;"></div>
-      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-        <button class="sbtn sact-muted" id="btnCancelChangeList" style="flex:1;">Annuler</button>
-      </div>
+<!-- Bottom Sheet : Changer de liste -->
+<div class="sheet" id="shChangeList" role="dialog" aria-modal="true" aria-labelledby="shChangeListTitle">
+  <div class="shandle" aria-hidden="true"></div>
+  <h2 class="stit" id="shChangeListTitle" data-i18n="change_list.title">Changer de liste</h2>
+  <div class="sbody">
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+      <button class="sbtn sact-muted" id="btnSortAlpha" style="flex:1;" data-i18n="change_list.sort_alpha">Trier A-Z</button>
+      <button class="sbtn sact-muted" id="btnSortOriginal" style="flex:1;" data-i18n="change_list.sort_original">Ordre initial</button>
+    </div>
+    <div id="changeListContainer" style="max-height: 50vh; overflow-y: auto;">
+      <!-- Le contenu est généré dynamiquement par JavaScript -->
+    </div>
+    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+      <button class="sbtn sact-muted" id="btnCancelChangeList" style="flex:1;" data-i18n="common.cancel">Annuler</button>
     </div>
   </div>
+</div>
 
   <!-- Modal pour afficher le logo ou la carte en grand -->
   <div id="logoModal" class="modal" onclick="closeLogoModal()" role="dialog" aria-modal="true" aria-label="Logo agrandi" style="display: none;">

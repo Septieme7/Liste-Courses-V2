@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "Pilih emoji"
+},
+  "change_list": {
+    "title": "Ganti dhaptar",
+    "sort_alpha": "Urut A-Z",
+    "sort_original": "Urutan asli"
 }
 }

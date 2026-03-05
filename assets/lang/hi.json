@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "एक इमोजी चुनें"
+},
+  "change_list": {
+    "title": "सूची बदलें",
+    "sort_alpha": "A-Z क्रम में",
+    "sort_original": "मूल क्रम"
 }
 }

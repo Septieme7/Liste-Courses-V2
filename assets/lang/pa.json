@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "ਇੱਕ ਇਮੋਜੀ ਚੁਣੋ"
+},
+  "change_list": {
+    "title": "ਸੂਚੀ ਬਦਲੋ",
+    "sort_alpha": "A-Z ਕ੍ਰਮ",
+    "sort_original": "ਮੂਲ ਕ੍ਰਮ"
 }
 }

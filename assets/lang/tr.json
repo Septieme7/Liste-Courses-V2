@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "Bir emoji seçin"
+},
+  "change_list": {
+    "title": "Listeyi değiştir",
+    "sort_alpha": "A-Z sırala",
+    "sort_original": "Orijinal sıra"
 }
 }

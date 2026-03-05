@@ -329,5 +329,10 @@
   },
   "emoji_picker": {
   "title": "Chọn một biểu tượng cảm xúc"
+},
+  "change_list": {
+    "title": "Đổi danh sách",
+    "sort_alpha": "Sắp xếp A-Z",
+    "sort_original": "Thứ tự ban đầu"
 }
 }
