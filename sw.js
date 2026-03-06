@@ -1,10 +1,10 @@
-const CACHE_NAME = 'courses-malin-v1';
+const CACHE_NAME = 'courses-malin-v2.8'; // Incrémentez la version pour forcer la mise à jour
 const urlsToCache = [
   '/',
   '/index.html',
   '/assets/css/style.css',
   '/assets/css/style2.css',
-  '/assets/js/script.min.js',
+  '/assets/js/script.js',        // Changé de script.min.js à script.js
   '/assets/js/i18n.js',
   '/assets/js/units.js',
   '/assets/js/dragdrop.js',
@@ -14,7 +14,11 @@ const urlsToCache = [
   '/assets/images/QRcode7.webp',
   '/assets/images/iconeCSV.svg',
   '/assets/images/iconeIMPORT.svg',
-  '/assets/images/iconeTXT.svg'
+  '/assets/images/iconeTXT.svg',
+  // Optionnel : ajoutez les icônes du manifeste pour les mettre en cache
+  '/assets/icon/android-chrome-192x192.png',
+  '/assets/icon/android-chrome-512x512.png',
+  '/manifest/site.webmanifest'
 ];
 
 self.addEventListener('install', event => {
@@ -28,13 +32,13 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(cached => {
       const fetchPromise = fetch(event.request)
         .then(response => {
-          // Mettre en cache avec une durée longue
           const responseClone = response.clone();
-          caches.open('courses-malin-v1').then(cache => {
+          caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseClone);
           });
           return response;
-        });
+        })
+        .catch(() => cached); // En cas d'échec réseau, retourne la copie cache si disponible
       return cached || fetchPromise;
     })
   );

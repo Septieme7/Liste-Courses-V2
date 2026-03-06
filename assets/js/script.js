@@ -2584,7 +2584,7 @@ function attachListeners() {
   window.addEventListener('resize', updateQrZoom);
 })();
 
-console.log('%c ☣️ Seven7&vous ☣️ ', 'background: #ff4500; color: white; font-size: 20px; font-weight: bold; padding: 6px; border-radius: 8px; box-shadow: 2px 2px 4px #000;');
+console.log('%c ☣️ Seven7&vous ☣️ ', 'background: #ff4500; color: white; font-size: 20px; font-weight: bold; padding: 12px; border-radius: 8px; box-shadow: 2px 2px 4px #000;');
 
 /* =============================================================
   DÉMARRAGE (asynchrone)
