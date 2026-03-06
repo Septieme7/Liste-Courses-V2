@@ -1,24 +1,23 @@
-const CACHE_NAME = 'courses-malin-v2.8'; // Incrémentez la version pour forcer la mise à jour
+const CACHE_NAME = 'courses-malin-v2.8'; // mettez à jour la version
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/assets/css/style.css',
-  '/assets/css/style2.css',
-  '/assets/js/script.js',        // Changé de script.min.js à script.js
-  '/assets/js/i18n.js',
-  '/assets/js/units.js',
-  '/assets/js/dragdrop.js',
-  '/assets/js/speech.js',
-  '/assets/js/geolocation.js',
-  '/assets/images/LogoCourses.webp',
-  '/assets/images/QRcode7.webp',
-  '/assets/images/iconeCSV.svg',
-  '/assets/images/iconeIMPORT.svg',
-  '/assets/images/iconeTXT.svg',
-  // Optionnel : ajoutez les icônes du manifeste pour les mettre en cache
-  '/assets/icon/android-chrome-192x192.png',
-  '/assets/icon/android-chrome-512x512.png',
-  '/manifest/site.webmanifest'
+  './',
+  './index.html',
+  './assets/css/style.css',
+  './assets/css/style2.css',
+  './assets/js/script.js',        // attention : vous aviez script.min.js
+  './assets/js/i18n.js',
+  './assets/js/units.js',
+  './assets/js/dragdrop.js',
+  './assets/js/speech.js',
+  './assets/js/geolocation.js',
+  './assets/images/LogoCourses.webp',
+  './assets/images/QRcode7.webp',
+  './assets/images/iconeCSV.svg',
+  './assets/images/iconeIMPORT.svg',
+  './assets/images/iconeTXT.svg',
+  './assets/icon/android-chrome-192x192.png',   // optionnel
+  './assets/icon/android-chrome-512x512.png',   // optionnel
+  './site.webmanifest'                           // optionnel
 ];
 
 self.addEventListener('install', event => {
@@ -38,7 +37,7 @@ self.addEventListener('fetch', event => {
           });
           return response;
         })
-        .catch(() => cached); // En cas d'échec réseau, retourne la copie cache si disponible
+        .catch(() => cached);
       return cached || fetchPromise;
     })
   );
