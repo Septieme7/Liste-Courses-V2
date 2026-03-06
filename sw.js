@@ -2,6 +2,7 @@ const CACHE_NAME = 'courses-malin-v2.8'; // mettez à jour la version
 const urlsToCache = [
   './',
   './index.html',
+  './site.webmanifest',
   './assets/css/style.css',
   './assets/css/style2.css',
   './assets/js/script.js',        // attention : vous aviez script.min.js
@@ -15,9 +16,8 @@ const urlsToCache = [
   './assets/images/iconeCSV.svg',
   './assets/images/iconeIMPORT.svg',
   './assets/images/iconeTXT.svg',
-  './assets/icon/android-chrome-192x192.png',   // optionnel
-  './assets/icon/android-chrome-512x512.png',   // optionnel
-  './site.webmanifest'                           // optionnel
+  './assets/icon/android-chrome-192x192.png',   // si vous voulez les mettre en cache
+  './assets/icon/android-chrome-512x512.png'
 ];
 
 self.addEventListener('install', event => {
